@@ -1,0 +1,15 @@
+---
+layout: default
+previousnext: True
+tagbar: True
+---
+
+    <div class="posts">
+      <article class="post">
+	  {% assign post = site.posts.first %} 
+	  <h1>{{ post.title }}</h1>
+	  </h1>
+	  <p class="postdate">{{ post.date | date: '%B %d, %Y' }}</p>
+	  <div class="entry">{{ post.content }}</div>
+      </article>
+    </div>

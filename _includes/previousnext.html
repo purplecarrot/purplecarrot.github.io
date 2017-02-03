@@ -1,0 +1,15 @@
+<div class="row previousnext">
+  <div class="col-xs-12">
+  {% if page.previous.url %}
+  {% assign previous = page.previous %}
+  {% else %}
+  {% assign previous = site.posts[1] %}
+  {% endif %}
+  <a class="btn btn-success" role="button" title="{{ previous.title }}" href="{{ previous.url }}">&laquo; Previous Post</a>
+
+  {% if page.next.url %}
+  <a class="btn btn-success pull-right" role="button" title="{{ page.next.title }}" href="{{ page.next.url }}">Next Post &raquo;</a>
+  {% endif %}
+  <hr />
+  </div>
+</div>

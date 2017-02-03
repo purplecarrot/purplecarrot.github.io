@@ -1,0 +1,49 @@
+---
+---
+
+// override the bootstrap brand-primary colour
+// $brand-primary: black;
+
+// import bootstrap
+@import "bootstrap";
+
+body {
+  font-family: "Open Sans", Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #545454;
+  line-height: 1.6;
+}
+
+a.list-group-item:hover, a.list-group-item:focus, button.list-group-item:hover, button.list-group-item:focus {
+  text-decoration: none;
+  color: #fff;
+  background-color: #428bca;
+}
+
+h1 {
+  font-size: 36px;
+}
+
+h2 {
+  font-size: 26px;
+}
+
+.avatar {
+  margin-top: 3px;
+  vertical-align: middle;
+}
+
+.postdate {
+  color: #777777;
+  font-style: italic;
+}
+
+.postcontent {
+  margin-top: 30px;
+}
+
+.previousnext {
+  position: relative;
+  top: 50px;
+  bottom: 10px;
+}
