@@ -1,0 +1,3 @@
+*.key
+.vscode
+.hugo_build*

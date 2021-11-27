@@ -1,0 +1,471 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Linux on Purplecarrot</title>
+    <link>https://purplecarrot.co.uk/categories/linux/</link>
+    <description>Recent content in Linux on Purplecarrot</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Thu, 24 Sep 2015 20:57:00 +0100</lastBuildDate><atom:link href="https://purplecarrot.co.uk/categories/linux/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Fedora 22, Wayland and Multiple Monitors</title>
+      <link>https://purplecarrot.co.uk/2015/09/24/fedora-22-wayland-and-multiple-monitors/</link>
+      <pubDate>Thu, 24 Sep 2015 20:57:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2015/09/24/fedora-22-wayland-and-multiple-monitors/</guid>
+      <description>
+        
+          &lt;p&gt;By default, a new Fedora installation or a fedup upgrade on my dual monitor machine will result in GDM displaying the list of users and login screen on my left hand monitor. But I want it on my right hand monitor...&lt;/p&gt;
+&lt;p&gt;Up until now, I simply logged in and set up the configuration I wanted using Settings -&amp;gt; Displays. Then I took the ~/.config/monitors.xml file that is generated and copied it to /var/lib/gdm/.config/monitors.xml ready for GDM to use.&lt;/p&gt;
+&lt;p&gt;However, with Fedora 22, it appears that GDM is set to use Wayland, however once you login to a session, it continues to use X. This new Wayland config uses slightly different XML directives in the monitors.xml meaning a simple copy of your ~/.config/monitors.xml to /var/lib/gdm/.config/monitors.xml no longer works.&lt;/p&gt;
+&lt;p&gt;To work around this, click on the cog and select GNOME on Wayland. Then setup the Displays as you need them and then copy the ~/.config/monitors.xml file (which will be in &amp;quot;Wayland&amp;quot; format) again to /var/lib/gdm/.config/monitors.xml and restart GDM (there may be a better way, but I switch to a virtual console and do init 3 followed by init 5)&lt;/p&gt;
+&lt;p&gt;Then your GDM login screen will be correctly setup.&lt;/p&gt;
+&lt;p&gt;&lt;em&gt;UPDATE 20151008: After upgrading to latest rpm set last night, this is now broken again and GDM is displaying the login on the monitor I don&#39;t want it to be on. I verified the monitors.xml file for gdm was correct, but for some reason gdm doesn&#39;t appear to be honoring it. Not being something I want to investigate, I decided to just disable Wayland for the moment by adding the WaylandEnable=False /etc/gdm/custom.conf :-)&lt;/em&gt;&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>PKI Certificate Encoding Formats and File Extensions</title>
+      <link>https://purplecarrot.co.uk/2015/05/22/pki-certificate-encoding-formats-and/</link>
+      <pubDate>Fri, 22 May 2015 10:29:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2015/05/22/pki-certificate-encoding-formats-and/</guid>
+      <description>
+        
+          &lt;p&gt;There are many different file formats and file extensions for storing certificates. It seems each time I come around to renewing a cert, I have forgetten what all the files and extensions mean.  So for next time...  Certificates are generally encoded in either Base64, PEM, or DEM formats.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;Base64 (.cer)&lt;/strong&gt;
+Originally developed for use with S/MIME (the first?) and the most widely supported format. More likely to be issued by Certificate Authorities that run on Linux.   A base64 encoded certificate can be opened in vi and will start with &amp;quot;-----BEGIN CERTIFICATE-----&amp;quot; and end with &amp;quot;-----END CERTIFICATE-----&amp;quot; with the BASE64 encoded data in the middle.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;PEM - Privacy Enhanced Mail (.pem,.crt, .key, .cer)&lt;/strong&gt;
+The PEM format is the most common format that CAs issue certificates in. They are ASCII and also BASE64 encoded and end and start with the same &amp;quot;-----BEGIN CERTIFICATE-----&amp;quot; and &amp;quot;-----END CERTIFICATE-----&amp;quot;  Certificates, certificate chains and private keys can be put into and distributed in PEM format.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;DER - Distinguished Encoding Rules (.der, but also .cer or .crt)&lt;/strong&gt;
+This is actually the same as PEM but whereas PEM is Base64 ASCII, DER is a binary form of the certificate and it does not have the BEGIN/END statements.   DER format supports storage of a single certificate, but can&#39;t be used for storing a private key or certificate chain. DER format is typically seen with java based platforms and applications.&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;PFX - Personal Information Exchange (.pfx)&lt;/strong&gt;
+The PFX format (also known as PKCS #12) is a format that stores multiple certificates and private keys in one file. They are typically used on Windows machines to facilitate import and exports. They can be readily converted to the other formats&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;PKCS#7 (.p7b)&lt;/strong&gt;
+Allows storage of certificates and certificate chains but not private keys and commonly used by Certicate Authorities to provide certificate chains to clients.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Mass In Place Editing of Linux Configuration Files</title>
+      <link>https://purplecarrot.co.uk/2015/01/14/mass-editing-of-linux-configuration/</link>
+      <pubDate>Wed, 14 Jan 2015 17:20:00 +0000</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2015/01/14/mass-editing-of-linux-configuration/</guid>
+      <description>
+        
+          &lt;p&gt;Generally, if I have 100 files that I need to edit and make changes in, I tend to write a perl or python script to make them (if I have 3 files, I just open them in VIM and make them manually!) Yesterday however, a colleague who doesn&#39;t code had to change 2 consecutive lines in about 400 similar files and wanted a simple &amp;quot;one liner&amp;quot; type way to do it.&lt;/p&gt;
+&lt;p&gt;This perl one liner is what I gave him. It allows replacement of multi line text with another piece of multiline text, in place, in the file.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;$ cat example.conf
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;Line1
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;Line2
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;Line3
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;Line4
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;$ perl -i -la0pe &lt;span class=&#34;s1&#34;&gt;&amp;#39;~s/Line2\nLine3/ReplaceLine2\nReplaceLine3/g&amp;#39;&lt;/span&gt; example.conf
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;$ cat example.conf
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;Line1
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;ReplaceLine2
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;ReplaceLine3
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;Line4
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It&#39;s then easy to use shell script to loop around all the files in a directory and run this command. If you&#39;re nervous, it&#39;s best to first check what your changes do by perhaps piping the file through perl.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ cat example.conf  &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; perl -la0pe &lt;span class=&#34;s1&#34;&gt;&amp;#39;~s/Line2\nLine3/ReplaceLine2\nReplaceLine3/g&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;$ cat example.conf 
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;Line1
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;ReplaceLine2
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;ReplaceLine3
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;Line4
+&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Another idea is also to use the -i.bak option to make backup files so you have a copy of the files before the edits ;-)&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Minecraft GNOME Desktop Icon</title>
+      <link>https://purplecarrot.co.uk/2014/10/07/minecraft/</link>
+      <pubDate>Tue, 07 Oct 2014 18:30:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2014/10/07/minecraft/</guid>
+      <description>
+        
+          &lt;p&gt;I had an email about the minecraft.desktop file in the config file in a previous post. My kids love to play Minecraft, and installation of this simple GNOME .desktop file gives them the launcher icon on their desktops.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;cat &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;lt&lt;span class=&#34;p&#34;&gt;;&amp;amp;&lt;/span&gt;lt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; EOF &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; /usr/share/applications/minecraft.desktop
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;Desktop Entry&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;Version&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;1.0
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;Name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;Minecraft
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;GenericName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;Minecraft
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;Comment&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;Minecraft
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;Exec&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;java -jar /data/minecraft/Minecraft.jar
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;Icon&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;mcicon256
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;Terminal&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;Type&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;Application
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;EOF
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then of course, you must copy the nice shiny minecraft icon into /usr/share/icons/mcicon256.png. I also created a very basic puppet manifest to install it on their computers too!:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;$ cat minecraft.pp 
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;file &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/data/minecraft&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;:
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;ensure&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;directory&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;file &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/usr/share/icons/mcicon256.png&amp;#34;&lt;/span&gt;:
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;ensure&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; file,
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;owner&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; root,
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;group&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; root,
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;mode&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; 644,
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;    &lt;span class=&#34;nb&#34;&gt;source&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;puppet:///files/minecraft/mcicon256.png&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;file &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/usr/share/applications/minecraft.desktop&amp;#34;&lt;/span&gt;:
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;ensure&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; file,
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;owner&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; root,
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;group&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; root,
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;mode&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; 644,
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;    &lt;span class=&#34;nb&#34;&gt;source&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;puppet:///files/minecraft/minecraft.desktop&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;file &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/data/minecraft/startminecraft.sh&amp;#34;&lt;/span&gt;:
+&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;ensure&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; file,
+&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;owner&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; root,
+&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;group&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; root,
+&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;mode&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; 755,
+&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;    &lt;span class=&#34;nb&#34;&gt;source&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;puppet:///files/minecraft/startminecraft.sh&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;28&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;29&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;30&lt;/span&gt;file &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/data/minecraft/Minecraft.jar&amp;#34;&lt;/span&gt;:
+&lt;span class=&#34;ln&#34;&gt;31&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;ensure&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; file,
+&lt;span class=&#34;ln&#34;&gt;32&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;owner&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; root,
+&lt;span class=&#34;ln&#34;&gt;33&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;group&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; root,
+&lt;span class=&#34;ln&#34;&gt;34&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;mode&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; 644,
+&lt;span class=&#34;ln&#34;&gt;35&lt;/span&gt;    &lt;span class=&#34;nb&#34;&gt;source&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;puppet:///files/minecraft/Minecraft.jar&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;36&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;37&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Configuring GNOME 3 Desktop and Shell</title>
+      <link>https://purplecarrot.co.uk/2014/05/13/configuring-gnome-3-desktop-and-shell/</link>
+      <pubDate>Tue, 13 May 2014 17:30:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2014/05/13/configuring-gnome-3-desktop-and-shell/</guid>
+      <description>
+        
+          &lt;p&gt;When it comes to customising GNOME, its config has always confused me - gconf, dconf, gconf-edit,  gconftool - what are they all for? The furthest I&#39;ve ever delved into them was copying and pasting some tips (give me my minimize and maximize buttons back!).&lt;/p&gt;
+&lt;p&gt;My Linux work is almost exclusively with headless servers sitting in data centres I never see, so I&#39;ve never taken the trouble to read or understand GNOME configuration. There has been lots of &lt;a href=&#34;http://http//en.wikipedia.org/wiki/Controversy_over_GNOME_3&#34;&gt;controversy&lt;/a&gt; over GNOME 3. I&#39;m all for change, but if only the configuration of GNOME 3 was easy a little easier. Most options aren&#39;t available to set in the GUI control panel, but there are plenty of options to be set. Unfortunately they tend to be hidden away and it is not at all clear how to set common settings. In turn, because of GNOME changes between versions, googling GNOME config finds much inaccurate or at best, out of date information.&lt;/p&gt;
+&lt;p&gt;It was time to properly understand all these things.&lt;/p&gt;
+&lt;p&gt;Forget gconftool, gconf-edit and scripts that sed gschema XML files (yes, there are some people sed&#39;ing XML files out there!). For GNOME 3 on Fedora 20 (RHEL 7), there are two tools of interest: gsettings and dconf-editor
+This is best illustrated by way of an example. Here is a list of common settings I put as default on my Fedora desktops. They should be pretty self-explanatory. The links below contain list of further configuration settings you can apply. I only wish these were more readily exposed in the GUI.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# Show Date in Gnome Shell Title Bar&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;cat&lt;/span&gt; \&lt;span class=&#34;o&#34;&gt;&amp;amp;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;lt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt;\&lt;span class=&#34;o&#34;&gt;&amp;lt;&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;eof&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;usr&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;share&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;glib&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;2.0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;schemas&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;mysettings&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;gschema&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;override&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;org&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;gnome&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;desktop&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;interface&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;clock&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;show&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;date&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;true&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;always&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;show&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;out&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;true&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# Set the default icons in the icon bar&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;org&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;gnome&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;desktop&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;shell&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;favorite&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;apps&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;firefox.desktop&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;google-chrome.desktop&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;gnome-terminal.desktop&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;shotwell.desktop&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;nautilus.desktop&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;system-config-printer.desktop&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;minecraft.desktop&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;org&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;gnome&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;desktop&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;screensaver&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;idle&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;activation&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;enabled&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;false&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;org&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;gnome&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;shell&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;overrides&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;button_layout&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;minimize&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;maximize&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;close&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;org&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;gnome&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Terminal&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Legacy&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Profile&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;use&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;theme&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;colors&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;false&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;use&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;system&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;font&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;false&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;foreground&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;color&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;#ffffff&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;background&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;color&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;#000000&amp;#39;&lt;/span&gt; 
+&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;font&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Inconsolata Medium 11&amp;#39;&lt;/span&gt; 
+&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;eof&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;References&lt;/strong&gt;&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;a href=&#34;https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/9-Beta/html/Desktop_Migration_and_Administration_Guide/gsettings-dconf.html&#34;&gt;RedHat RHEL7 Desktop Migration and Administration Guide&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;https://developer.gnome.org/gio/stable/GSettings.html#GSettings.description&#34;&gt;GNOME gsettings reference&lt;/a&gt;&lt;/li&gt;
+&lt;li&gt;&lt;a href=&#34;http://askubuntu.com/questions/249887/gconf-dconf-gsettings-and-the-relationship-between-them&#34;&gt;dconf, gconf and gsettings and the relationship between them&lt;/a&gt;&lt;/li&gt;
+&lt;/ul&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>OpenSSL Command Line Quick Reference</title>
+      <link>https://purplecarrot.co.uk/2014/04/24/openssl-command-line-quick-reference/</link>
+      <pubDate>Thu, 24 Apr 2014 15:55:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2014/04/24/openssl-command-line-quick-reference/</guid>
+      <description>
+        
+          &lt;p&gt;Is there anybody in the IT industry that wasn&#39;t doing something with openssl in April? &lt;a href=&#34;http://heartbleed.com/&#34;&gt;&lt;/a&gt; I don&#39;t use the openssl command line utility that often, but last week it reminded me that openssl command line tool is pretty comprehensive and has some nice features. I thought on this occasion I&#39;d record the most useful ones so that next time I don&#39;t have to look them up again!&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# Show Certificate Info&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;$ openssl x509 -text -in server.cert
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;$ openssl md5 server.cert
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;$ openssl sha1 server.cert
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# Confirming openssl build info&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;openssl version -a
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;OpenSSL 1.0.1e-fips &lt;span class=&#34;m&#34;&gt;11&lt;/span&gt; Feb &lt;span class=&#34;m&#34;&gt;2013&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;built on: Tue Apr  &lt;span class=&#34;m&#34;&gt;8&lt;/span&gt; 00:29:11 UTC &lt;span class=&#34;m&#34;&gt;2014&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;platform: linux-x86_64
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;options:  bn&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;64,64&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; md2&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;int&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; rc4&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;16x,int&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; des&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;idx,cisc,16,int&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; idea&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;int&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; blowfish&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;idx&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; 
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;compiler: gcc -fPIC -DOPENSSL_PIC -DZLIB -DOPENSSL_THREADS -D_REENTRANT -DDSO_DLFCN -DHAVE_DLFCN_H -DKRB5_MIT -m64 -DL_ENDIAN -DTERMIO -Wall -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;2&lt;/span&gt; -fexceptions -fstack-protector --param&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;ssp-buffer-size&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; -grecord-gcc-switches  -m64 -mtune&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;generic -Wa,--noexecstack -DPURIFY -DOPENSSL_IA32_SSE2 -DOPENSSL_BN_ASM_MONT -DOPENSSL_BN_ASM_MONT5 -DOPENSSL_BN_ASM_GF2m -DSHA1_ASM -DSHA256_ASM -DSHA512_ASM -DMD5_ASM -DAES_ASM -DVPAES_ASM -DBSAES_ASM -DWHIRLPOOL_ASM -DGHASH_ASM
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;OPENSSLDIR: &lt;span class=&#34;s2&#34;&gt;&amp;#34;/etc/pki/tls&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;engines:  dynamic 
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# Generate hashed passwords (for example, for Anaconda)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;openssl passwd -1 mysecretword
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$1$utlS7bht$VLMQrtHnPU0mkSO&lt;/span&gt;/Kpzh/.
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# Directory complied in and used to search for openSSL files (--openssldir)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;openssl version -d 
+&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I tend to use commercial SSL certificates or ones from my company&#39;s internal CA. However, I found this text file in my home directory which I&#39;m recording here for next time because it&#39;s a very easy quick reference for generating a self signed certificate:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# Generate new private key&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;openssl genrsa -aes256 -out my.key &lt;span class=&#34;m&#34;&gt;4096&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# Generate new certificate request&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;openssl req -new -key my.key -out my.csr
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# Sign certificate&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;openssl x509 -req -days &lt;span class=&#34;m&#34;&gt;3650&lt;/span&gt; -in my.csr -signkey my.key -out my.crt
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# Remove cert password&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;openssl rsa -in my.key -out my.key 
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Mirror a Remote Directory over HTTP</title>
+      <link>https://purplecarrot.co.uk/2014/01/25/mirror-remote-directory-over-http/</link>
+      <pubDate>Sat, 25 Jan 2014 16:07:00 +0000</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2014/01/25/mirror-remote-directory-over-http/</guid>
+      <description>
+        
+          &lt;p&gt;Different ways to mirror a remote directory:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;wget -r --no-parent http://server/location
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;If there are any files you don&#39;t want you can add the --reject option: &amp;lt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;wget -r --no-parent --reject&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;tmp*&amp;#34;&lt;/span&gt; http://server/location
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;curl&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Configuring Out-Of-Band Management Interface from In-Band Server</title>
+      <link>https://purplecarrot.co.uk/2013/10/11/configuring-out-of-band-management/</link>
+      <pubDate>Fri, 11 Oct 2013 16:43:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2013/10/11/configuring-out-of-band-management/</guid>
+      <description>
+        
+          &lt;p&gt;Most modern x86 servers include &lt;a href=&#34;http://en.wikipedia.org/wiki/Out-of-band_management&#34;&gt;out-of-band&lt;/a&gt; Management or Lights-out Management systems. These systems offer remote configuration and remote console access to a headless server normally located in a datacenter. These are typically used when first setting up a server, or perhaps when the server is hosed.  The company I work for is large enough to have dedicated server operators, and in my role I rarely if ever need to access the consoles of real devices. However, I recently needed to get to the console of a device and the server was in a different continent and timezone and I couldn&#39;t access the IP address I&#39;d been emailed :( Not a good start to the day.  I remember using ipmitool to configure OOB management before, but of course I never wrote down what I did then. As this blog is really a note taking memory aid system, I&#39;m writing it down for next time.  So using ipmitool I was able to determine the IP address of the server.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;ipmiserver# ipmitool -I open lan print &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;Set in Progress         : Set Complete
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;Auth Type Support       : NONE MD2 MD5 PASSWORD
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;Auth Type Enable        : Callback :
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;                        : User     : MD2 MD5 PASSWORD
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;                        : Operator : MD2 MD5 PASSWORD
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;                        : Admin    : MD5
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;                        : OEM      :
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;IP Address Source       : Static Address
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;IP Address              : 192.168.1.1
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;Subnet Mask             : 255.255.255.0
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;MAC Address             : 00:00:00:00:00:00
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;SNMP Community String   : public
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;IP Header               : &lt;span class=&#34;nv&#34;&gt;TTL&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0x40 &lt;span class=&#34;nv&#34;&gt;Flags&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0x40 &lt;span class=&#34;nv&#34;&gt;Precedence&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0x00 &lt;span class=&#34;nv&#34;&gt;TOS&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0x10
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;BMC ARP Control         : ARP Responses Enabled, Gratuitous ARP Disabled
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;Gratituous ARP Intrvl   : 2.0 seconds
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;Default Gateway IP      : 192.168.1.254
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;Default Gateway MAC     : 00:00:00:00:00:00
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;Backup Gateway IP       : 0.0.0.0
+&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;Backup Gateway MAC      : 00:00:00:00:00:00
+&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;802.1q VLAN ID          : Disabled
+&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;802.1q VLAN Priority    : &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;RMCP+ Cipher Suites     : 0,1,2,3,4
+&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;Cipher Suite Priv Max   : XaaaaXXXXXXXXXX
+&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;                        :     &lt;span class=&#34;nv&#34;&gt;X&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;Cipher Suite Unused
+&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;                        :     &lt;span class=&#34;nv&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;CALLBACK
+&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;                        :     &lt;span class=&#34;nv&#34;&gt;u&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;USER
+&lt;span class=&#34;ln&#34;&gt;28&lt;/span&gt;                        :     &lt;span class=&#34;nv&#34;&gt;o&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;OPERATOR
+&lt;span class=&#34;ln&#34;&gt;29&lt;/span&gt;                        :     &lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;ADMIN
+&lt;span class=&#34;ln&#34;&gt;30&lt;/span&gt;                        :     &lt;span class=&#34;nv&#34;&gt;O&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;OEM
+&lt;span class=&#34;ln&#34;&gt;31&lt;/span&gt;ipmiserver#
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;From this I noticed that the default gateway for the out-of-band was incorrect (as with all blog posts, the IPs are changed to RFC1918 private addresses here). What must have happen is that the server installation engineer had used a screen and keyboard on a trolley to configure the server, and then probably tested it from a device on the same subnet (I&#39;m being generous here, as he/she may have never bothered testing it!) Anyway, quick man ipmitool for syntax and this was easily fixed from the in-band server with the following command:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;ipmitool -I open lan set 1 defgw ipaddr 192.168.1.1
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Determining the IP Address of a Server&#39;s Out of Band Management </title>
+      <link>https://purplecarrot.co.uk/2013/10/11/determining-ip-address-of-servers-out/</link>
+      <pubDate>Fri, 11 Oct 2013 16:11:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2013/10/11/determining-ip-address-of-servers-out/</guid>
+      <description>
+        
+          &lt;p&gt;Nearly all enterprise x86 servers include an &lt;a href=&#34;http://en.wikipedia.org/wiki/Out-of-band_management&#34;&gt;out-of-band management interface&lt;/a&gt; such as &lt;a href=&#34;http://en.wikipedia.org/wiki/HP_Integrated_Lights-Out&#34;&gt;HP iLO&lt;/a&gt;, &lt;a href=&#34;http://en.wikipedia.org/wiki/IBM_Remote_Supervisor_Adapter&#34;&gt;IBM RSA&lt;/a&gt; or &lt;a href=&#34;http://en.wikipedia.org/wiki/Baseboard_Management_Controller#Baseboard_management_controller&#34;&gt;BMC&lt;/a&gt;, &lt;a href=&#34;http://en.wikipedia.org/wiki/Intelligent_Platform_Management_Interface&#34;&gt;IPMI&lt;/a&gt;, Dell DRAC, etc. These are used for remotely power cycling, monitoring and what the data centre ops guys, confusingly for me, call KVM access (that&#39;s Keyboard Video Mouse not Kernel Virtual Machine!)&lt;/p&gt;
+&lt;p&gt;As shown in {{ site.baseurl }}{% post_url 2013-10-11-configuring-out-of-band-management %}
+this post, finding out the IP of the Out-of-Band Management interface from the &amp;quot;in-band&amp;quot; server is at times very useful. Here is the quick reference way to find that out from the Linux command line for popular OOBs:&lt;/p&gt;
+&lt;p&gt;&lt;strong&gt;HP iLO&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;hpserver:~# hponcfg -a -w ilosettings.xml
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;HP Lights-Out Online Configuration utility
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;Version 4.0.0 Date 12/08/2011 &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;c&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; Hewlett-Packard Company, &lt;span class=&#34;m&#34;&gt;2011&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;Firmware &lt;span class=&#34;nv&#34;&gt;Revision&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 1.29 Device &lt;span class=&#34;nb&#34;&gt;type&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; iLO &lt;span class=&#34;m&#34;&gt;2&lt;/span&gt; Driver &lt;span class=&#34;nv&#34;&gt;name&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; hpilo
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;Management Processor configuration is successfully written to file &lt;span class=&#34;s2&#34;&gt;&amp;#34;ilosettings.xml&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;hpserver:~# grep &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;lt;IP_ADDRESS VALUE&amp;#34;&lt;/span&gt; ilosettings.xml
+&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;    &amp;lt;IP_ADDRESS &lt;span class=&#34;nv&#34;&gt;VALUE&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;192.168.1.1&amp;#34;&lt;/span&gt;&amp;gt;
+&lt;span class=&#34;ln&#34;&gt;8&lt;/span&gt;hpserver:~#
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;&lt;strong&gt;IPMI&lt;/strong&gt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;ipmiserver# ipmitool -I open lan print &lt;span class=&#34;m&#34;&gt;1&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;Set in Progress         : Set Complete
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;Auth Type Support       : NONE MD2 MD5 PASSWORD
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;Auth Type Enable        : Callback :
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;                        : User     : MD2 MD5 PASSWORD
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;                        : Operator : MD2 MD5 PASSWORD
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;                        : Admin    : MD5
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;                        : OEM      :
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;IP Address Source       : Static Address
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;IP Address              : 192.168.1.1
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;Subnet Mask             : 255.255.255.0
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;MAC Address             : 00:00:00:00:00:00
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;SNMP Community String   : public
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;IP Header               : &lt;span class=&#34;nv&#34;&gt;TTL&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0x40 &lt;span class=&#34;nv&#34;&gt;Flags&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0x40 &lt;span class=&#34;nv&#34;&gt;Precedence&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0x00 &lt;span class=&#34;nv&#34;&gt;TOS&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;0x10
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;BMC ARP Control         : ARP Responses Enabled, Gratuitous ARP Disabled
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;Gratituous ARP Intrvl   : 2.0 seconds
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;Default Gateway IP      : 192.168.1.254
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;Default Gateway MAC     : 00:00:00:00:00:00
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;Backup Gateway IP       : 0.0.0.0
+&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;Backup Gateway MAC      : 00:00:00:00:00:00
+&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;802.1q VLAN ID          : Disabled
+&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;802.1q VLAN Priority    : &lt;span class=&#34;m&#34;&gt;0&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;RMCP+ Cipher Suites     : 0,1,2,3,4
+&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;Cipher Suite Priv Max   : XaaaaXXXXXXXXXX
+&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;                        :     &lt;span class=&#34;nv&#34;&gt;X&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;Cipher Suite Unused
+&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;                        :     &lt;span class=&#34;nv&#34;&gt;c&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;CALLBACK
+&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;                        :     &lt;span class=&#34;nv&#34;&gt;u&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;USER
+&lt;span class=&#34;ln&#34;&gt;28&lt;/span&gt;                        :     &lt;span class=&#34;nv&#34;&gt;o&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;OPERATOR
+&lt;span class=&#34;ln&#34;&gt;29&lt;/span&gt;                        :     &lt;span class=&#34;nv&#34;&gt;a&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;ADMIN
+&lt;span class=&#34;ln&#34;&gt;30&lt;/span&gt;                        :     &lt;span class=&#34;nv&#34;&gt;O&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;OEM
+&lt;span class=&#34;ln&#34;&gt;31&lt;/span&gt;ipmiserver#
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Broadband External IP Address from Command Line</title>
+      <link>https://purplecarrot.co.uk/2013/09/16/broadband-external-ip-address-from/</link>
+      <pubDate>Mon, 16 Sep 2013 09:04:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2013/09/16/broadband-external-ip-address-from/</guid>
+      <description>
+        
+          &lt;p&gt;Just typing &amp;quot;What is my external ip address&amp;quot; into Google is normally the most convenient way to find your external public IP address when you&#39;re behind a NAT&#39;d broadband connection. The site ipconfig.me offers an alternative and clean way to get it from the command line, for example for use in a shell script:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;server# curl ifconfig.me
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;132.231.56.65
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;server# curl ifconfig.me/host
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;132-231-56-65.myisp.com
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;They have a range of options to return IP, Hostname, UserAgent, etc. The one I may be using is ifconfig.me/all.json or all.xml, to make it even easier to read into a Perl or Python script!&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>UTF-8 and Euro Symbol</title>
+      <link>https://purplecarrot.co.uk/2013/09/09/utf-8-and-euro-symbol/</link>
+      <pubDate>Mon, 09 Sep 2013 20:28:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2013/09/09/utf-8-and-euro-symbol/</guid>
+      <description>
+        
+          &lt;p&gt;Quick and easy way to show that UTF-8 is configured correctly in shell and terminal emulator is to display the Euro symbol. If you don&#39;t see the Euro symbol, then UTF-8 is not configured correctly.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;linux:~$ perl -CS -le &amp;#39;print &amp;#34;\x{20AC}&amp;#34;&amp;#39;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;€
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>SimpleHTTPServer</title>
+      <link>https://purplecarrot.co.uk/2013/08/16/whilst-reading-about-basehttpserver/</link>
+      <pubDate>Fri, 16 Aug 2013 17:59:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2013/08/16/whilst-reading-about-basehttpserver/</guid>
+      <description>
+        
+          &lt;p&gt;Whilst reading about &lt;a href=&#34;http://docs.python.org/2/library/basehttpserver.html&#34;&gt;BaseHTTPServer&lt;/a&gt; class as mentioned in the last post, I also came across the very useful &lt;a href=&#34;http://docs.python.org/2/library/simplehttpserver.html&#34;&gt;SimpleHTTPserver&lt;/a&gt; which is most definitely worth recording as a one-liner.  Everybody must have come across the situation where you&#39;re ssh&#39;d into a headless server with no Apache installed or running on it, and you come across an HTML file you want to look at. You can read it with vi (or lynx!) but that&#39;s never really going to be that nice. As python is near-ubiquitous on all Linux installations these days, you can run this simple oneliner to view HTML docs on the system (or in fact any files you might want to view graphically instead of via a terminal?)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;usr&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;share&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;doc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;bash&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;3.2&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;$&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;python&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;m&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;SimpleHTTPServer&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;8000&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Serving&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;HTTP&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;on&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;0.0&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;port&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;8000&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;127.0&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;0.1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Aug&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2013&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;51&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;49&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;GET / HTTP/1.1&amp;#34;&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;200&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Who logs in the most?</title>
+      <link>https://purplecarrot.co.uk/2011/05/16/who-logs-in-most/</link>
+      <pubDate>Mon, 16 May 2011 22:01:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2011/05/16/who-logs-in-most/</guid>
+      <description>
+        
+          &lt;p&gt;I work in a firm with 10s of 1000s of Linux servers. A colleague had been emailed a list of servers and was trying to find out who owned them. At first, I suggested running last to see who last logged in but we realised this probably wasn&#39;t the best way to start the hunt. On reflection, the was a high chance that the user who logged in the &lt;em&gt;most&lt;/em&gt; frequently into the server, was the the owner of that server. Or if not, he would most likely know the owner ;-)&lt;/p&gt;
+&lt;p&gt;So I used this 30 second one liner (wrapped for viewability) to list most frequent users:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-perl&#34; data-lang=&#34;perl&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;last&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;perl&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;lane&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#39;$users{$F[0]}++; END { 
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;foreach $u (reverse sort { $users{$a} &amp;lt;=&amp;gt; $users{b} } keys %users) 
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;{ print &amp;#34;$u logged in $users{$u} times&amp;#34;; } }&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tom&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logged&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;108&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;times&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;sally&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logged&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;81&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;times&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;dave&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logged&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;32&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;times&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;root&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logged&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;27&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;times&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;richard&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logged&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;times&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;admin&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logged&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;times&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;wtmp&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logged&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;times&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Remote XDMCP Connection to GDM</title>
+      <link>https://purplecarrot.co.uk/2011/04/27/remote-xdmcp-connection-to-gdm/</link>
+      <pubDate>Tue, 27 Apr 2010 21:16:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2011/04/27/remote-xdmcp-connection-to-gdm/</guid>
+      <description>
+        
+          &lt;p&gt;I always forget how to do this. And it always takes me ages to find out what I did last time. Edit /etc/gdm/custom.conf and add:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;[xdmcp]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;enable&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;true&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;[greeter]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;RemoteGreeter&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;/usr/libexec/gdmgreeter&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>
