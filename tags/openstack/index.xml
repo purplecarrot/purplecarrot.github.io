@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?><rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom"><channel><title>OpenStack on Purplecarrot</title><link>https://purplecarrot.co.uk/tags/openstack/</link><description>Recent content in OpenStack on Purplecarrot</description><generator>Hugo -- gohugo.io</generator><language>en-gb</language><lastBuildDate>Thu, 23 Apr 2015 18:00:00 +0100</lastBuildDate><atom:link href="https://purplecarrot.co.uk/tags/openstack/index.xml" rel="self" type="application/rss+xml"/><item><title>Writing OpenStack Hooks</title><link>https://purplecarrot.co.uk/2015/04/23/writing-openstack-hooks/</link><pubDate>Thu, 23 Apr 2015 18:00:00 +0100</pubDate><guid>https://purplecarrot.co.uk/2015/04/23/writing-openstack-hooks/</guid><description>
+&lt;p>I've recently been writing OpenStack Nova hooks for integration of newly deployed OpenStack nova instances with our existing infrastructure systems. Though the &lt;a href="http://developer.openstack.org/">OpenStack Developer Documentation&lt;/a> is very good, there is not that much documentation out there on real world end-user experiences of writing nova hooks. In this post, I will document my experiences in writing a nova hook for the first time and may be it will help others approaching the same task.&lt;/p>
+&lt;h2 id="summary-and-goals">Summary and Goals&lt;/h2>
+&lt;p>Linux or Windows VMs provisioned by OpenStack for use in my firm must be registered with a number of other &amp;quot;Enterprise&amp;quot; systems external to the OpenStack core components. For example, an inventory system, an LDAP directory, a separate corporate IPAM solution (DNS) as well as security audit systems. Generally, the key for recording this data in the external system is either the new instance's hostname, IP address or mac address. This integration must be done at the point of instance/vm creation or deletion (because in some cases the registration event must occur before the new instance has booted) and so OpenStack nova hooks work well for this.&lt;/p>
+&lt;h2 id="what-are-openstack-hooks">What are OpenStack Hooks?&lt;/h2>
+&lt;p>OpenStack hooks allow you - as the system integrator - to write custom python code to execute any business logic or custom logic and then have this code execute when the relevant OpenStack function is called.&lt;/p>
+&lt;p>You write your code as a standard python module and using setuptools for packaging and deployment, just as if you were writing any other python module. You then simply define entry points and your code will get executed.&lt;/p>
+&lt;p>Your code can be setup to run either before the hooked function (pre hook) or after (post hook) the hooked function. At the time of writing, nova only has a handful of hooks declared but I would imagine that in time hooks will be declared across many more methods and across many OpenStack components.&lt;/p>
+&lt;p>Currently with the version of OpenStack I'm working with, you could add custom code to be run on nova create_instance, delete_instance or resize_instance method and this would get executed when that method is called internally as part of those nova processes.&lt;/p>
+&lt;p>You then create your package and define the methods you want to get called alongside the OpenStack nova methods where you want them to run. Here is an example of the setup.py binding custom package methods to nova create and delete instances:&lt;/p>
+&lt;h2 id="setuppy">setup.py&lt;/h2>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="ln"> 1&lt;/span>&lt;span class="n">setup&lt;/span>&lt;span class="p">(&lt;/span>
+&lt;span class="ln"> 2&lt;/span> &lt;span class="n">name&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;myfirmshooks&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="ln"> 3&lt;/span> &lt;span class="n">version&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;1.0&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="ln"> 4&lt;/span> &lt;span class="n">description&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;My Firms Hooks&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="ln"> 5&lt;/span> &lt;span class="n">author&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="s2">&amp;#34;Me&amp;#34;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="ln"> 6&lt;/span> &lt;span class="n">entry_points&lt;/span>&lt;span class="o">=&lt;/span>&lt;span class="p">{&lt;/span>
+&lt;span class="ln"> 7&lt;/span> &lt;span class="s1">&amp;#39;nova.hooks&amp;#39;&lt;/span>&lt;span class="p">:&lt;/span> &lt;span class="p">[&lt;/span>
+&lt;span class="ln"> 8&lt;/span> &lt;span class="s1">&amp;#39;create_instance=myfirmshooks.nova:CreateInstance&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="ln"> 9&lt;/span> &lt;span class="s1">&amp;#39;delete_instance=myfirmshooks.nova:DeleteInstance&amp;#39;&lt;/span>&lt;span class="p">,&lt;/span>
+&lt;span class="ln">10&lt;/span> &lt;span class="p">]&lt;/span>
+&lt;span class="ln">11&lt;/span> &lt;span class="p">},&lt;/span>
+&lt;span class="ln">12&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="ln">13&lt;/span>
+&lt;span class="ln">14&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="mynovahookpy">mynovahook.py&lt;/h2>
+&lt;p>The code is actually very simple indeed. You add the code you want to run inside the post of pre method of the class. Because this code runs inside nova-api, you have access to lots of information inside the args and kwargs passed into the function which can be used inside your code. For example, the uuid, name, flavor and much more are all available with very little efforts for your code to use.&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-python" data-lang="python">&lt;span class="ln"> 1&lt;/span>
+&lt;span class="ln"> 2&lt;/span>&lt;span class="k">class&lt;/span> &lt;span class="nc">MyNovaHook&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="nb">object&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="ln"> 3&lt;/span> &lt;span class="s2">&amp;#34;&amp;#34;&amp;#34; object for running custom code &amp;#34;&amp;#34;&amp;#34;&lt;/span>
+&lt;span class="ln"> 4&lt;/span> &lt;span class="k">def&lt;/span> &lt;span class="fm">__init__&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;span class="ln"> 5&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span> &lt;span class="o">=&lt;/span> &lt;span class="n">logging&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">getLogger&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="vm">__name__&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="ln"> 6&lt;/span>
+&lt;span class="ln"> 7&lt;/span> &lt;span class="k">def&lt;/span> &lt;span class="nf">pre&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">args&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">**&lt;/span>&lt;span class="n">kwargs&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;span class="ln"> 8&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">info&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Tasks that run before the instance is created&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="ln"> 9&lt;/span>
+&lt;span class="ln">10&lt;/span> &lt;span class="k">def&lt;/span> &lt;span class="nf">post&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="bp">self&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">*&lt;/span>&lt;span class="n">args&lt;/span>&lt;span class="p">,&lt;/span> &lt;span class="o">**&lt;/span>&lt;span class="n">kwargs&lt;/span>&lt;span class="p">):&lt;/span>
+&lt;span class="ln">11&lt;/span> &lt;span class="bp">self&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">log&lt;/span>&lt;span class="o">.&lt;/span>&lt;span class="n">info&lt;/span>&lt;span class="p">(&lt;/span>&lt;span class="s2">&amp;#34;Tasks that run after the instance is created&amp;#34;&lt;/span>&lt;span class="p">)&lt;/span>
+&lt;span class="ln">12&lt;/span> &lt;span class="s2">&amp;#34;&amp;#34;&amp;#34;REST requests for interaction with external systems&amp;#34;&amp;#34;&amp;#34;&lt;/span>
+&lt;span class="ln">13&lt;/span>
+&lt;span class="ln">14&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;h2 id="scale">Scale&lt;/h2>
+&lt;p>There isn't much information out there on customising OpenStack workflow like this. There is lots of information about using ansible, puppet, chef and similar tools for &lt;em>post&lt;/em> build configuration of the operating system inside instance, but less information on running code that you want to run on behalf of the instance, but which cannot or you do not wish to run inside the instance. However, it should be noted that code running inside the post hook will block and/or error the instance creation. It maybe that a message bus approach would scale better with a short simple hook that puts a message on a bus and a secondary daemon running on the system that consumes and acts on that message and I may look at implementing that in future.&lt;/p>
+&lt;h2 id="references">References&lt;/h2>
+&lt;p>The following pages were useful when I started out writing nova hooks.&lt;/p>
+&lt;ul>
+&lt;li>
+&lt;p>OpenStack Developer Documentation on Hooks&lt;br>
+&lt;a href="http://docs.openstack.org/developer/nova/devref/hooks.html">http://docs.openstack.org/developer/nova/devref/hooks.html&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Python Setuptools Documentation&lt;br>
+&lt;a href="http://pythonhosted.org/setuptools/index.html">http://pythonhosted.org/setuptools/index.html&lt;/a>&lt;/p>
+&lt;/li>
+&lt;li>
+&lt;p>Lars Kellogg-Stedman's Blog Entry on Writing Nova Hooks&lt;br>
+&lt;a href="http://blog.oddbit.com/2014/09/27/integrating-custom-code-with-n/">http://blog.oddbit.com/2014/09/27/integrating-custom-code-with-n&lt;/a>&lt;/p>
+&lt;/li>
+&lt;/ul></description></item><item><title>Python Setuptools and Building RPMs with Dependencies.</title><link>https://purplecarrot.co.uk/2015/04/07/python-setuptools-and-building-rpms/</link><pubDate>Tue, 07 Apr 2015 16:42:00 +0100</pubDate><guid>https://purplecarrot.co.uk/2015/04/07/python-setuptools-and-building-rpms/</guid><description>
+&lt;p>If you develop python modules for distribution, you likely use python setuptools. It's very useful and takes lots of the manual operations out of distributing python code and modules. I recently started going one step further and using the bdist_rpm setup.py command option to automatically build rpms for my python code and modules too. Unfortunately, I found a bug (on RHEL 6 version of setuptools at least) in that it doesn't appear the install_requires directive in setup.py is being read or used correctly.&lt;/p>
+&lt;p>After adding &lt;em>install_requires=['requests']&lt;/em> to the setup.py file, the rpm spec file that &lt;em>python setup.py bdist_rpm&lt;/em> created did &lt;strong>NOT&lt;/strong> include the correct &lt;em>Requires:&lt;/em> line required to include the dependency in the RPM. I experimented with the argument supplied (eg python-requests/requests) and other such things, but was not able to build an RPM with the dependencies on the python-requests RPM that I wanted to include.&lt;/p>
+&lt;p>After some playing and research, I was finally able to get it to generate an RPM with the correct dependency on python-requests by creating and using this custom setup.cfg file:&lt;/p>
+&lt;div class="highlight">&lt;pre tabindex="0" class="chroma">&lt;code class="language-shell" data-lang="shell">&lt;span class="ln">1&lt;/span>cat &lt;span class="s">&amp;lt;&amp;lt; EOF &amp;gt; setup.cfg
+&lt;/span>&lt;span class="ln">2&lt;/span>&lt;span class="s">[bdist_rpm]
+&lt;/span>&lt;span class="ln">3&lt;/span>&lt;span class="s">requires = python-requests &amp;gt;= 1.1
+&lt;/span>&lt;span class="ln">4&lt;/span>&lt;span class="s">no-autoreq = yes
+&lt;/span>&lt;span class="ln">5&lt;/span>&lt;span class="s">EOF&lt;/span>
+&lt;span class="ln">6&lt;/span>
+&lt;/code>&lt;/pre>&lt;/div>&lt;p>The other line in there (&lt;em>no-autoreq&lt;/em>) tells setup.py not to analyse your code for dependencies and include those in the RPM too. I added this because by default, the generated RPM had tied a dependency to python 2.6 (RHEL 6) but I wanted an RPM generated that would run on python 2.7 (RHEL 7) too so adding this flag removes any dependency on a specific python version&lt;/p></description></item></channel></rss>
