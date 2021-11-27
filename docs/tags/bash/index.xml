@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Bash on Purplecarrot</title>
+    <link>https://purplecarrot.co.uk/tags/bash/</link>
+    <description>Recent content in Bash on Purplecarrot</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Mon, 16 May 2011 22:01:00 +0100</lastBuildDate><atom:link href="https://purplecarrot.co.uk/tags/bash/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Who logs in the most?</title>
+      <link>https://purplecarrot.co.uk/2011/05/16/who-logs-in-most/</link>
+      <pubDate>Mon, 16 May 2011 22:01:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2011/05/16/who-logs-in-most/</guid>
+      <description>
+        
+          &lt;p&gt;I work in a firm with 10s of 1000s of Linux servers. A colleague had been emailed a list of servers and was trying to find out who owned them. At first, I suggested running last to see who last logged in but we realised this probably wasn&#39;t the best way to start the hunt. On reflection, the was a high chance that the user who logged in the &lt;em&gt;most&lt;/em&gt; frequently into the server, was the the owner of that server. Or if not, he would most likely know the owner ;-)&lt;/p&gt;
+&lt;p&gt;So I used this 30 second one liner (wrapped for viewability) to list most frequent users:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-perl&#34; data-lang=&#34;perl&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;last&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;|&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;perl&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;lane&lt;/span&gt; &lt;span class=&#34;s&#34;&gt;&amp;#39;$users{$F[0]}++; END { 
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;foreach $u (reverse sort { $users{$a} &amp;lt;=&amp;gt; $users{b} } keys %users) 
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;{ print &amp;#34;$u logged in $users{$u} times&amp;#34;; } }&amp;#39;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;tom&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logged&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;108&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;times&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;sally&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logged&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;81&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;times&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;dave&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logged&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;32&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;times&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;root&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logged&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;27&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;times&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;richard&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logged&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;8&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;times&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;admin&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logged&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;3&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;times&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;wtmp&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logged&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;times&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

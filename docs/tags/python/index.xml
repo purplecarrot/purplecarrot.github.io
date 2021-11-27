@@ -1,0 +1,346 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Python on Purplecarrot</title>
+    <link>https://purplecarrot.co.uk/tags/python/</link>
+    <description>Recent content in Python on Purplecarrot</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Thu, 03 Dec 2015 18:11:00 +0000</lastBuildDate><atom:link href="https://purplecarrot.co.uk/tags/python/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Verifying TLS certificates in Python</title>
+      <link>https://purplecarrot.co.uk/post/archive/2015-12-03-verifying-tls-certificates-in-python/</link>
+      <pubDate>Thu, 03 Dec 2015 18:11:00 +0000</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/post/archive/2015-12-03-verifying-tls-certificates-in-python/</guid>
+      <description>
+        
+          &lt;p&gt;All too often people I see Python code using the requests module to query an API that just bypass TLS verification (i.e it sets &lt;code&gt;verify=False&lt;/code&gt; in the requests function calls). On RedHat Linux and derivatives, you can simply set this to &lt;code&gt;verify=/etc/pki/tls/certs/ca-bundle.crt&lt;/code&gt; and your Python code will then automatically use any system CA certs are part of TLS verification.&lt;/p&gt;
+&lt;p&gt;If like me, the environment you work in has a private Root CA that even requires and issues certs to internal services on an internal private network, you can really easily add this root CA cert (and any intermediate CA certs you might want to trust) to the systems cert chain:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# cp mycompany-root-ca.crt /etc/pki/ca-trust/source/anchors&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# /usr/bin/update-ca-trust&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;But perhaps you work on regulated systems where you don&#39;t have privileged root access? In that case, you can set the shell environment variable &lt;code&gt;REQUESTS_CA_BUNDLE=$HOME/mycert.crt&lt;/code&gt;.&lt;/p&gt;
+&lt;p&gt;I can relate to the fact that sometimes we just want to get the code written as quickly as possible, but it doesn&#39;t have to be difficult and it&#39;s worth getting in the habit of leaving TLS verification turned on.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Generating a RPM changelog using git log</title>
+      <link>https://purplecarrot.co.uk/2015/11/19/generating-rpm-changelog-from-git-log/</link>
+      <pubDate>Thu, 19 Nov 2015 16:11:00 +0000</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2015/11/19/generating-rpm-changelog-from-git-log/</guid>
+      <description>
+        
+          &lt;p&gt;I use python setuptools bdist_rpm to build RPMs from the code in my git repositories and today I updated my automated build script (a wrapper around python setup.py to run pre-requisite functions) to generate an RPM changelog from the git log of the repository hosting the package and then automatically include this in the rpm being built. A search on github shows there are a few python scripts and pypi modules to do this, but I wondered if I could just use git log.&lt;/p&gt;
+&lt;p&gt;It seems you can. The &lt;a href=&#34;http://fedoraproject.org/wiki/Packaging:Guidelines#Changelogs&#34;&gt;Fedora packaging&lt;/a&gt; describe the format of the changelog file. They also appear to recommend not using your vcs changelog as your changelog messages would be too terse for the users. However, in my case they&#39;re not and it&#39;s exactly what they want&lt;/p&gt;
+&lt;p&gt;With git log you can use the --pretty option to format the output of the commit log. You select the appropriate formats from git &lt;a href=&#34;http://git-scm.com/docs/pretty-formats&#34;&gt;pretty-formats&lt;/a&gt; to make it output the git log in RPM changelog format. Unfortunately though, none of the date formats available are quite the correct format for an RPM changelog. It expects just the date of the change and doesn&#39;t want (nor can it handle) the time or the timezone offset of the git commit. The way I addressed this was to pipe the git log output through perl to remove those date fields. It would be nicer if git log had date +%H:%M:%S type formatting, but it doesn&#39;t, so we add the perl oneliner with a suitable regex to remove the parts we don&#39;t want.&lt;/p&gt;
+&lt;p&gt;Also rpm-build (or perhaps setuptools) doesn&#39;t like any blank lines in the changelog file, so we remove those with perl -00 option. The contents of the generated changelog file (not the filename) are then passed into the setup.py --changelog option. The double quotes ensure the whitespace is preserved.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ git log --pretty&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;tformat:* %cd %an &amp;lt;%ae&amp;gt; (%h)%n- %s%b%n&amp;#34;&lt;/span&gt; &lt;span class=&#34;se&#34;&gt;\
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; perl -lap00e &lt;span class=&#34;s1&#34;&gt;&amp;#39;~s/(\d{2]:){2}\d{2} (\d{4}) [+-]\d{4}/$2/g&amp;#39;&lt;/span&gt; &amp;gt; changelog
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;$ python setup.py bdist_rpm --changelog&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;$(&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;ltchangelog&lt;span class=&#34;k&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;
+&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Debugging Flask applications running under Apache mod_wsgi</title>
+      <link>https://purplecarrot.co.uk/2015/07/21/debugging-flask-applications-running/</link>
+      <pubDate>Tue, 21 Jul 2015 10:46:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2015/07/21/debugging-flask-applications-running/</guid>
+      <description>
+        
+          &lt;p&gt;I have recently been developing a new python web application that uses the Flask framework. Whilst running standalone, it was working fine. Then I went to setup the UAT environment which is running under Apache using mod_wsgi. I&#39;ve done this many times before without any problems. However, this time I was getting a &amp;quot;500 Internal Server Error&amp;quot; in my browser. I opened up the Apache error_log expecting a stack trace error in there that will pinpoint where my typo or forgotten config option that I need to fix is, but no. Nothing. It just said &amp;quot;Loading WSGI script&amp;quot; and implied everything was working ok.&lt;/p&gt;
+&lt;p&gt;Then I read that mod_wsgi discards all stdout and as I realised my error was early in the startup process, I wasn&#39;t able to see the error message or stack trace I needed to debug the problem. To see this error, you can add basic logging to stderr in your WSGI script to send the missing errors to stderr and therefore on to Apache error_log. In my case the error was simply an IOError exception because of a missing file I had forgot to copy over (yes, I will add that to my tests!)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;sys&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;logging&lt;/span&gt; 
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;logging&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;basicConfig&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;stream&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;sys&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;stderr&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;kn&#34;&gt;from&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;myapplication&lt;/span&gt; &lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;app&lt;/span&gt; &lt;span class=&#34;k&#34;&gt;as&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;application&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Writing OpenStack Hooks</title>
+      <link>https://purplecarrot.co.uk/2015/04/23/writing-openstack-hooks/</link>
+      <pubDate>Thu, 23 Apr 2015 18:00:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2015/04/23/writing-openstack-hooks/</guid>
+      <description>
+        
+          &lt;p&gt;I&#39;ve recently been writing OpenStack Nova hooks for integration of newly deployed OpenStack nova instances with our existing infrastructure systems. Though the &lt;a href=&#34;http://developer.openstack.org/&#34;&gt;OpenStack Developer Documentation&lt;/a&gt; is very good, there is not that much documentation out there on real world end-user experiences of writing nova hooks. In this post, I will document my experiences in writing a nova hook for the first time and may be it will help others approaching the same task.&lt;/p&gt;
+&lt;h2 id=&#34;summary-and-goals&#34;&gt;Summary and Goals&lt;/h2&gt;
+&lt;p&gt;Linux or Windows VMs provisioned by OpenStack for use in my firm must be registered with a number of other &amp;quot;Enterprise&amp;quot; systems external to the OpenStack core components. For example, an inventory system, an LDAP directory, a separate corporate IPAM solution (DNS) as well as security audit systems. Generally, the key for recording this data in the external system is either the new instance&#39;s hostname, IP address or mac address. This integration must be done at the point of instance/vm creation or deletion (because in some cases the registration event must occur before the new instance has booted) and so OpenStack nova hooks work well for this.&lt;/p&gt;
+&lt;h2 id=&#34;what-are-openstack-hooks&#34;&gt;What are OpenStack Hooks?&lt;/h2&gt;
+&lt;p&gt;OpenStack hooks allow you - as the system integrator - to write custom python code to execute any business logic or custom logic and then have this code execute when the relevant OpenStack function is called.&lt;/p&gt;
+&lt;p&gt;You write your code as a standard python module and using setuptools for packaging and deployment, just as if you were writing any other python module. You then simply define entry points and your code will get executed.&lt;/p&gt;
+&lt;p&gt;Your code can be setup to run either before the hooked function (pre hook) or after (post hook) the hooked function. At the time of writing, nova only has a handful of hooks declared but I would imagine that in time hooks will be declared across many more methods and across many OpenStack components.&lt;/p&gt;
+&lt;p&gt;Currently with the version of OpenStack I&#39;m working with, you could add custom code to be run on nova create_instance, delete_instance or resize_instance method and this would get executed when that method is called internally as part of those nova processes.&lt;/p&gt;
+&lt;p&gt;You then create your package and define the methods you want to get called alongside the OpenStack nova methods where you want them to run. Here is an example of the setup.py binding custom package methods to nova create and delete instances:&lt;/p&gt;
+&lt;h2 id=&#34;setuppy&#34;&gt;setup.py&lt;/h2&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;setup&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;myfirmshooks&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;version&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;1.0&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;description&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;My Firms Hooks&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;author&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Me&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;entry_points&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;        &lt;span class=&#34;s1&#34;&gt;&amp;#39;nova.hooks&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;            &lt;span class=&#34;s1&#34;&gt;&amp;#39;create_instance=myfirmshooks.nova:CreateInstance&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;            &lt;span class=&#34;s1&#34;&gt;&amp;#39;delete_instance=myfirmshooks.nova:DeleteInstance&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;        &lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;        
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;mynovahookpy&#34;&gt;mynovahook.py&lt;/h2&gt;
+&lt;p&gt;The code is actually very simple indeed. You add the code you want to run inside the post of pre method of the class. Because this code runs inside nova-api, you have access to lots of information inside the args and kwargs passed into the function which can be used inside your code. For example, the uuid, name, flavor and much more are all available with very little efforts for your code to use.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;MyNovaHook&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;object&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;    &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&amp;#34; object for running custom code &amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;fm&#34;&gt;__init__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;        &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;log&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;logging&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;getLogger&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;vm&#34;&gt;__name__&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;pre&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;**&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;kwargs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;        &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Tasks that run before the instance is created&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;post&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;**&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;kwargs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;        &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Tasks that run after the instance is created&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&amp;#34;REST requests for interaction with external systems&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;scale&#34;&gt;Scale&lt;/h2&gt;
+&lt;p&gt;There isn&#39;t much information out there on customising OpenStack workflow like this. There is lots of information about using ansible, puppet, chef and similar tools for &lt;em&gt;post&lt;/em&gt; build configuration of the operating system inside instance, but less information on running code that you want to run on behalf of the instance, but which cannot or you do not wish to run inside the instance. However, it should be noted that code running inside the post hook will block and/or error the instance creation. It maybe that a message bus approach would scale better with a short simple hook that puts a message on a bus and a secondary daemon running on the system that consumes and acts on that message and I may look at implementing that in future.&lt;/p&gt;
+&lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;
+&lt;p&gt;The following pages were useful when I started out writing nova hooks.&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;
+&lt;p&gt;OpenStack Developer Documentation on Hooks&lt;br&gt;
+&lt;a href=&#34;http://docs.openstack.org/developer/nova/devref/hooks.html&#34;&gt;http://docs.openstack.org/developer/nova/devref/hooks.html&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Python Setuptools Documentation&lt;br&gt;
+&lt;a href=&#34;http://pythonhosted.org/setuptools/index.html&#34;&gt;http://pythonhosted.org/setuptools/index.html&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;Lars Kellogg-Stedman&#39;s Blog Entry on Writing Nova Hooks&lt;br&gt;
+&lt;a href=&#34;http://blog.oddbit.com/2014/09/27/integrating-custom-code-with-n/&#34;&gt;http://blog.oddbit.com/2014/09/27/integrating-custom-code-with-n&lt;/a&gt;&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ul&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Python Setuptools and Building RPMs with Dependencies.</title>
+      <link>https://purplecarrot.co.uk/2015/04/07/python-setuptools-and-building-rpms/</link>
+      <pubDate>Tue, 07 Apr 2015 16:42:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2015/04/07/python-setuptools-and-building-rpms/</guid>
+      <description>
+        
+          &lt;p&gt;If you develop python modules for distribution, you likely use python setuptools. It&#39;s very useful and takes lots of the manual operations out of distributing python code and modules. I recently started going one step further and using the bdist_rpm setup.py command option to automatically build rpms for my python code and modules too. Unfortunately, I found a bug (on RHEL 6 version of setuptools at least) in that it doesn&#39;t appear the install_requires directive in setup.py is being read or used correctly.&lt;/p&gt;
+&lt;p&gt;After adding &lt;em&gt;install_requires=[&#39;requests&#39;]&lt;/em&gt; to the setup.py file, the rpm spec file that &lt;em&gt;python setup.py bdist_rpm&lt;/em&gt; created did &lt;strong&gt;NOT&lt;/strong&gt; include the correct &lt;em&gt;Requires:&lt;/em&gt; line required to include the dependency in the RPM. I experimented with the argument supplied (eg python-requests/requests) and other such things, but was not able to build an RPM with the dependencies on the python-requests RPM that I wanted to include.&lt;/p&gt;
+&lt;p&gt;After some playing and research, I was finally able to get it to generate an RPM with the correct dependency on python-requests by creating and using this custom setup.cfg file:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;cat &lt;span class=&#34;s&#34;&gt;&amp;lt;&amp;lt; EOF &amp;gt; setup.cfg
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;[bdist_rpm]
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;requires = python-requests &amp;gt;= 1.1
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;no-autoreq = yes
+&lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;EOF&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;The other line in there (&lt;em&gt;no-autoreq&lt;/em&gt;) tells setup.py not to analyse your code for dependencies and include those in the RPM too. I added this because by default, the generated RPM had tied a dependency to python 2.6 (RHEL 6) but I wanted an RPM generated that would run on python 2.7 (RHEL 7) too so adding this flag removes any dependency on a specific python version&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Build a Python Version Agnostic RPM For Your Python Module</title>
+      <link>https://purplecarrot.co.uk/2015/04/02/build-rpm-for-your-python-module/</link>
+      <pubDate>Thu, 02 Apr 2015 15:52:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2015/04/02/build-rpm-for-your-python-module/</guid>
+      <description>
+        
+          &lt;p&gt;I often use the python setup.py bdist_rpm command on RHEL to build RPMs of the python modules I&#39;m developing. This makes it easy for me to distribute my module via the yum repos internally at the company I work for.   At my company, most of our production servers are currently RHEL 6, but we are starting to deploy RHEL 7. When I took one of my recently built RPMs of a python module (that runs under python 2.6 and python 2.7), I was surprised to find that it did not install on RHEL7 because of missing dependencies. It turns out, that my RPMs &amp;quot;required&amp;quot; python 2.6 from RHEL 6 (RHEL 7 moves to python 2.7 as default).  &amp;lt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ rpm -qpR python-mymodule-2.8-1.noarch.rpm
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;/usr/bin/python
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;python&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;abi&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 2.6
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;python-requests
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;rpmlib&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;CompressedFileNames&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &amp;lt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 3.0.4-1
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;rpmlib&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;PayloadFilesHavePrefix&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &amp;lt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 4.0-1
+&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Even though I don&#39;t have a specific version of python listed in the requirements for the package, the rpmbuild called by setuptools automatically adds a dependency on the python version installed on the system I&#39;m using. This is because when rpmbuild scans through my source, it then finds the shebang that points to #!/usr/bin/env python, which in turn finds the python 3.6 on the server where I build the RPM. Obviously, I could rebuild the rpm on a RHEL 7 host and it would then find python 2.7, but I don&#39;t want to have separate RPMs for different RHEL versions when the code is the same.  I wanted to be able to produce an RPM for my python module and code that installs and runs on RHEL 6 and RHEL 7 (when the python code is tested to run under python 2.6+)  Now this isn&#39;t particularly well documented, but I did a little digging and found that to do this, you can simply add the --no-autoreq option to setup.py&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ python setup.py bdist_rpm --no-autoreq
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This will then tell bdist_rpm to add the &amp;quot;AutoReq: no&amp;quot; option to the spec file used to generate the RPM. RPM build will then see this and the resulting RPM will then no longer require a specific version of python.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ rpm -qpR python-mymodule-2.8-2.noarch.rpm
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;python-requests
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;rpmlib&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;CompressedFileNames&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &amp;lt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 3.0.4-1
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;rpmlib&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;PayloadFilesHavePrefix&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; &amp;lt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; 4.0-1
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;You can then add the option to your setup.cfg file for the module, so that you don&#39;t forget it next time and inadvertently distribute a python version dependent module.  &amp;lt;&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;bdist_rpm&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;no-autoreq &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; yes
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Useful References:&lt;/p&gt;
+&lt;h1 id=&#34;rpm-automatic-dependencieshttpwwwrpmorgmax-rpm-snapshots1-rpm-depend-auto-dependhtml&#34;&gt;&lt;a href=&#34;http://www.rpm.org/max-rpm-snapshot/s1-rpm-depend-auto-depend.html&#34;&gt;RPM Automatic Dependencies&lt;/a&gt;&lt;/h1&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Named Groups in Python Regular Expressions</title>
+      <link>https://purplecarrot.co.uk/2013/09/11/named-groups-in-python-regular/</link>
+      <pubDate>Wed, 11 Sep 2013 10:14:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2013/09/11/named-groups-in-python-regular/</guid>
+      <description>
+        
+          &lt;p&gt;To anybody working with Unix and Linux systems, &lt;a href=&#34;http://en.wikipedia.org/wiki/Regular_expression&#34;&gt;regular expressions&lt;/a&gt; or regexes are extremely useful for fast pattern matching in scripts. First there were basic regexes now known as BREs as used by traditional Unix utilities like sed, and then came along the even more useful Perl Enhanced Regular Expressions. So useful were these, that many of the traditional GNU utilities in Linux were retrofitted with support for these Perl Compatible Regular Expressions (so ubiquitous are these PCREs now in GNU and OSS, that younger nix readers only familiar with Linux may assume the were always this good!)&lt;/p&gt;
+&lt;p&gt;Anyway, to the point of this post. Whilst checking some syntax earlier, I came across &lt;a href=&#34;http://docs.python.org/2/howto/regex.html#non-capturing-and-named-groups&#34;&gt;named groups&lt;/a&gt;. I&#39;ve never really stopped to read about these before.  Traditionally (and in most code I come across), groups matched in regexes are captured with ( and ), and then &amp;quot;replayed&amp;quot; with $1, $2 (or \1 or \2 for sed, etc). This is fine when you&#39;re only trying to match 1 or 2 groups. But what happens when you have a hideously complicated match with 10+ matches. Editing and maintaining this is nightmare and fraught with problems. This is where named groups come in.&lt;/p&gt;
+&lt;p&gt;How named groups work is best illustrated with a very simple example. Imagine a file like this, that is used to set shell variables that a command line utility picks up from the environment.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;DBSERVER&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;dbserver.example.com
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;DBPORT&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;2000&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;CITY&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;London
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;export&lt;/span&gt; &lt;span class=&#34;nv&#34;&gt;COUNTRY&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;UK
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now imagine I need to write a python app that needs to use those same variables without duplicating them in a second config file. An easy way to do this would be with the following code using normal numbered groups.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;ch&#34;&gt;#!/usr/bin/env python&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;re&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;regex&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;re&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;compile&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;export (\w+)=(.*)&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;settings&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;f&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;open&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;app.conf&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;r&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;line&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;f&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;m&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;regex&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;match&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;line&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;m&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;m&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;and&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;m&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;            &lt;span class=&#34;n&#34;&gt;key&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;m&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;lower&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;            &lt;span class=&#34;n&#34;&gt;settings&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;m&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;f&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;close&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;settings&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Running this gives you a dictionary with a key for each shell variable that was read in:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-json&#34; data-lang=&#34;json&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;&amp;#34;dbport&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;2000&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; 
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;&amp;#34;country&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;UK&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; 
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;&amp;#34;city&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;London&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; 
+&lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt; &lt;span class=&#34;nt&#34;&gt;&amp;#34;dbserver&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;dbserver.example.com&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;}&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Switching to named groups, the functionally equivalent code could be written like this:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;ch&#34;&gt;#!/usr/bin/env python&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;kn&#34;&gt;import&lt;/span&gt; &lt;span class=&#34;nn&#34;&gt;re&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;regex&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;re&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;compile&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;export (?P&amp;lt;shellvar&amp;gt;\w+)=(?P&amp;lt;value&amp;gt;.*)&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;settings&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;{}&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;f&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;nb&#34;&gt;open&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;app.conf&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;r&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;for&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;line&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;in&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;f&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;m&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;regex&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;match&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;line&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;m&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;        &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;m&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;shellvar&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; &lt;span class=&#34;ow&#34;&gt;and&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;m&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;value&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;            &lt;span class=&#34;n&#34;&gt;key&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;m&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;shellvar&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;lower&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;            &lt;span class=&#34;n&#34;&gt;settings&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;key&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;m&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;group&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;value&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;f&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;close&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;print&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;settings&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;value&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;shellvar&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;This is just an example. You probably don&#39;t &lt;strong&gt;need&lt;/strong&gt; to use named groups in this instance and there is probably a config file parsing module anyway, but it&#39; a good illustration on named groups and numbered groups.&lt;/p&gt;
+&lt;p&gt;Now my last thought on the matter is that I wonder if the reason I&#39;ve never come across or used named groups before is because if I&#39;m matching a hideously long string into more than half a dozen groups, I&#39;d probably tackle the problem in another way (read more simple and readable) such as breaking the string down with split, etc. Regular expressions are great, but the complicated ones don&#39;t contribute well to code maintainability.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>SimpleHTTPServer</title>
+      <link>https://purplecarrot.co.uk/2013/08/16/whilst-reading-about-basehttpserver/</link>
+      <pubDate>Fri, 16 Aug 2013 17:59:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2013/08/16/whilst-reading-about-basehttpserver/</guid>
+      <description>
+        
+          &lt;p&gt;Whilst reading about &lt;a href=&#34;http://docs.python.org/2/library/basehttpserver.html&#34;&gt;BaseHTTPServer&lt;/a&gt; class as mentioned in the last post, I also came across the very useful &lt;a href=&#34;http://docs.python.org/2/library/simplehttpserver.html&#34;&gt;SimpleHTTPserver&lt;/a&gt; which is most definitely worth recording as a one-liner.  Everybody must have come across the situation where you&#39;re ssh&#39;d into a headless server with no Apache installed or running on it, and you come across an HTML file you want to look at. You can read it with vi (or lynx!) but that&#39;s never really going to be that nice. As python is near-ubiquitous on all Linux installations these days, you can run this simple oneliner to view HTML docs on the system (or in fact any files you might want to view graphically instead of via a terminal?)&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;server&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;usr&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;share&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;doc&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;bash&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;3.2&lt;/span&gt;&lt;span class=&#34;err&#34;&gt;$&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;python&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;m&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;SimpleHTTPServer&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;8000&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Serving&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;HTTP&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;on&lt;/span&gt; &lt;span class=&#34;mf&#34;&gt;0.0.0.0&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;port&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;8000&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;...&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;&lt;span class=&#34;mf&#34;&gt;127.0.0.1&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;Aug&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2013&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;51&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;49&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;]&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;GET / HTTP/1.1&amp;#34;&lt;/span&gt; &lt;span class=&#34;mi&#34;&gt;200&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;-&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>Integrated Web Serving with BaseHTTPServer</title>
+      <link>https://purplecarrot.co.uk/2013/08/16/these-last-few-days-i-have-been-writing/</link>
+      <pubDate>Fri, 16 Aug 2013 17:49:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2013/08/16/these-last-few-days-i-have-been-writing/</guid>
+      <description>
+        
+          &lt;p&gt;These last few days I have been writing a command line reporting program at work. For Linux techs, formatted terminal output works great and is actually their preferred view. However, for managers, you simple must have the eye candy of a GUI. Normally in these situations, I would simply add CGI code and then bundle a simple Apache config to &lt;em&gt;Include&lt;/em&gt; along with the code. With this particular program, it could be run on any one of tens of thousands of servers we have, however it is only likely to be run for a short while to graphically review some data stored in JSON files on the server. The overhead of reconfiguring and restarting Apache, even though only a few commands, is probably too much in this particular scenario.&lt;/p&gt;
+&lt;p&gt;Enter &lt;a href=&#34;http://docs.python.org/2/library/basehttpserver.html&#34;&gt;BaseHTTPServer&lt;/a&gt;. This includes classes that let your program become the webserver itself, negating the need to run a CGI script or framework under full blown Apache.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;class&lt;/span&gt; &lt;span class=&#34;nc&#34;&gt;MyWebServer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BaseHTTPServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;BaseHTTPRequestHandler&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;do_HEAD&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;        &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;send_response&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;200&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;        &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;send_header&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Content-type&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;text/html&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;        &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;end_headers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;do_GET&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;s&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;        &lt;span class=&#34;k&#34;&gt;try&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;            &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;send_response&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;200&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;            &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;send_header&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Content-type&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;text/html&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;            &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;end_headers&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;            &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;wfile&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;write&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&amp;lt;html&amp;gt;&amp;lt;head&amp;gt;&amp;lt;title&amp;gt;Web Page&amp;lt;/title&amp;gt;&amp;lt;/head&amp;gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;  
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;            &lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;/&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;                &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;wfile&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;write&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;show_table&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt; 
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;            &lt;span class=&#34;k&#34;&gt;else&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;                &lt;span class=&#34;n&#34;&gt;reportjson&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;%s&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;/&lt;/span&gt;&lt;span class=&#34;si&#34;&gt;%s&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;%&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;rootdir&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;                &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;wfile&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;write&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;show_table&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;path&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;        &lt;span class=&#34;k&#34;&gt;except&lt;/span&gt; &lt;span class=&#34;ne&#34;&gt;IOError&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;            &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;send_error&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;404&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;Oops: &lt;/span&gt;&lt;span class=&#34;si&#34;&gt;%s&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;%&lt;/span&gt; &lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;e&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;))&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;if&lt;/span&gt; &lt;span class=&#34;vm&#34;&gt;__name__&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;==&lt;/span&gt; &lt;span class=&#34;s1&#34;&gt;&amp;#39;__main__&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;    &lt;span class=&#34;n&#34;&gt;httpd&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt; &lt;span class=&#34;n&#34;&gt;BaseHTTPServer&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;HTTPServer&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;((&lt;/span&gt;&lt;span class=&#34;s1&#34;&gt;&amp;#39;0.0.0.0&amp;#39;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt;&lt;span class=&#34;mi&#34;&gt;2000&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;),&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;MyWebServer&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;28&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;try&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;29&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;httpd&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;serve_forever&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;30&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;31&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;except&lt;/span&gt; &lt;span class=&#34;ne&#34;&gt;KeyboardInterrupt&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;:&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;32&lt;/span&gt;        &lt;span class=&#34;k&#34;&gt;pass&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;33&lt;/span&gt;        &lt;span class=&#34;n&#34;&gt;httpd&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;server_close&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;()&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;34&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;35&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;lt;/&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;html&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;&amp;gt;&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Now, this obviously isn&#39;t going to replace your Apache installation (though I came across bugs in BaseHTTPServer where people were seemingly trying to!) but for development purposes and short lived web serving without affecting the running Apache server on your server, this is a very useful feature I am sure I will be using time and time again.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+    <item>
+      <title>First Post</title>
+      <link>https://purplecarrot.co.uk/2011/04/27/first-post/</link>
+      <pubDate>Wed, 27 Apr 2011 21:06:00 +0100</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2011/04/27/first-post/</guid>
+      <description>
+        
+          &lt;p&gt;Memory not as good as it used to be. Need to stop recording things in text files in my homedir and put them here where I can find them next time. Hopefully they may help you too.&lt;/p&gt;
+
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>

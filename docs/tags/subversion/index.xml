@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Subversion on Purplecarrot</title>
+    <link>https://purplecarrot.co.uk/tags/subversion/</link>
+    <description>Recent content in Subversion on Purplecarrot</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>en-gb</language>
+    <lastBuildDate>Thu, 31 Oct 2013 11:31:00 +0000</lastBuildDate><atom:link href="https://purplecarrot.co.uk/tags/subversion/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>Subversion and gnome-keyring-daemon</title>
+      <link>https://purplecarrot.co.uk/2013/10/31/subversion-and-gnome-keyring-daemon/</link>
+      <pubDate>Thu, 31 Oct 2013 11:31:00 +0000</pubDate>
+      
+      <guid>https://purplecarrot.co.uk/2013/10/31/subversion-and-gnome-keyring-daemon/</guid>
+      <description>
+        
+          &lt;p&gt;Subversion&#39;s &amp;quot;feature&amp;quot; to store repository passwords in plain text files is a little scary. In my opinion, even a minimal obfuscation routine in the svn client would be better than saving a user&#39;s clear text password in text files.&lt;/p&gt;
+&lt;p&gt;I obviously do not want to store my password in clear, so up until now, I&#39;ve put up with typing my password in for each commit. But having recently created an automated packaging system for some software at work which uses multiple svn tags and copies, it was becoming tiresome having to repeatedly enter my password all the time.&lt;/p&gt;
+&lt;p&gt;As an alternative, Subversion supports using gnome-keyring-daemon to store the repository passwords but the servers I used don&#39;t have X or GNOME installed, but with a little bit of extra manual config, gnome-keyring-daemon can be used over SSH connections too.&lt;/p&gt;
+&lt;p&gt;The subversion documentation on setting this up and using gnome-keyring-daemon with SSH from the terminal is pretty poor, and the suggestions on sites and blogs I found discussing the problem didn&#39;t work for me. However, after reading these sites and some trial and error, I did get it working. The steps below show what I did to get gnome-keyring-daemon and subversion working on a RHEL 6 server with standard RHEL repos:&lt;/p&gt;
+&lt;p&gt;First install the following core RPMs that are in the standard RHEL repositories:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;yum install gnome-keyring dbus-x11 subversion
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Next, add the following to your .bashrc or .bash_profile to setup gnome-keyring-daemon when you&#39;re not running GNOME or a desktop:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;eval `dbus-launch --sh-syntax`
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;eval `gnome-keyring-daemon`
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Edit subversion config files to use gnome-keyring for passwords: &lt;pre class=&#34;brush: shell&#34;&gt;
+~/.subversion/config
+[auth]
+password-stores = gnome-keyring&lt;/p&gt;
+&lt;p&gt;~/.subversion/servers
+[global]
+store-passwords = yes
+store-plaintext-passwords = no&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;Then when you do a subversion action for the first time you&amp;#39;ll get asked for GNOME keyring password, but subsequent actions will no longer prompt for password:
+&lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;server01:~/svn/proj/trunk$ svn update
+Updating &#39;.&#39;:
+Password for &#39;svn&#39; GNOME keyring:
+At revision 864&lt;/p&gt;
+&lt;p&gt;server01:~/svn/proj/trunk$ svn -m &amp;quot;Test Auth&amp;quot; ci
+Sending        GNUmakefile
+Transmitting file data .....
+Committed revision 865.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;Sites that I found useful in getting this config working for me were the [Version Control with Subversion](http://svnbook.red-bean.com/en/1.7/svn.advanced.confarea.html) book and [this blog post](http://technicalprose.blogspot.co.uk/2011/06/using-subversion-with-gnome-keyring.html) describing a wrapper around svn and gnome-keyring that the author wrote to do the same.
+&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+        
+      </description>
+    </item>
+    
+  </channel>
+</rss>
