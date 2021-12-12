@@ -23,9 +23,9 @@ Yesterday, I came to use this cluster for the first time again after quite a lon
 So with no standard OAUTH authentication method available, I went back trying to use the original kubeconfig from the installation of the cluster.
 
 ```
-    $ export KUBECONFIG=auth/kubeconfig
-    $ oc get nodes
-    Unable to connect to the server: x509: certificate signed by unknown authority
+$ export KUBECONFIG=auth/kubeconfig
+$ oc get nodes
+Unable to connect to the server: x509: certificate signed by unknown authority
 ```
 
 To try and understand more about what was happening, I added `--insecure-skip-tls-verify=true`, and the `--loglevel=10` options to the command line, but I could see that a goroutine stack trace was immediately output after the x509 error message above.
@@ -41,13 +41,13 @@ The first thing was to boot the system to single user, reset the root password s
 So all the secrets needed to run kube-apiserver are found in `/etc/kubenetes/static-pod-resources/kube-apiserver-certs`. In particular, the node-kubeconfigs/ directory has mulitple kubeconfig files, one of which was called `lb-int.kubeconfig`. When I set my KUBECONFIG environment variable to point to this file, I was then able to issue oc commands to the cluster:
  
 ```
-    # cd /etc/kubenetes/static-pod-resources/kube-apiserver-certs/secrets/node-kubeconfigs
-    # export KUBECONFIG=$(pwd)/lb-int.kubeconfig
-    # oc get nodes
-    <lots of nodes with STATUS NotReady>
-    # oc get pods -A | grep -e Running
-    <lots of pods in ContainerCreating or Pending
-    # oc get csr -o name | xargs oc adm certificate approve
+# cd /etc/kubenetes/static-pod-resources/kube-apiserver-certs/secrets/node-kubeconfigs
+# export KUBECONFIG=$(pwd)/lb-int.kubeconfig
+# oc get nodes
+<lots of nodes with STATUS NotReady>
+# oc get pods -A | grep -e Running
+<lots of pods in ContainerCreating or Pending
+# oc get csr -o name | xargs oc adm certificate approve
 ```
 
 I found that half the nodes were in state `NotReady`, and so the oauth-openshift containers were not `Running`. This in turn was because there were a bunch of unapproved CSRs. Once these were approved, the nodes became `Ready` and the OAuth authentication pods were able to start up and the cluster recovered itself in the usual way. I was then able to login normally again and recreate a backup `kubeconfig`!

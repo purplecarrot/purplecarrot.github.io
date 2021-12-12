@@ -16,7 +16,7 @@ Generally, if I have 100 files that I need to edit and make changes in, I tend t
 
 This perl one liner is what I gave him. It allows replacement of multi line text with another piece of multiline text, in place, in the file.
 
-``` shell
+```
 $ cat example.conf
 Line1
 Line2
@@ -28,19 +28,17 @@ Line1
 ReplaceLine2
 ReplaceLine3
 Line4
-
 ```
 
 It's then easy to use shell script to loop around all the files in a directory and run this command. If you're nervous, it's best to first check what your changes do by perhaps piping the file through perl. 
 
-``` shell
+```
 $ cat example.conf  | perl -la0pe '~s/Line2\nLine3/ReplaceLine2\nReplaceLine3/g'
 $ cat example.conf 
 Line1
 ReplaceLine2
 ReplaceLine3
 Line4
-
 ```
 
 Another idea is also to use the -i.bak option to make backup files so you have a copy of the files before the edits ;-)  

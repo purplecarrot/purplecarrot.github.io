@@ -22,7 +22,7 @@ The subversion documentation on setting this up and using gnome-keyring-daemon w
 
 First install the following core RPMs that are in the standard RHEL repositories:
 
-``` shell
+```
 yum install gnome-keyring dbus-x11 subversion
 ```
 
@@ -31,10 +31,10 @@ Next, add the following to your .bashrc or .bash_profile to setup gnome-keyring-
 ```
 eval `dbus-launch --sh-syntax`
 eval `gnome-keyring-daemon`
-
 ```
 
-Edit subversion config files to use gnome-keyring for passwords: <pre class="brush: shell">
+Edit subversion config files to use gnome-keyring for passwords:
+```
 ~/.subversion/config
 [auth]
 password-stores = gnome-keyring

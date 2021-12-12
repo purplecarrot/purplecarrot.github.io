@@ -21,14 +21,12 @@ python(abi) = 2.6
 python-requests
 rpmlib(CompressedFileNames) <= 3.0.4-1
 rpmlib(PayloadFilesHavePrefix) <= 4.0-1
-
 ```
 
 Even though I don't have a specific version of python listed in the requirements for the package, the rpmbuild called by setuptools automatically adds a dependency on the python version installed on the system I'm using. This is because when rpmbuild scans through my source, it then finds the shebang that points to #!/usr/bin/env python, which in turn finds the python 3.6 on the server where I build the RPM. Obviously, I could rebuild the rpm on a RHEL 7 host and it would then find python 2.7, but I don't want to have separate RPMs for different RHEL versions when the code is the same.  I wanted to be able to produce an RPM for my python module and code that installs and runs on RHEL 6 and RHEL 7 (when the python code is tested to run under python 2.6+)  Now this isn't particularly well documented, but I did a little digging and found that to do this, you can simply add the --no-autoreq option to setup.py
 
 ``` shell
 $ python setup.py bdist_rpm --no-autoreq
-
 ```
 
 This will then tell bdist_rpm to add the "AutoReq: no" option to the spec file used to generate the RPM. RPM build will then see this and the resulting RPM will then no longer require a specific version of python.
@@ -38,7 +36,6 @@ $ rpm -qpR python-mymodule-2.8-2.noarch.rpm
 python-requests
 rpmlib(CompressedFileNames) <= 3.0.4-1
 rpmlib(PayloadFilesHavePrefix) <= 4.0-1
-
 ```
 
 You can then add the option to your setup.cfg file for the module, so that you don't forget it next time and inadvertently distribute a python version dependent module.  <
@@ -46,9 +43,9 @@ You can then add the option to your setup.cfg file for the module, so that you d
 ``` shell
 [bdist_rpm]
 no-autoreq = yes
-
 ```
 
 Useful References:
+------------------
 
-# [RPM Automatic Dependencies](http://www.rpm.org/max-rpm-snapshot/s1-rpm-depend-auto-depend.html)
+- [RPM Automatic Dependencies](http://www.rpm.org/max-rpm-snapshot/s1-rpm-depend-auto-depend.html)

@@ -29,6 +29,5 @@ Last Changed Rev: 3
 Last Changed Date: 2013-02-05 14:15:13 +0000 (Tue, 05 Feb 2013)
 server:~/svn/work$ svn switch --relocate https://123.45.56.78/svn/pyf \
 https://231.1.2.3/svn/pyf
-
 ```
 

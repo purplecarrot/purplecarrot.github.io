@@ -47,8 +47,6 @@ setup(
         ]        
     },
 )
-
-
 ```
 
 
@@ -69,8 +67,6 @@ class MyNovaHook(object)
     def post(self, *args, **kwargs):
         self.log.info("Tasks that run after the instance is created")
         """REST requests for interaction with external systems"""
-
-
 ```
 
 Scale
