@@ -17,26 +17,24 @@
         
           &lt;p&gt;Generally, if I have 100 files that I need to edit and make changes in, I tend to write a perl or python script to make them (if I have 3 files, I just open them in VIM and make them manually!) Yesterday however, a colleague who doesn&#39;t code had to change 2 consecutive lines in about 400 similar files and wanted a simple &amp;quot;one liner&amp;quot; type way to do it.&lt;/p&gt;
 &lt;p&gt;This perl one liner is what I gave him. It allows replacement of multi line text with another piece of multiline text, in place, in the file.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;$ cat example.conf
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;$ cat example.conf
 &lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;Line1
 &lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;Line2
 &lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;Line3
 &lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;Line4
-&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;$ perl -i -la0pe &lt;span class=&#34;s1&#34;&gt;&amp;#39;~s/Line2\nLine3/ReplaceLine2\nReplaceLine3/g&amp;#39;&lt;/span&gt; example.conf
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;$ perl -i -la0pe &amp;#39;~s/Line2\nLine3/ReplaceLine2\nReplaceLine3/g&amp;#39; example.conf
 &lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;$ cat example.conf
 &lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;Line1
 &lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;ReplaceLine2
 &lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;ReplaceLine3
 &lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;Line4
-&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It&#39;s then easy to use shell script to loop around all the files in a directory and run this command. If you&#39;re nervous, it&#39;s best to first check what your changes do by perhaps piping the file through perl.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ cat example.conf  &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; perl -la0pe &lt;span class=&#34;s1&#34;&gt;&amp;#39;~s/Line2\nLine3/ReplaceLine2\nReplaceLine3/g&amp;#39;&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ cat example.conf  | perl -la0pe &amp;#39;~s/Line2\nLine3/ReplaceLine2\nReplaceLine3/g&amp;#39;
 &lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;$ cat example.conf 
 &lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;Line1
 &lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;ReplaceLine2
 &lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;ReplaceLine3
 &lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;Line4
-&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Another idea is also to use the -i.bak option to make backup files so you have a copy of the files before the edits ;-)&lt;/p&gt;
 
         

@@ -37,8 +37,6 @@
 &lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;        &lt;span class=&#34;p&#34;&gt;]&lt;/span&gt;        
 &lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;    &lt;span class=&#34;p&#34;&gt;},&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;mynovahookpy&#34;&gt;mynovahook.py&lt;/h2&gt;
 &lt;p&gt;The code is actually very simple indeed. You add the code you want to run inside the post of pre method of the class. Because this code runs inside nova-api, you have access to lots of information inside the args and kwargs passed into the function which can be used inside your code. For example, the uuid, name, flavor and much more are all available with very little efforts for your code to use.&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-python&#34; data-lang=&#34;python&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;
@@ -53,8 +51,6 @@
 &lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;    &lt;span class=&#34;k&#34;&gt;def&lt;/span&gt; &lt;span class=&#34;nf&#34;&gt;post&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;*&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;args&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;,&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;**&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;kwargs&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;):&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;        &lt;span class=&#34;bp&#34;&gt;self&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;log&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;.&lt;/span&gt;&lt;span class=&#34;n&#34;&gt;info&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;(&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;Tasks that run after the instance is created&amp;#34;&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;)&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;        &lt;span class=&#34;s2&#34;&gt;&amp;#34;&amp;#34;&amp;#34;REST requests for interaction with external systems&amp;#34;&amp;#34;&amp;#34;&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;h2 id=&#34;scale&#34;&gt;Scale&lt;/h2&gt;
 &lt;p&gt;There isn&#39;t much information out there on customising OpenStack workflow like this. There is lots of information about using ansible, puppet, chef and similar tools for &lt;em&gt;post&lt;/em&gt; build configuration of the operating system inside instance, but less information on running code that you want to run on behalf of the instance, but which cannot or you do not wish to run inside the instance. However, it should be noted that code running inside the post hook will block and/or error the instance creation. It maybe that a message bus approach would scale better with a short simple hook that puts a message on a bus and a secondary daemon running on the system that consumes and acts on that message and I may look at implementing that in future.&lt;/p&gt;
 &lt;h2 id=&#34;references&#34;&gt;References&lt;/h2&gt;

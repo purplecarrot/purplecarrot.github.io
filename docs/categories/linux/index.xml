@@ -16,9 +16,9 @@
       <description>
         
           &lt;p&gt;By default, a new Fedora installation or a fedup upgrade on my dual monitor machine will result in GDM displaying the list of users and login screen on my left hand monitor. But I want it on my right hand monitor...&lt;/p&gt;
-&lt;p&gt;Up until now, I simply logged in and set up the configuration I wanted using Settings -&amp;gt; Displays. Then I took the ~/.config/monitors.xml file that is generated and copied it to /var/lib/gdm/.config/monitors.xml ready for GDM to use.&lt;/p&gt;
-&lt;p&gt;However, with Fedora 22, it appears that GDM is set to use Wayland, however once you login to a session, it continues to use X. This new Wayland config uses slightly different XML directives in the monitors.xml meaning a simple copy of your ~/.config/monitors.xml to /var/lib/gdm/.config/monitors.xml no longer works.&lt;/p&gt;
-&lt;p&gt;To work around this, click on the cog and select GNOME on Wayland. Then setup the Displays as you need them and then copy the ~/.config/monitors.xml file (which will be in &amp;quot;Wayland&amp;quot; format) again to /var/lib/gdm/.config/monitors.xml and restart GDM (there may be a better way, but I switch to a virtual console and do init 3 followed by init 5)&lt;/p&gt;
+&lt;p&gt;Up until now, I simply logged in and set up the configuration I wanted using Settings -&amp;gt; Displays. Then I took the &lt;code&gt;~/.config/monitors.xml&lt;/code&gt; file that is generated and copied it to &lt;code&gt;/var/lib/gdm/.config/monitors.xml&lt;/code&gt; ready for GDM to use.&lt;/p&gt;
+&lt;p&gt;However, with Fedora 22, it appears that GDM is set to use Wayland, however once you login to a session, it continues to use X. This new Wayland config uses slightly different XML directives in the monitors.xml meaning a simple copy of your &lt;code&gt;~/.config/monitors.xml&lt;/code&gt; to &lt;code&gt;/var/lib/gdm/.config/monitors.xml&lt;/code&gt; no longer works.&lt;/p&gt;
+&lt;p&gt;To work around this, click on the cog and select GNOME on Wayland. Then setup the Displays as you need them and then copy the &lt;code&gt;~/.config/monitors.xml&lt;/code&gt; file (which will be in &amp;quot;Wayland&amp;quot; format) again to &lt;code&gt;/var/lib/gdm/.config/monitors.xml&lt;/code&gt; and restart GDM (there may be a better way, but I switch to a virtual console and do init 3 followed by init 5)&lt;/p&gt;
 &lt;p&gt;Then your GDM login screen will be correctly setup.&lt;/p&gt;
 &lt;p&gt;&lt;em&gt;UPDATE 20151008: After upgrading to latest rpm set last night, this is now broken again and GDM is displaying the login on the monitor I don&#39;t want it to be on. I verified the monitors.xml file for gdm was correct, but for some reason gdm doesn&#39;t appear to be honoring it. Not being something I want to investigate, I decided to just disable Wayland for the moment by adding the WaylandEnable=False /etc/gdm/custom.conf :-)&lt;/em&gt;&lt;/p&gt;
 
@@ -60,26 +60,24 @@ Allows storage of certificates and certificate chains but not private keys and c
         
           &lt;p&gt;Generally, if I have 100 files that I need to edit and make changes in, I tend to write a perl or python script to make them (if I have 3 files, I just open them in VIM and make them manually!) Yesterday however, a colleague who doesn&#39;t code had to change 2 consecutive lines in about 400 similar files and wanted a simple &amp;quot;one liner&amp;quot; type way to do it.&lt;/p&gt;
 &lt;p&gt;This perl one liner is what I gave him. It allows replacement of multi line text with another piece of multiline text, in place, in the file.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;$ cat example.conf
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;$ cat example.conf
 &lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;Line1
 &lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;Line2
 &lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;Line3
 &lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;Line4
-&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;$ perl -i -la0pe &lt;span class=&#34;s1&#34;&gt;&amp;#39;~s/Line2\nLine3/ReplaceLine2\nReplaceLine3/g&amp;#39;&lt;/span&gt; example.conf
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;$ perl -i -la0pe &amp;#39;~s/Line2\nLine3/ReplaceLine2\nReplaceLine3/g&amp;#39; example.conf
 &lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;$ cat example.conf
 &lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;Line1
 &lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;ReplaceLine2
 &lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;ReplaceLine3
 &lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;Line4
-&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;It&#39;s then easy to use shell script to loop around all the files in a directory and run this command. If you&#39;re nervous, it&#39;s best to first check what your changes do by perhaps piping the file through perl.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ cat example.conf  &lt;span class=&#34;p&#34;&gt;|&lt;/span&gt; perl -la0pe &lt;span class=&#34;s1&#34;&gt;&amp;#39;~s/Line2\nLine3/ReplaceLine2\nReplaceLine3/g&amp;#39;&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;$ cat example.conf  | perl -la0pe &amp;#39;~s/Line2\nLine3/ReplaceLine2\nReplaceLine3/g&amp;#39;
 &lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;$ cat example.conf 
 &lt;span class=&#34;ln&#34;&gt;3&lt;/span&gt;Line1
 &lt;span class=&#34;ln&#34;&gt;4&lt;/span&gt;ReplaceLine2
 &lt;span class=&#34;ln&#34;&gt;5&lt;/span&gt;ReplaceLine3
 &lt;span class=&#34;ln&#34;&gt;6&lt;/span&gt;Line4
-&lt;span class=&#34;ln&#34;&gt;7&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Another idea is also to use the -i.bak option to make backup files so you have a copy of the files before the edits ;-)&lt;/p&gt;
 
         
@@ -95,56 +93,54 @@ Allows storage of certificates and certificate chains but not private keys and c
       <description>
         
           &lt;p&gt;I had an email about the minecraft.desktop file in the config file in a previous post. My kids love to play Minecraft, and installation of this simple GNOME .desktop file gives them the launcher icon on their desktops.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;cat &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;lt&lt;span class=&#34;p&#34;&gt;;&amp;amp;&lt;/span&gt;lt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; EOF &lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; /usr/share/applications/minecraft.desktop
-&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;Desktop Entry&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;Version&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;1.0
-&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;Name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;Minecraft
-&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;GenericName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;Minecraft
-&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;Comment&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;Minecraft
-&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;Exec&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;java -jar /data/minecraft/Minecraft.jar
-&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;Icon&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;mcicon256
-&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;Terminal&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;nb&#34;&gt;false&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;Type&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;Application
-&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;EOF
-&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-ini&#34; data-lang=&#34;ini&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;cat &amp;lt;&amp;lt; EOF &amp;gt; /usr/share/applications/minecraft.desktop&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;k&#34;&gt;[Desktop Entry]&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Version&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;1.0&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Name&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;Minecraft&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;GenericName&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;Minecraft&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Comment&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;Minecraft&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Exec&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;java -jar /data/minecraft/Minecraft.jar&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Icon&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;mcicon256&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Terminal&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;false&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;Type&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;s&#34;&gt;Application&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;na&#34;&gt;EOF&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;Then of course, you must copy the nice shiny minecraft icon into /usr/share/icons/mcicon256.png. I also created a very basic puppet manifest to install it on their computers too!:&lt;/p&gt;
 &lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;$ cat minecraft.pp 
 &lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;file &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;[&lt;/span&gt;&lt;span class=&#34;s2&#34;&gt;&amp;#34;/data/minecraft&amp;#34;&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;]&lt;/span&gt;:
-&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;ensure&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;directory&amp;#34;&lt;/span&gt;,
+&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;ensure&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;directory&amp;#34;&lt;/span&gt;,
 &lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;file &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/usr/share/icons/mcicon256.png&amp;#34;&lt;/span&gt;:
-&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;ensure&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; file,
-&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;owner&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; root,
-&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;group&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; root,
-&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;mode&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; 644,
-&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;    &lt;span class=&#34;nb&#34;&gt;source&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;puppet:///files/minecraft/mcicon256.png&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;ensure&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; file,
+&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;owner&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; root,
+&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;group&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; root,
+&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;mode&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; 644,
+&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;    &lt;span class=&#34;nb&#34;&gt;source&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;puppet:///files/minecraft/mcicon256.png&amp;#34;&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;file &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/usr/share/applications/minecraft.desktop&amp;#34;&lt;/span&gt;:
-&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;ensure&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; file,
-&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;owner&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; root,
-&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;group&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; root,
-&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;mode&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; 644,
-&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;    &lt;span class=&#34;nb&#34;&gt;source&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;puppet:///files/minecraft/minecraft.desktop&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;ensure&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; file,
+&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;owner&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; root,
+&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;group&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; root,
+&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;mode&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; 644,
+&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;    &lt;span class=&#34;nb&#34;&gt;source&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;puppet:///files/minecraft/minecraft.desktop&amp;#34;&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;file &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/data/minecraft/startminecraft.sh&amp;#34;&lt;/span&gt;:
-&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;ensure&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; file,
-&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;owner&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; root,
-&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;group&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; root,
-&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;mode&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; 755,
-&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;    &lt;span class=&#34;nb&#34;&gt;source&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;puppet:///files/minecraft/startminecraft.sh&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;23&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;ensure&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; file,
+&lt;span class=&#34;ln&#34;&gt;24&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;owner&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; root,
+&lt;span class=&#34;ln&#34;&gt;25&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;group&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; root,
+&lt;span class=&#34;ln&#34;&gt;26&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;mode&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; 755,
+&lt;span class=&#34;ln&#34;&gt;27&lt;/span&gt;    &lt;span class=&#34;nb&#34;&gt;source&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;puppet:///files/minecraft/startminecraft.sh&amp;#34;&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;28&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;29&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;30&lt;/span&gt;file &lt;span class=&#34;o&#34;&gt;{&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;/data/minecraft/Minecraft.jar&amp;#34;&lt;/span&gt;:
-&lt;span class=&#34;ln&#34;&gt;31&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;ensure&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; file,
-&lt;span class=&#34;ln&#34;&gt;32&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;owner&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; root,
-&lt;span class=&#34;ln&#34;&gt;33&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;group&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; root,
-&lt;span class=&#34;ln&#34;&gt;34&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;mode&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; 644,
-&lt;span class=&#34;ln&#34;&gt;35&lt;/span&gt;    &lt;span class=&#34;nb&#34;&gt;source&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;p&#34;&gt;&amp;amp;&lt;/span&gt;gt&lt;span class=&#34;p&#34;&gt;;&lt;/span&gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;puppet:///files/minecraft/Minecraft.jar&amp;#34;&lt;/span&gt;
+&lt;span class=&#34;ln&#34;&gt;31&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;ensure&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; file,
+&lt;span class=&#34;ln&#34;&gt;32&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;owner&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; root,
+&lt;span class=&#34;ln&#34;&gt;33&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;group&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; root,
+&lt;span class=&#34;ln&#34;&gt;34&lt;/span&gt;    &lt;span class=&#34;nv&#34;&gt;mode&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; 644,
+&lt;span class=&#34;ln&#34;&gt;35&lt;/span&gt;    &lt;span class=&#34;nb&#34;&gt;source&lt;/span&gt; &lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&amp;gt; &lt;span class=&#34;s2&#34;&gt;&amp;#34;puppet:///files/minecraft/Minecraft.jar&amp;#34;&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;36&lt;/span&gt;&lt;span class=&#34;o&#34;&gt;}&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt;37&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
         
       </description>

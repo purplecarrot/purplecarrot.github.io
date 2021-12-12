@@ -206,7 +206,6 @@
 &lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;Last Changed Date: 2013-02-05 14:15:13 +0000 &lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;Tue, &lt;span class=&#34;m&#34;&gt;05&lt;/span&gt; Feb 2013&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt;
 &lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;server:~/svn/work$ svn switch --relocate https://123.45.56.78/svn/pyf &lt;span class=&#34;se&#34;&gt;\
 &lt;/span&gt;&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;se&#34;&gt;&lt;/span&gt;https://231.1.2.3/svn/pyf
-&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;
 &lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
         
       </description>

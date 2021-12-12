@@ -161,26 +161,24 @@
     
     <p>Generally, if I have 100 files that I need to edit and make changes in, I tend to write a perl or python script to make them (if I have 3 files, I just open them in VIM and make them manually!) Yesterday however, a colleague who doesn't code had to change 2 consecutive lines in about 400 similar files and wanted a simple &quot;one liner&quot; type way to do it.</p>
 <p>This perl one liner is what I gave him. It allows replacement of multi line text with another piece of multiline text, in place, in the file.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="ln"> 1</span>$ cat example.conf
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln"> 1</span>$ cat example.conf
 <span class="ln"> 2</span>Line1
 <span class="ln"> 3</span>Line2
 <span class="ln"> 4</span>Line3
 <span class="ln"> 5</span>Line4
-<span class="ln"> 6</span>$ perl -i -la0pe <span class="s1">&#39;~s/Line2\nLine3/ReplaceLine2\nReplaceLine3/g&#39;</span> example.conf
+<span class="ln"> 6</span>$ perl -i -la0pe &#39;~s/Line2\nLine3/ReplaceLine2\nReplaceLine3/g&#39; example.conf
 <span class="ln"> 7</span>$ cat example.conf
 <span class="ln"> 8</span>Line1
 <span class="ln"> 9</span>ReplaceLine2
 <span class="ln">10</span>ReplaceLine3
 <span class="ln">11</span>Line4
-<span class="ln">12</span>
 </code></pre></div><p>It's then easy to use shell script to loop around all the files in a directory and run this command. If you're nervous, it's best to first check what your changes do by perhaps piping the file through perl.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="ln">1</span>$ cat example.conf  <span class="p">|</span> perl -la0pe <span class="s1">&#39;~s/Line2\nLine3/ReplaceLine2\nReplaceLine3/g&#39;</span>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ cat example.conf  | perl -la0pe &#39;~s/Line2\nLine3/ReplaceLine2\nReplaceLine3/g&#39;
 <span class="ln">2</span>$ cat example.conf 
 <span class="ln">3</span>Line1
 <span class="ln">4</span>ReplaceLine2
 <span class="ln">5</span>ReplaceLine3
 <span class="ln">6</span>Line4
-<span class="ln">7</span>
 </code></pre></div><p>Another idea is also to use the -i.bak option to make backup files so you have a copy of the files before the edits ;-)</p>
 
 

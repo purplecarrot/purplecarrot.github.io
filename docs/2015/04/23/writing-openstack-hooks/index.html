@@ -181,8 +181,6 @@
 <span class="ln">10</span>        <span class="p">]</span>        
 <span class="ln">11</span>    <span class="p">},</span>
 <span class="ln">12</span><span class="p">)</span>
-<span class="ln">13</span>
-<span class="ln">14</span>
 </code></pre></div><h2 id="mynovahookpy">mynovahook.py</h2>
 <p>The code is actually very simple indeed. You add the code you want to run inside the post of pre method of the class. Because this code runs inside nova-api, you have access to lots of information inside the args and kwargs passed into the function which can be used inside your code. For example, the uuid, name, flavor and much more are all available with very little efforts for your code to use.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="ln"> 1</span>
@@ -197,8 +195,6 @@
 <span class="ln">10</span>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
 <span class="ln">11</span>        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&#34;Tasks that run after the instance is created&#34;</span><span class="p">)</span>
 <span class="ln">12</span>        <span class="s2">&#34;&#34;&#34;REST requests for interaction with external systems&#34;&#34;&#34;</span>
-<span class="ln">13</span>
-<span class="ln">14</span>
 </code></pre></div><h2 id="scale">Scale</h2>
 <p>There isn't much information out there on customising OpenStack workflow like this. There is lots of information about using ansible, puppet, chef and similar tools for <em>post</em> build configuration of the operating system inside instance, but less information on running code that you want to run on behalf of the instance, but which cannot or you do not wish to run inside the instance. However, it should be noted that code running inside the post hook will block and/or error the instance creation. It maybe that a message bus approach would scale better with a short simple hook that puts a message on a bus and a secondary daemon running on the system that consumes and acts on that message and I may look at implementing that in future.</p>
 <h2 id="references">References</h2>

@@ -165,22 +165,20 @@
 <span class="ln">4</span>python-requests
 <span class="ln">5</span>rpmlib<span class="o">(</span>CompressedFileNames<span class="o">)</span> &lt;<span class="o">=</span> 3.0.4-1
 <span class="ln">6</span>rpmlib<span class="o">(</span>PayloadFilesHavePrefix<span class="o">)</span> &lt;<span class="o">=</span> 4.0-1
-<span class="ln">7</span>
 </code></pre></div><p>Even though I don't have a specific version of python listed in the requirements for the package, the rpmbuild called by setuptools automatically adds a dependency on the python version installed on the system I'm using. This is because when rpmbuild scans through my source, it then finds the shebang that points to #!/usr/bin/env python, which in turn finds the python 3.6 on the server where I build the RPM. Obviously, I could rebuild the rpm on a RHEL 7 host and it would then find python 2.7, but I don't want to have separate RPMs for different RHEL versions when the code is the same.  I wanted to be able to produce an RPM for my python module and code that installs and runs on RHEL 6 and RHEL 7 (when the python code is tested to run under python 2.6+)  Now this isn't particularly well documented, but I did a little digging and found that to do this, you can simply add the --no-autoreq option to setup.py</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="ln">1</span>$ python setup.py bdist_rpm --no-autoreq
-<span class="ln">2</span>
 </code></pre></div><p>This will then tell bdist_rpm to add the &quot;AutoReq: no&quot; option to the spec file used to generate the RPM. RPM build will then see this and the resulting RPM will then no longer require a specific version of python.</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="ln">1</span>$ rpm -qpR python-mymodule-2.8-2.noarch.rpm
 <span class="ln">2</span>python-requests
 <span class="ln">3</span>rpmlib<span class="o">(</span>CompressedFileNames<span class="o">)</span> &lt;<span class="o">=</span> 3.0.4-1
 <span class="ln">4</span>rpmlib<span class="o">(</span>PayloadFilesHavePrefix<span class="o">)</span> &lt;<span class="o">=</span> 4.0-1
-<span class="ln">5</span>
 </code></pre></div><p>You can then add the option to your setup.cfg file for the module, so that you don't forget it next time and inadvertently distribute a python version dependent module.  &lt;</p>
 <div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="ln">1</span><span class="o">[</span>bdist_rpm<span class="o">]</span>
 <span class="ln">2</span>no-autoreq <span class="o">=</span> yes
-<span class="ln">3</span>
-</code></pre></div><p>Useful References:</p>
-<h1 id="rpm-automatic-dependencieshttpwwwrpmorgmax-rpm-snapshots1-rpm-depend-auto-dependhtml"><a href="http://www.rpm.org/max-rpm-snapshot/s1-rpm-depend-auto-depend.html">RPM Automatic Dependencies</a></h1>
+</code></pre></div><h2 id="useful-references">Useful References:</h2>
+<ul>
+<li><a href="http://www.rpm.org/max-rpm-snapshot/s1-rpm-depend-auto-depend.html">RPM Automatic Dependencies</a></li>
+</ul>
 
 
   </article>
