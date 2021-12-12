@@ -3,4 +3,5 @@ languageCode: en-gb
 theme: hugo-clarity
 title: Purplecarrot
 publishDir: "docs"
-ga_analytics: G-77YM82FSW7
+ga_analytics: UA-44831480-1
+googleAnalytics: UA-44831480-1
