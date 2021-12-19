@@ -3,7 +3,6 @@ title: "Getting Along with the OpenShift Machine Config Operator"
 date: 2021-12-19T11:11:45Z'
 description: "Understanding the OpenShift Machine Config Operator, and fixing it when things go wrong."
 featured: true 
-draft: true
 toc: true
 thumbnail: images/thumbnails/openshift.png 
 categories:
