@@ -6,11 +6,11 @@
     <description>Recent content in OpenShift on Purplecarrot</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-gb</language>
-    <lastBuildDate>Sat, 30 Oct 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://purplecarrot.co.uk/tags/openshift/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Sat, 30 Oct 2021 11:04:12 +0000</lastBuildDate><atom:link href="https://purplecarrot.co.uk/tags/openshift/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Breaking into your OpenShift Cluster</title>
       <link>https://purplecarrot.co.uk/post/2021-10-30-breaking_into_your_openshift_cluster/</link>
-      <pubDate>Sat, 30 Oct 2021 00:00:00 +0000</pubDate>
+      <pubDate>Sat, 30 Oct 2021 11:04:12 +0000</pubDate>
       
       <guid>https://purplecarrot.co.uk/post/2021-10-30-breaking_into_your_openshift_cluster/</guid>
       <description>
@@ -43,10 +43,10 @@
     
     <item>
       <title>Does Alpine resolve DNS properly?</title>
-      <link>https://purplecarrot.co.uk/post/2021-09-04_does_alpine-resolve_dns_properly/</link>
-      <pubDate>Sat, 04 Sep 2021 08:51:20 +0100</pubDate>
+      <link>https://purplecarrot.co.uk/post/2021-09-04-does_alpine-resolve_dns_properly/</link>
+      <pubDate>Sat, 04 Sep 2021 08:51:20 +0000</pubDate>
       
-      <guid>https://purplecarrot.co.uk/post/2021-09-04_does_alpine-resolve_dns_properly/</guid>
+      <guid>https://purplecarrot.co.uk/post/2021-09-04-does_alpine-resolve_dns_properly/</guid>
       <description>
         
           &lt;p&gt;To anybody who has ever used containers, Alpine is a well known base operating system layer to many popular and widely used container images in use today. By design, it&#39;s a cut down minimal OS layer using the excellent &lt;a href=&#34;https://www.busybox.net/&#34;&gt;busybox&lt;/a&gt; and &lt;a href=&#34;https://musl.libc.org/&#34;&gt;musl libc&lt;/a&gt; C library. By using these alternatives to GNU Coreutils and GNU glibc C Library, it provides a base OS container layer that allows you to build and run very small Linux containers.&lt;/p&gt;

@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <html lang="en" data-figures="" class="page">
   <head>
-<title>Broadband External IP Address from Command Line | Purplecarrot</title>
+<title>Does Alpine resolve DNS properly? | Purplecarrot</title>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -14,24 +14,23 @@
   gtag('config', 'XXXXXXXXXX');
 </script>
 
-  
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="Just typing &quot;What is my external ip address&quot; into Google is normally the most convenient way to find your external public IP address when you&#39;re …">
+<meta name="description" content="Investigations into musl libc DNS resolver used in Alpine containers">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
-<meta name="twitter:title" content="Broadband External IP Address from Command Line" />
-<meta property="og:url" content="https://purplecarrot.co.uk/2013/09/16/broadband-external-ip-address-from/" />
-<meta property="og:title" content="Broadband External IP Address from Command Line" />
-<meta property="og:description" content="Just typing &quot;What is my external ip address&quot; into Google is normally the most convenient way to find your external public IP address when you&#39;re …" />
-<meta property="og:image" content="https://purplecarrot.co.uk/images/thumbnails/linux.png" />
+<meta name="twitter:title" content="Does Alpine resolve DNS properly?" />
+<meta property="og:url" content="https://purplecarrot.co.uk/post/2021-09-04-does_alpine-resolve_dns_properly/" />
+<meta property="og:title" content="Does Alpine resolve DNS properly?" />
+<meta property="og:description" content="Investigations into musl libc DNS resolver used in Alpine containers" />
+<meta property="og:image" content="https://purplecarrot.co.uk/images/thumbnails/container.png" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="https://purplecarrot.co.uk/icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="https://purplecarrot.co.uk/icons/favicon-32x32.png">
 <link rel="manifest" href="https://purplecarrot.co.uk/icons/site.webmanifest">
 
-<link rel="canonical" href="https://purplecarrot.co.uk/2013/09/16/broadband-external-ip-address-from/">
+<link rel="canonical" href="https://purplecarrot.co.uk/post/2021-09-04-does_alpine-resolve_dns_properly/">
 
 <script type="application/javascript">
 var doNotTrack = false;
@@ -133,25 +132,27 @@ if (!doNotTrack) {
   
 <div class="grid-inverse wrap content">
   <article class="post_content">
-    <h1 class="post_title">Broadband External IP Address from Command Line</h1>
+    <h1 class="post_title">Does Alpine resolve DNS properly?</h1>
   <div class="post_meta">
     <span><svg class="icon">
   <use xlink:href="#calendar"></use>
 </svg></span>
     <span class="post_date">
-      Sep 16, 2013</span>
-    <span class="post_time"> · 1 min read</span><span>&nbsp;· <a href='https://purplecarrot.co.uk/tags/linux' title="Linux" class="post_tag button button_translucent">Linux
+      Sep 4, 2021</span>
+    <span class="post_time"> · 5 min read</span><span>&nbsp;· <a href='https://purplecarrot.co.uk/tags/kubernetes' title="Kubernetes" class="post_tag button button_translucent">Kubernetes
+        </a><a href='https://purplecarrot.co.uk/tags/openshift' title="OpenShift" class="post_tag button button_translucent">OpenShift
+        </a><a href='https://purplecarrot.co.uk/tags/linux' title="Linux" class="post_tag button button_translucent">Linux
         </a>
     </span>
     <span class="page_only">
   <div class="post_share">
     
-    <a href="https://twitter.com/intent/tweet?text=Broadband%20External%20IP%20Address%20from%20Command%20Line&url=https%3a%2f%2fpurplecarrot.co.uk%2f2013%2f09%2f16%2fbroadband-external-ip-address-from%2f&tw_p=tweetbutton" class="twitter" title=" Twitter" target="_blank" rel="nofollow">
+    <a href="https://twitter.com/intent/tweet?text=Does%20Alpine%20resolve%20DNS%20properly%3f&url=https%3a%2f%2fpurplecarrot.co.uk%2fpost%2f2021-09-04-does_alpine-resolve_dns_properly%2f&tw_p=tweetbutton" class="twitter" title=" Twitter" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#twitter"></use>
 </svg>
     </a>
-    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpurplecarrot.co.uk%2f2013%2f09%2f16%2fbroadband-external-ip-address-from%2f&t=Broadband%20External%20IP%20Address%20from%20Command%20Line" class="facebook" title=" Facebook" target="_blank" rel="nofollow">
+    <a href="https://www.facebook.com/sharer.php?u=https%3a%2f%2fpurplecarrot.co.uk%2fpost%2f2021-09-04-does_alpine-resolve_dns_properly%2f&t=Does%20Alpine%20resolve%20DNS%20properly%3f" class="facebook" title=" Facebook" target="_blank" rel="nofollow">
       <svg class="icon">
   <use xlink:href="#facebook"></use>
 </svg>
@@ -161,7 +162,7 @@ if (!doNotTrack) {
   <use xlink:href="#linkedin"></use>
 </svg>
     </a>
-    <a href="https://purplecarrot.co.uk/2013/09/16/broadband-external-ip-address-from/" title="Copy Link" class="link link_yank">
+    <a href="https://purplecarrot.co.uk/post/2021-09-04-does_alpine-resolve_dns_properly/" title="Copy Link" class="link link_yank">
       <svg class="icon">
   <use xlink:href="#copy"></use>
 </svg>
@@ -172,13 +173,46 @@ if (!doNotTrack) {
   </div>
 
     
-    <p>Just typing &quot;What is my external ip address&quot; into Google is normally the most convenient way to find your external public IP address when you're behind a NAT'd broadband connection. The site ipconfig.me offers an alternative and clean way to get it from the command line, for example for use in a shell script:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="ln">1</span>server# curl ifconfig.me
-<span class="ln">2</span>132.231.56.65
-<span class="ln">3</span>server# curl ifconfig.me/host
-<span class="ln">4</span>132-231-56-65.myisp.com
-<span class="ln">5</span>
-</code></pre></div><p>They have a range of options to return IP, Hostname, UserAgent, etc. The one I may be using is ifconfig.me/all.json or all.xml, to make it even easier to read into a Perl or Python script!</p>
+    
+    <h2>Overview</h2>
+    <nav id="TableOfContents">
+  <ul>
+    <li><a href="#basic-troubleshooting">Basic Troubleshooting</a></li>
+    <li><a href="#inside-the-container">Inside the Container</a></li>
+    <li><a href="#dns-query">DNS Query</a></li>
+  </ul>
+</nav>
+    <p>To anybody who has ever used containers, Alpine is a well known base operating system layer to many popular and widely used container images in use today. By design, it's a cut down minimal OS layer using the excellent <a href="https://www.busybox.net/">busybox</a> and <a href="https://musl.libc.org/">musl libc</a> C library. By using these alternatives to GNU Coreutils and GNU glibc C Library, it provides a base OS container layer that allows you to build and run very small Linux containers.</p>
+<p>This week I was asked to look at a problem where an application team could not resolve a key DNS name used on our internal network when running their application within the container - their first thought was a problem with the OpenShift/Kubernetes environment where the container was running.</p>
+<p>Unfortunately, the company I work for doesn't like us to disclose internal proprietary network information, so for the purposes of the post, let's say the DNS name being queried is <code>vis.company.com</code> (very important service). All IPs and some other data in the extracts below have been manually changed to private RFC1918 addresses or redacted too.</p>
+<h2 id="basic-troubleshooting">Basic Troubleshooting</h2>
+<p>The first thing to do was to perform my own DNS lookup of <code>vis.company.com</code>. This worked fine from both my Linux workstation and Windows laptop.</p>
+<p>Now what made this problem interesting was that the application running in the container was able to resolve all other DNS entries that it was required to in order to function(eg <code>a.company.com</code>, <code>b.company.com</code>), but it couldn't resolve this one crucial DNS entry <code>vis.company.com</code>. When you connected to a shell running inside the container and ran <code>getent hosts vis.company.com</code> it simply returned nothing at all, and exited with exit code 2.</p>
+<h2 id="inside-the-container">Inside the Container</h2>
+<p>So how do you go about troubleshooting a problem like this from within a container? In a standard OS, you can simply use the standard tools in your sysadmin toolkit - ss (lsof/netstat), dig, strace, tcpdump, nmap, etc - but inside a container these are unlikely to be available by default (and some containers don't even include a minimal unix shell even). I have a pre-built container I use for situations like this that I then add as a sidecar in the pod I'm troubleshooting. Then by setting <code>shareProcessNamespace: true</code> in the podspec, it will allow you to easily debug and strace processes running inside the first container from the sidecar.</p>
+<h2 id="dns-query">DNS Query</h2>
+<p>So strace'ing the DNS queries I could see the <code>socket()</code> and <code>bind()</code> calls, followed by receiving a response from the DNS server. However, this response was empty. Something weird was happening, because running the same command on a standard Linux host you could see 100s of lines more of system calls and a good DNS response with multiple A records was returned.</p>
+<p>So the next step was to use tcpdump and capture a packet trace of the DNS query. Below is the relevant section from that pcap that shows the DNS query:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>18:00:27.376761 IP (tos 0x0, ttl 64, id 32569, offset 0, flags [DF], proto UDP (17), length 68)
+<span class="ln">2</span>    10.96.10.99.43507 &gt; 10.96.0.10:domain: 19977+ A? vis.company.com. (40)
+<span class="ln">3</span>18:00:27.386585 IP (tos 0x0, ttl 64, id 24288, offset 0, flags [DF], proto UDP (17), length 79)
+<span class="ln">4</span>    10.96.0.10.domain &gt; 10.96.10.99.43507: 19977| 0/0/1 (51)
+</code></pre></div><p>So what does this tell us?</p>
+<ol>
+<li>This is standard UDP DNS query (id 19977) to query the IPv4 record <code>vis.company.com</code></li>
+<li>The DNS server response comes from <code>10.96.0.10</code>, which is the Kubernetes <code>Service</code> address for CoreDNS.</li>
+<li>A DNS response was received, but no DNS records were in it (<code>0/0/1</code> = 0 answer records, 0 nameservers and 1 additional record which is the query address itself)</li>
+<li>The <code>|</code> character after the 19977 id indicates that the TC (TrunCation) bit is set on this packet.</li>
+</ol>
+<p>The most interesting of these is the last. The TC bit is used when the DNS response the DNS server wants to send to the client is longer than the 512bytes available to it in a UDP packet (see <a href="https://datatracker.ietf.org/doc/html/rfc1035">RFC1035</a> for more information.)</p>
+<p>This is a signal to the DNS resolver client that it needs to switch from a standard UDP DNS query and do a new TCP DNS query instead - but in both the strace and tcpdump output of the application running the the Alpine container, the resolver query exited immediate after receiving this TC UDP packet from the DNS server.</p>
+<p>I expected this to be a bug, but it turned out that this is a <a href="https://wiki.musl-libc.org/functional-differences-from-glibc.html">functional difference between musl libc and glibc</a> and is by design. The musl libc author states that he intentionally didn't support TCP as felt it would be better for performance and UX reasons:</p>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">My choice not to do TCP in musl&#39;s stub resolver was based on an interpretation that truncated results are not just acceptable but better ux - not only do you save major round-trip delays to DNS but you also get a reasonable upper bound on # of addrs in result.</p>&mdash; Rich Felker (@RichFelker) <a href="https://twitter.com/RichFelker/status/994629795551031296?ref_src=twsrc%5Etfw">May 10, 2018</a></blockquote>
+<script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+
+<p>This is true, and a valid point. However, it means that this particular app would never work when running in a container based on Alpine. Sometimes predictable functionality is more important.</p>
+<p>There are various other ways this could have been made to work. Perhaps making the DNS entry smaller - which was indeed unnecessarily large - would indeed be a better fix, but unfortunately this wasn't a practical option as the DNS entry wasn't under this team's control.</p>
+<p>Instead, the quickest fix was to rebuild the application into a new container image using the RedHat UBI8 image as a base layer instead of Alpine. This image uses glibc resolver, and then the app then ran fine, in the same way as it did on the RedHat Linux 8 host where it had ran before being containerized.</p>
 
 
   </article>
@@ -190,9 +224,6 @@ if (!doNotTrack) {
         <a href="https://purplecarrot.co.uk/post/2021-10-30-breaking_into_your_openshift_cluster/" class="nav-link" title="Breaking into your OpenShift Cluster">Breaking into your OpenShift Cluster</a>
       </li>
       <li>
-        <a href="https://purplecarrot.co.uk/post/2021-09-04-does_alpine-resolve_dns_properly/" class="nav-link" title="Does Alpine resolve DNS properly?">Does Alpine resolve DNS properly?</a>
-      </li>
-      <li>
         <a href="https://purplecarrot.co.uk/post/2020-09-12-tekton_and_knative/" class="nav-link" title="Practical Tekton">Practical Tekton</a>
       </li>
     </ul>
@@ -202,10 +233,10 @@ if (!doNotTrack) {
         <a href="https://purplecarrot.co.uk/post/2021-10-30-breaking_into_your_openshift_cluster/" class="nav-link" title="Breaking into your OpenShift Cluster">Breaking into your OpenShift Cluster</a>
       </li>
       <li>
-        <a href="https://purplecarrot.co.uk/post/2021-09-04-does_alpine-resolve_dns_properly/" class="nav-link" title="Does Alpine resolve DNS properly?">Does Alpine resolve DNS properly?</a>
+        <a href="https://purplecarrot.co.uk/post/2020-09-12-tekton_and_knative/" class="nav-link" title="Practical Tekton">Practical Tekton</a>
       </li>
       <li>
-        <a href="https://purplecarrot.co.uk/post/2020-09-12-tekton_and_knative/" class="nav-link" title="Practical Tekton">Practical Tekton</a>
+        <a href="https://purplecarrot.co.uk/post/archive/2015-12-03-verifying-tls-certificates-in-python/" class="nav-link" title="Verifying TLS certificates in Python">Verifying TLS certificates in Python</a>
       </li>
     </ul>
     <div>
