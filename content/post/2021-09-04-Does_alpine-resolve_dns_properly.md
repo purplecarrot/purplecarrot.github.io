@@ -1,6 +1,6 @@
 ---
 title: "Does Alpine resolve DNS properly?" 
-date: 2021-09-04T08:51:20+01:00 
+date: 2021-09-04T08:51:20Z
 description: "Investigations into musl libc DNS resolver used in Alpine containers"
 featured: true 
 draft: false

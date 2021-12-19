@@ -1,7 +1,7 @@
 ---
 title: Practical Tekton
 author: Mark
-date: '2020-09-12T10:11:00.001Z'
+date: 2020-09-12T10:11:00Z
 categories:
   - Containers
   - Development
