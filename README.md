@@ -3,7 +3,7 @@
 ## Usage
 ```
 # Development
-hugo server -D --bind 0.0.0.0 --baseURL http://skylake.local
+hugo server -D --bind 0.0.0.0 --baseURL http://skylake.lan
    
 # Publish
 hugo 
