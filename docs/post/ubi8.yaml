@@ -1,0 +1,30 @@
+---
+title: "RedHat UBI8 - what is it, and should you be using it?"
+date: "2021-12-22T10:10:00Z"
+description: "RedHat Universal Binary Image 8 - what is it, and should you be using it?"
+featured: true 
+toc: false
+# Thumbnails need to be 1:1 ratio at 150x150px
+thumbnail: images/thumbnails/linux.png 
+categories:
+  - Containers
+tags:
+  - Kubernetes
+  - OpenShift
+  - Linux
+---
+
+What is the RedHat Universal Binary Image, and should you be using it?
+
+Advantages of Using UBI8 in OpenShift
+
+One of the reasons you might want to use UBI8 is a high level of compatibility with worker nodes operating system. For example, if you build an application using UBI8 for running on OCP4.x, you’ll know your application is using Linux libraries that are compatible with, and widely tested with, those libraries and the kernel of the worker node host running your containers. At first, this might seem a little pedantic. However, I’ve not come across a couple of scenarios where the application encountered issues running on Alpine, that it had never encountered when it ran on RedHat Enterprise Linux on a VM. At first the fact that they were containerised and running in OpenShift was suspected as the issue, but it was actually the MUSL libc that differed.
+
+
+
+If you’re running production workloads where stability and uptime i
+
+
+
+
+

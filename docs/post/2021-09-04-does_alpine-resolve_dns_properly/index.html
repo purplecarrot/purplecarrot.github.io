@@ -32,18 +32,6 @@
 
 <link rel="canonical" href="https://purplecarrot.co.uk/post/2021-09-04-does_alpine-resolve_dns_properly/">
 
-<script type="application/javascript">
-var doNotTrack = false;
-if (!doNotTrack) {
-	(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-	(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-	m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-	})(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
-	ga('create', 'UA-44831480-1', 'auto');
-	
-	ga('send', 'pageview');
-}
-</script>
 
 
     
@@ -207,7 +195,7 @@ if (!doNotTrack) {
 <p>The most interesting of these is the last. The TC bit is used when the DNS response the DNS server wants to send to the client is longer than the 512bytes available to it in a UDP packet (see <a href="https://datatracker.ietf.org/doc/html/rfc1035">RFC1035</a> for more information.)</p>
 <p>This is a signal to the DNS resolver client that it needs to switch from a standard UDP DNS query and do a new TCP DNS query instead - but in both the strace and tcpdump output of the application running the the Alpine container, the resolver query exited immediate after receiving this TC UDP packet from the DNS server.</p>
 <p>I expected this to be a bug, but it turned out that this is a <a href="https://wiki.musl-libc.org/functional-differences-from-glibc.html">functional difference between musl libc and glibc</a> and is by design. The musl libc author states that he intentionally didn't support TCP as felt it would be better for performance and UX reasons:</p>
-<blockquote class="twitter-tweet"><p lang="en" dir="ltr">My choice not to do TCP in musl&#39;s stub resolver was based on an interpretation that truncated results are not just acceptable but better ux - not only do you save major round-trip delays to DNS but you also get a reasonable upper bound on # of addrs in result.</p>&mdash; Rich Felker (@RichFelker) <a href="https://twitter.com/RichFelker/status/994629795551031296?ref_src=twsrc%5Etfw">May 10, 2018</a></blockquote>
+<blockquote class="twitter-tweet"><p lang="en" dir="ltr">My choice not to do TCP in musl&#39;s stub resolver was based on an interpretation that truncated results are not just acceptable but better ux - not only do you save major round-trip delays to DNS but you also get a reasonable upper bound on # of addrs in result.</p>&mdash; 🦣 @dalias@hachyderm.io 🦣 (@RichFelker) <a href="https://twitter.com/RichFelker/status/994629795551031296?ref_src=twsrc%5Etfw">May 10, 2018</a></blockquote>
 <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
 
 <p>This is true, and a valid point. However, it means that this particular app would never work when running in a container based on Alpine. Sometimes predictable functionality is more important.</p>
