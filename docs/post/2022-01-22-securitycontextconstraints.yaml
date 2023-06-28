@@ -1,0 +1,97 @@
+---
+title: "Running your containers more securely with OpenShift SecurityContextConstraints"
+date: 2021-12-22T10:10:00Z
+description: "Running your containers more securely with OpenShift SecurityContextConstraints"
+featured: true 
+draft: true
+toc: false
+# Thumbnails need to be 1:1 ratio at 150x150px
+thumbnail: images/thumbnails/linux.png 
+categories:
+  - Containers
+tags:
+  - Kubernetes
+  - OpenShift
+  - Linux
+---
+I really should have written this article about 5 years ago when I started using OpenShift 3.x and came across `SecurityContextConstraints` for the first time. Back then, when I started working with containers and Docker, security for many people using and running containers was very much an afterthought. The initial design of Docker meant that the daemon and containers ran as root by default, and many application container images were based on this assumption and were built to do things that are normally privileged operations such as binding on port 80, or expecting usage of the resources on the container host’s network or filesystem.
+
+OpenShift was designed from the outset to be secure by default. RedHat has a strong history of taking open source software and tailoring it towards the needs of their enterprise customers. One of these needs is security and early Kubernetes versions lacked features in this area, the core developers preferring to concentrate on other functionality at that time (although I might sound like a RedHat fanboy, I should at this point make clear that I don’t work for, nor have I ever worked for RedHat!).
+
+So RedHat, knowing that majority of their customers would be unable to adopt Kubernetes/OpenShift without addressing some of the security issues, worked on and added functionality to increase the security of OpenShift. This lead to a number of enhancements such as the RBAC and Security Context Constraints. These features were originally added to OpenShift, but have now mostly been “upstreamed” back to Kubernetes, or were heavily influential on the design of security features we see in Kubernetes today.
+
+## Project Configuration
+
+Before looking into SecurityContextConstraints, it’s worth discussing how OpenShift runs containers and how this differs from standalone Docker and other Kubernetes installations. By default, every project in OpenShift (if you’re not familiar with it, a project is an OpenShift construct, very similar to a namespace) has a series of annotations that look like these:
+
+## User IDs
+
+The first annotation of interest is openshift.io/sa.scc.uid-range. The is a range of “arbitrarily assigned user IDs” that are assigned to each project created in the cluster. By default every single project in an OpenShift clusters gets a range of 10000 unique and non-overlapping user IDs. They’re very high UIDs (so high that if you run ps on the host, you get a + sign at the end because the uid is too long for the standard uid field width!), and so are not going to be used by any running processes or files on the host system running the container. This is important, because its design is helping to be secure by default.
+
+
+
+What does this mean for you, as a creator of container images that you want to run in OpenShift? It’s pretty simple. It just means that directories and files in the image must be owned by the root group (GID=0 and be read/write by that group). Any files that get executed must have group execute permissions.
+
+
+
+If you use RedHat’s Source-to-image (S2I) tools, then this is taken care of automatically for you by the [fix-permissions] script.
+
+
+
+SELinux
+
+
+
+SecurityContextConstraints
+
+
+
+SecurityContextConstraints are another security feature RedHat added to OpenShift as early Kubernetes versions didn’t address security of running Pods particularly well.
+
+
+
+MustRunAsRange vs MustRunAsNonRoot
+
+
+
+MustRunAsRanage is default “restricted” scc, MustRunAsNonRoot is “nonroot” scc
+
+
+
+Collisions, not recommended
+
+
+
+
+InterestingFacts/Discuss
+
+
+
+Internally, the high UID is appended to /etc/passwd inside the container when it is run.
+RunAsAny vs runAsUser??
+
+Selinux MCS values
+Enables Multi-tenancy
+pods from one namespace cannot access files created by pods from another namespace
+pods cannot access files owned by host processes unrelated to the pod
+By default, no range is defined for fsGroup – it defaults to minimum value nsenter
+
+
+
+
+OpenShift Container Platform 4.9 – Creating Images
+
+https://docs.openshift.com/container-platform/4.9/openshift_images/create-images.html
+
+
+
+A Guide to OpenShift and UIDs
+
+https://cloud.redhat.com/blog/a-guide-to-openshift-and-uids
+
+
+
+Best practices for designing a universal application image
+
+https://developer.ibm.com/learningpaths/universal-application-image/design-universal-image/#3-set-group-ownership-and-file-permission
+
