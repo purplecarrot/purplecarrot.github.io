@@ -40,8 +40,8 @@
     
     
     <link rel="preload" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
+    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -161,55 +161,55 @@
 
     
     <p>I had an email about the minecraft.desktop file in the config file in a previous post. My kids love to play Minecraft, and installation of this simple GNOME .desktop file gives them the launcher icon on their desktops.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ini" data-lang="ini"><span class="ln"> 1</span><span class="na">cat &lt;&lt; EOF &gt; /usr/share/applications/minecraft.desktop</span>
-<span class="ln"> 2</span><span class="k">[Desktop Entry]</span>
-<span class="ln"> 3</span><span class="na">Version</span><span class="o">=</span><span class="s">1.0</span>
-<span class="ln"> 4</span><span class="na">Name</span><span class="o">=</span><span class="s">Minecraft</span>
-<span class="ln"> 5</span><span class="na">GenericName</span><span class="o">=</span><span class="s">Minecraft</span>
-<span class="ln"> 6</span><span class="na">Comment</span><span class="o">=</span><span class="s">Minecraft</span>
-<span class="ln"> 7</span><span class="na">Exec</span><span class="o">=</span><span class="s">java -jar /data/minecraft/Minecraft.jar</span>
-<span class="ln"> 8</span><span class="na">Icon</span><span class="o">=</span><span class="s">mcicon256</span>
-<span class="ln"> 9</span><span class="na">Terminal</span><span class="o">=</span><span class="s">false</span>
-<span class="ln">10</span><span class="na">Type</span><span class="o">=</span><span class="s">Application</span>
-<span class="ln">11</span><span class="na">EOF</span>
-</code></pre></div><p>Then of course, you must copy the nice shiny minecraft icon into /usr/share/icons/mcicon256.png. I also created a very basic puppet manifest to install it on their computers too!:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="ln"> 1</span>$ cat minecraft.pp 
-<span class="ln"> 2</span>file <span class="o">{</span> <span class="o">[</span><span class="s2">&#34;/data/minecraft&#34;</span><span class="o">]</span>:
-<span class="ln"> 3</span>    <span class="nv">ensure</span> <span class="o">=</span>&gt; <span class="s2">&#34;directory&#34;</span>,
-<span class="ln"> 4</span><span class="o">}</span>
-<span class="ln"> 5</span>
-<span class="ln"> 6</span>file <span class="o">{</span> <span class="s2">&#34;/usr/share/icons/mcicon256.png&#34;</span>:
-<span class="ln"> 7</span>    <span class="nv">ensure</span> <span class="o">=</span>&gt; file,
-<span class="ln"> 8</span>    <span class="nv">owner</span> <span class="o">=</span>&gt; root,
-<span class="ln"> 9</span>    <span class="nv">group</span> <span class="o">=</span>&gt; root,
-<span class="ln">10</span>    <span class="nv">mode</span> <span class="o">=</span>&gt; 644,
-<span class="ln">11</span>    <span class="nb">source</span> <span class="o">=</span>&gt; <span class="s2">&#34;puppet:///files/minecraft/mcicon256.png&#34;</span>
-<span class="ln">12</span><span class="o">}</span>
-<span class="ln">13</span>
-<span class="ln">14</span>file <span class="o">{</span> <span class="s2">&#34;/usr/share/applications/minecraft.desktop&#34;</span>:
-<span class="ln">15</span>    <span class="nv">ensure</span> <span class="o">=</span>&gt; file,
-<span class="ln">16</span>    <span class="nv">owner</span> <span class="o">=</span>&gt; root,
-<span class="ln">17</span>    <span class="nv">group</span> <span class="o">=</span>&gt; root,
-<span class="ln">18</span>    <span class="nv">mode</span> <span class="o">=</span>&gt; 644,
-<span class="ln">19</span>    <span class="nb">source</span> <span class="o">=</span>&gt; <span class="s2">&#34;puppet:///files/minecraft/minecraft.desktop&#34;</span>
-<span class="ln">20</span><span class="o">}</span>
-<span class="ln">21</span>
-<span class="ln">22</span>file <span class="o">{</span> <span class="s2">&#34;/data/minecraft/startminecraft.sh&#34;</span>:
-<span class="ln">23</span>    <span class="nv">ensure</span> <span class="o">=</span>&gt; file,
-<span class="ln">24</span>    <span class="nv">owner</span> <span class="o">=</span>&gt; root,
-<span class="ln">25</span>    <span class="nv">group</span> <span class="o">=</span>&gt; root,
-<span class="ln">26</span>    <span class="nv">mode</span> <span class="o">=</span>&gt; 755,
-<span class="ln">27</span>    <span class="nb">source</span> <span class="o">=</span>&gt; <span class="s2">&#34;puppet:///files/minecraft/startminecraft.sh&#34;</span>
-<span class="ln">28</span><span class="o">}</span>
-<span class="ln">29</span>
-<span class="ln">30</span>file <span class="o">{</span> <span class="s2">&#34;/data/minecraft/Minecraft.jar&#34;</span>:
-<span class="ln">31</span>    <span class="nv">ensure</span> <span class="o">=</span>&gt; file,
-<span class="ln">32</span>    <span class="nv">owner</span> <span class="o">=</span>&gt; root,
-<span class="ln">33</span>    <span class="nv">group</span> <span class="o">=</span>&gt; root,
-<span class="ln">34</span>    <span class="nv">mode</span> <span class="o">=</span>&gt; 644,
-<span class="ln">35</span>    <span class="nb">source</span> <span class="o">=</span>&gt; <span class="s2">&#34;puppet:///files/minecraft/Minecraft.jar&#34;</span>
-<span class="ln">36</span><span class="o">}</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-ini" data-lang="ini"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="na">cat &lt;&lt; EOF &gt; /usr/share/applications/minecraft.desktop</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="k">[Desktop Entry]</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="na">Version</span><span class="o">=</span><span class="s">1.0</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="na">Name</span><span class="o">=</span><span class="s">Minecraft</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="na">GenericName</span><span class="o">=</span><span class="s">Minecraft</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl"><span class="na">Comment</span><span class="o">=</span><span class="s">Minecraft</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="na">Exec</span><span class="o">=</span><span class="s">java -jar /data/minecraft/Minecraft.jar</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl"><span class="na">Icon</span><span class="o">=</span><span class="s">mcicon256</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl"><span class="na">Terminal</span><span class="o">=</span><span class="s">false</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="na">Type</span><span class="o">=</span><span class="s">Application</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="na">EOF</span>
+</span></span></code></pre></div><p>Then of course, you must copy the nice shiny minecraft icon into /usr/share/icons/mcicon256.png. I also created a very basic puppet manifest to install it on their computers too!:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="ln"> 1</span><span class="cl">$ cat minecraft.pp 
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">file <span class="o">{</span> <span class="o">[</span><span class="s2">&#34;/data/minecraft&#34;</span><span class="o">]</span>:
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">    <span class="nv">ensure</span> <span class="o">=</span>&gt; <span class="s2">&#34;directory&#34;</span>,
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">file <span class="o">{</span> <span class="s2">&#34;/usr/share/icons/mcicon256.png&#34;</span>:
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">    <span class="nv">ensure</span> <span class="o">=</span>&gt; file,
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">    <span class="nv">owner</span> <span class="o">=</span>&gt; root,
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">    <span class="nv">group</span> <span class="o">=</span>&gt; root,
+</span></span><span class="line"><span class="ln">10</span><span class="cl">    <span class="nv">mode</span> <span class="o">=</span>&gt; 644,
+</span></span><span class="line"><span class="ln">11</span><span class="cl">    <span class="nb">source</span> <span class="o">=</span>&gt; <span class="s2">&#34;puppet:///files/minecraft/mcicon256.png&#34;</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">
+</span></span><span class="line"><span class="ln">14</span><span class="cl">file <span class="o">{</span> <span class="s2">&#34;/usr/share/applications/minecraft.desktop&#34;</span>:
+</span></span><span class="line"><span class="ln">15</span><span class="cl">    <span class="nv">ensure</span> <span class="o">=</span>&gt; file,
+</span></span><span class="line"><span class="ln">16</span><span class="cl">    <span class="nv">owner</span> <span class="o">=</span>&gt; root,
+</span></span><span class="line"><span class="ln">17</span><span class="cl">    <span class="nv">group</span> <span class="o">=</span>&gt; root,
+</span></span><span class="line"><span class="ln">18</span><span class="cl">    <span class="nv">mode</span> <span class="o">=</span>&gt; 644,
+</span></span><span class="line"><span class="ln">19</span><span class="cl">    <span class="nb">source</span> <span class="o">=</span>&gt; <span class="s2">&#34;puppet:///files/minecraft/minecraft.desktop&#34;</span>
+</span></span><span class="line"><span class="ln">20</span><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="ln">21</span><span class="cl">
+</span></span><span class="line"><span class="ln">22</span><span class="cl">file <span class="o">{</span> <span class="s2">&#34;/data/minecraft/startminecraft.sh&#34;</span>:
+</span></span><span class="line"><span class="ln">23</span><span class="cl">    <span class="nv">ensure</span> <span class="o">=</span>&gt; file,
+</span></span><span class="line"><span class="ln">24</span><span class="cl">    <span class="nv">owner</span> <span class="o">=</span>&gt; root,
+</span></span><span class="line"><span class="ln">25</span><span class="cl">    <span class="nv">group</span> <span class="o">=</span>&gt; root,
+</span></span><span class="line"><span class="ln">26</span><span class="cl">    <span class="nv">mode</span> <span class="o">=</span>&gt; 755,
+</span></span><span class="line"><span class="ln">27</span><span class="cl">    <span class="nb">source</span> <span class="o">=</span>&gt; <span class="s2">&#34;puppet:///files/minecraft/startminecraft.sh&#34;</span>
+</span></span><span class="line"><span class="ln">28</span><span class="cl"><span class="o">}</span>
+</span></span><span class="line"><span class="ln">29</span><span class="cl">
+</span></span><span class="line"><span class="ln">30</span><span class="cl">file <span class="o">{</span> <span class="s2">&#34;/data/minecraft/Minecraft.jar&#34;</span>:
+</span></span><span class="line"><span class="ln">31</span><span class="cl">    <span class="nv">ensure</span> <span class="o">=</span>&gt; file,
+</span></span><span class="line"><span class="ln">32</span><span class="cl">    <span class="nv">owner</span> <span class="o">=</span>&gt; root,
+</span></span><span class="line"><span class="ln">33</span><span class="cl">    <span class="nv">group</span> <span class="o">=</span>&gt; root,
+</span></span><span class="line"><span class="ln">34</span><span class="cl">    <span class="nv">mode</span> <span class="o">=</span>&gt; 644,
+</span></span><span class="line"><span class="ln">35</span><span class="cl">    <span class="nb">source</span> <span class="o">=</span>&gt; <span class="s2">&#34;puppet:///files/minecraft/Minecraft.jar&#34;</span>
+</span></span><span class="line"><span class="ln">36</span><span class="cl"><span class="o">}</span>
+</span></span></code></pre></div>
 
   </article>
 <aside class="sidebar">
@@ -506,7 +506,7 @@
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
     
   </body>
 </html>

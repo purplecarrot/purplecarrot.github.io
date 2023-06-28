@@ -40,8 +40,8 @@
     
     
     <link rel="preload" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
+    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -161,11 +161,10 @@
 
     
     <p>Whilst reading about <a href="http://docs.python.org/2/library/basehttpserver.html">BaseHTTPServer</a> class as mentioned in the last post, I also came across the very useful <a href="http://docs.python.org/2/library/simplehttpserver.html">SimpleHTTPserver</a> which is most definitely worth recording as a one-liner.  Everybody must have come across the situation where you're ssh'd into a headless server with no Apache installed or running on it, and you come across an HTML file you want to look at. You can read it with vi (or lynx!) but that's never really going to be that nice. As python is near-ubiquitous on all Linux installations these days, you can run this simple oneliner to view HTML docs on the system (or in fact any files you might want to view graphically instead of via a terminal?)</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="ln">1</span><span class="n">server</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">bash</span><span class="o">-</span><span class="mf">3.2</span><span class="err">$</span> <span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">SimpleHTTPServer</span> <span class="mi">8000</span>
-<span class="ln">2</span><span class="n">Serving</span> <span class="n">HTTP</span> <span class="n">on</span> <span class="mf">0.0.0.0</span> <span class="n">port</span> <span class="mi">8000</span> <span class="o">...</span>
-<span class="ln">3</span><span class="mf">127.0.0.1</span> <span class="o">-</span> <span class="o">-</span> <span class="p">[</span><span class="mi">16</span><span class="o">/</span><span class="n">Aug</span><span class="o">/</span><span class="mi">2013</span> <span class="mi">17</span><span class="p">:</span><span class="mi">51</span><span class="p">:</span><span class="mi">49</span><span class="p">]</span> <span class="s2">&#34;GET / HTTP/1.1&#34;</span> <span class="mi">200</span> <span class="o">-</span>
-<span class="ln">4</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="ln">1</span><span class="cl"><span class="n">server</span><span class="p">:</span><span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">doc</span><span class="o">/</span><span class="n">bash</span><span class="o">-</span><span class="mf">3.2</span><span class="err">$</span> <span class="n">python</span> <span class="o">-</span><span class="n">m</span> <span class="n">SimpleHTTPServer</span> <span class="mi">8000</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl"><span class="n">Serving</span> <span class="n">HTTP</span> <span class="n">on</span> <span class="mf">0.0.0.0</span> <span class="n">port</span> <span class="mi">8000</span> <span class="o">...</span>
+</span></span><span class="line"><span class="ln">3</span><span class="cl"><span class="mf">127.0.0.1</span> <span class="o">-</span> <span class="o">-</span> <span class="p">[</span><span class="mi">16</span><span class="o">/</span><span class="n">Aug</span><span class="o">/</span><span class="mi">2013</span> <span class="mi">17</span><span class="p">:</span><span class="mi">51</span><span class="p">:</span><span class="mi">49</span><span class="p">]</span> <span class="s2">&#34;GET / HTTP/1.1&#34;</span> <span class="mi">200</span> <span class="o">-</span>
+</span></span></code></pre></div>
 
   </article>
 <aside class="sidebar">
@@ -462,7 +461,7 @@
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
     
   </body>
 </html>

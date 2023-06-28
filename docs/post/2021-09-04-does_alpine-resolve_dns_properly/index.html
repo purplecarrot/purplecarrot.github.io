@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
+    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -181,11 +181,11 @@
 <h2 id="dns-query">DNS Query</h2>
 <p>So strace'ing the DNS queries I could see the <code>socket()</code> and <code>bind()</code> calls, followed by receiving a response from the DNS server. However, this response was empty. Something weird was happening, because running the same command on a standard Linux host you could see 100s of lines more of system calls and a good DNS response with multiple A records was returned.</p>
 <p>So the next step was to use tcpdump and capture a packet trace of the DNS query. Below is the relevant section from that pcap that shows the DNS query:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>18:00:27.376761 IP (tos 0x0, ttl 64, id 32569, offset 0, flags [DF], proto UDP (17), length 68)
-<span class="ln">2</span>    10.96.10.99.43507 &gt; 10.96.0.10:domain: 19977+ A? vis.company.com. (40)
-<span class="ln">3</span>18:00:27.386585 IP (tos 0x0, ttl 64, id 24288, offset 0, flags [DF], proto UDP (17), length 79)
-<span class="ln">4</span>    10.96.0.10.domain &gt; 10.96.10.99.43507: 19977| 0/0/1 (51)
-</code></pre></div><p>So what does this tell us?</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">18:00:27.376761 IP (tos 0x0, ttl 64, id 32569, offset 0, flags [DF], proto UDP (17), length 68)
+</span></span><span class="line"><span class="ln">2</span><span class="cl">    10.96.10.99.43507 &gt; 10.96.0.10:domain: 19977+ A? vis.company.com. (40)
+</span></span><span class="line"><span class="ln">3</span><span class="cl">18:00:27.386585 IP (tos 0x0, ttl 64, id 24288, offset 0, flags [DF], proto UDP (17), length 79)
+</span></span><span class="line"><span class="ln">4</span><span class="cl">    10.96.0.10.domain &gt; 10.96.10.99.43507: 19977| 0/0/1 (51)
+</span></span></code></pre></div><p>So what does this tell us?</p>
 <ol>
 <li>This is standard UDP DNS query (id 19977) to query the IPv4 record <code>vis.company.com</code></li>
 <li>The DNS server response comes from <code>10.96.0.10</code>, which is the Kubernetes <code>Service</code> address for CoreDNS.</li>
@@ -495,7 +495,7 @@
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
     
   </body>
 </html>

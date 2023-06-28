@@ -40,8 +40,8 @@
     
     
     <link rel="preload" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
+    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -166,31 +166,31 @@
 <p>It was time to properly understand all these things.</p>
 <p>Forget gconftool, gconf-edit and scripts that sed gschema XML files (yes, there are some people sed'ing XML files out there!). For GNOME 3 on Fedora 20 (RHEL 7), there are two tools of interest: gsettings and dconf-editor
 This is best illustrated by way of an example. Here is a list of common settings I put as default on my Fedora desktops. They should be pretty self-explanatory. The links below contain list of further configuration settings you can apply. I only wish these were more readily exposed in the GUI.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="ln"> 1</span><span class="c1"># Show Date in Gnome Shell Title Bar</span>
-<span class="ln"> 2</span><span class="n">cat</span> \<span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span>\<span class="o">&lt;</span><span class="n">eof</span><span class="o">&gt;</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">glib</span><span class="o">-</span><span class="mf">2.0</span><span class="o">/</span><span class="n">schemas</span><span class="o">/</span><span class="n">mysettings</span><span class="o">.</span><span class="n">gschema</span><span class="o">.</span><span class="n">override</span>
-<span class="ln"> 3</span><span class="p">[</span><span class="n">org</span><span class="o">.</span><span class="n">gnome</span><span class="o">.</span><span class="n">desktop</span><span class="o">.</span><span class="n">interface</span><span class="p">]</span>
-<span class="ln"> 4</span><span class="n">clock</span><span class="o">-</span><span class="n">show</span><span class="o">-</span><span class="n">date</span><span class="o">=</span><span class="n">true</span>
-<span class="ln"> 5</span><span class="n">always</span><span class="o">-</span><span class="n">show</span><span class="o">-</span><span class="n">log</span><span class="o">-</span><span class="n">out</span><span class="o">=</span><span class="n">true</span>
-<span class="ln"> 6</span>
-<span class="ln"> 7</span><span class="c1"># Set the default icons in the icon bar</span>
-<span class="ln"> 8</span><span class="p">[</span><span class="n">org</span><span class="o">.</span><span class="n">gnome</span><span class="o">.</span><span class="n">desktop</span><span class="o">.</span><span class="n">shell</span><span class="p">]</span>
-<span class="ln"> 9</span><span class="n">favorite</span><span class="o">-</span><span class="n">apps</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;firefox.desktop&#39;</span><span class="p">,</span> <span class="s1">&#39;google-chrome.desktop&#39;</span><span class="p">,</span> <span class="s1">&#39;gnome-terminal.desktop&#39;</span><span class="p">,</span> <span class="s1">&#39;shotwell.desktop&#39;</span><span class="p">,</span> <span class="s1">&#39;nautilus.desktop&#39;</span><span class="p">,</span> <span class="s1">&#39;system-config-printer.desktop&#39;</span><span class="p">,</span> <span class="s1">&#39;minecraft.desktop&#39;</span><span class="p">]</span>
-<span class="ln">10</span>
-<span class="ln">11</span><span class="p">[</span><span class="n">org</span><span class="o">.</span><span class="n">gnome</span><span class="o">.</span><span class="n">desktop</span><span class="o">.</span><span class="n">screensaver</span><span class="p">]</span>
-<span class="ln">12</span><span class="n">idle</span><span class="o">-</span><span class="n">activation</span><span class="o">-</span><span class="n">enabled</span><span class="o">=</span><span class="n">false</span>
-<span class="ln">13</span>
-<span class="ln">14</span><span class="p">[</span><span class="n">org</span><span class="o">.</span><span class="n">gnome</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">overrides</span><span class="p">]</span>
-<span class="ln">15</span><span class="n">button_layout</span><span class="o">=</span><span class="p">:</span><span class="n">minimize</span><span class="p">,</span><span class="n">maximize</span><span class="p">,</span><span class="n">close</span>
-<span class="ln">16</span>
-<span class="ln">17</span><span class="p">[</span><span class="n">org</span><span class="o">.</span><span class="n">gnome</span><span class="o">.</span><span class="n">Terminal</span><span class="o">.</span><span class="n">Legacy</span><span class="o">.</span><span class="n">Profile</span><span class="p">]</span>
-<span class="ln">18</span><span class="n">use</span><span class="o">-</span><span class="n">theme</span><span class="o">-</span><span class="n">colors</span><span class="o">=</span><span class="n">false</span>
-<span class="ln">19</span><span class="n">use</span><span class="o">-</span><span class="n">system</span><span class="o">-</span><span class="n">font</span><span class="o">=</span><span class="n">false</span>
-<span class="ln">20</span><span class="n">foreground</span><span class="o">-</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#ffffff&#39;</span>
-<span class="ln">21</span><span class="n">background</span><span class="o">-</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#000000&#39;</span> 
-<span class="ln">22</span><span class="n">font</span><span class="o">=</span><span class="s1">&#39;Inconsolata Medium 11&#39;</span> 
-<span class="ln">23</span>
-<span class="ln">24</span><span class="o">&lt;/</span><span class="n">eof</span><span class="o">&gt;</span>
-</code></pre></div><p><strong>References</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1"># Show Date in Gnome Shell Title Bar</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="n">cat</span> \<span class="o">&amp;</span><span class="n">lt</span><span class="p">;</span>\<span class="o">&lt;</span><span class="n">eof</span><span class="o">&gt;</span> <span class="o">/</span><span class="n">usr</span><span class="o">/</span><span class="n">share</span><span class="o">/</span><span class="n">glib</span><span class="o">-</span><span class="mf">2.0</span><span class="o">/</span><span class="n">schemas</span><span class="o">/</span><span class="n">mysettings</span><span class="o">.</span><span class="n">gschema</span><span class="o">.</span><span class="n">override</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="p">[</span><span class="n">org</span><span class="o">.</span><span class="n">gnome</span><span class="o">.</span><span class="n">desktop</span><span class="o">.</span><span class="n">interface</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="n">clock</span><span class="o">-</span><span class="n">show</span><span class="o">-</span><span class="n">date</span><span class="o">=</span><span class="n">true</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="n">always</span><span class="o">-</span><span class="n">show</span><span class="o">-</span><span class="n">log</span><span class="o">-</span><span class="n">out</span><span class="o">=</span><span class="n">true</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="c1"># Set the default icons in the icon bar</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl"><span class="p">[</span><span class="n">org</span><span class="o">.</span><span class="n">gnome</span><span class="o">.</span><span class="n">desktop</span><span class="o">.</span><span class="n">shell</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl"><span class="n">favorite</span><span class="o">-</span><span class="n">apps</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;firefox.desktop&#39;</span><span class="p">,</span> <span class="s1">&#39;google-chrome.desktop&#39;</span><span class="p">,</span> <span class="s1">&#39;gnome-terminal.desktop&#39;</span><span class="p">,</span> <span class="s1">&#39;shotwell.desktop&#39;</span><span class="p">,</span> <span class="s1">&#39;nautilus.desktop&#39;</span><span class="p">,</span> <span class="s1">&#39;system-config-printer.desktop&#39;</span><span class="p">,</span> <span class="s1">&#39;minecraft.desktop&#39;</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">
+</span></span><span class="line"><span class="ln">11</span><span class="cl"><span class="p">[</span><span class="n">org</span><span class="o">.</span><span class="n">gnome</span><span class="o">.</span><span class="n">desktop</span><span class="o">.</span><span class="n">screensaver</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl"><span class="n">idle</span><span class="o">-</span><span class="n">activation</span><span class="o">-</span><span class="n">enabled</span><span class="o">=</span><span class="n">false</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">
+</span></span><span class="line"><span class="ln">14</span><span class="cl"><span class="p">[</span><span class="n">org</span><span class="o">.</span><span class="n">gnome</span><span class="o">.</span><span class="n">shell</span><span class="o">.</span><span class="n">overrides</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln">15</span><span class="cl"><span class="n">button_layout</span><span class="o">=</span><span class="p">:</span><span class="n">minimize</span><span class="p">,</span><span class="n">maximize</span><span class="p">,</span><span class="n">close</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl">
+</span></span><span class="line"><span class="ln">17</span><span class="cl"><span class="p">[</span><span class="n">org</span><span class="o">.</span><span class="n">gnome</span><span class="o">.</span><span class="n">Terminal</span><span class="o">.</span><span class="n">Legacy</span><span class="o">.</span><span class="n">Profile</span><span class="p">]</span>
+</span></span><span class="line"><span class="ln">18</span><span class="cl"><span class="n">use</span><span class="o">-</span><span class="n">theme</span><span class="o">-</span><span class="n">colors</span><span class="o">=</span><span class="n">false</span>
+</span></span><span class="line"><span class="ln">19</span><span class="cl"><span class="n">use</span><span class="o">-</span><span class="n">system</span><span class="o">-</span><span class="n">font</span><span class="o">=</span><span class="n">false</span>
+</span></span><span class="line"><span class="ln">20</span><span class="cl"><span class="n">foreground</span><span class="o">-</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#ffffff&#39;</span>
+</span></span><span class="line"><span class="ln">21</span><span class="cl"><span class="n">background</span><span class="o">-</span><span class="n">color</span><span class="o">=</span><span class="s1">&#39;#000000&#39;</span> 
+</span></span><span class="line"><span class="ln">22</span><span class="cl"><span class="n">font</span><span class="o">=</span><span class="s1">&#39;Inconsolata Medium 11&#39;</span> 
+</span></span><span class="line"><span class="ln">23</span><span class="cl">
+</span></span><span class="line"><span class="ln">24</span><span class="cl"><span class="o">&lt;/</span><span class="n">eof</span><span class="o">&gt;</span>
+</span></span></code></pre></div><p><strong>References</strong></p>
 <ul>
 <li><a href="https://access.redhat.com/site/documentation/en-US/Red_Hat_Enterprise_Linux/9-Beta/html/Desktop_Migration_and_Administration_Guide/gsettings-dconf.html">RedHat RHEL7 Desktop Migration and Administration Guide</a></li>
 <li><a href="https://developer.gnome.org/gio/stable/GSettings.html#GSettings.description">GNOME gsettings reference</a></li>
@@ -493,7 +493,7 @@ This is best illustrated by way of an example. Here is a list of common settings
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
     
   </body>
 </html>

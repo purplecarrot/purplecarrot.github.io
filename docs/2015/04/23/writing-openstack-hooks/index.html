@@ -40,8 +40,8 @@
     
     
     <link rel="preload" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
+    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -171,33 +171,33 @@
 <p>Currently with the version of OpenStack I'm working with, you could add custom code to be run on nova create_instance, delete_instance or resize_instance method and this would get executed when that method is called internally as part of those nova processes.</p>
 <p>You then create your package and define the methods you want to get called alongside the OpenStack nova methods where you want them to run. Here is an example of the setup.py binding custom package methods to nova create and delete instances:</p>
 <h2 id="setuppy">setup.py</h2>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="ln"> 1</span><span class="n">setup</span><span class="p">(</span>
-<span class="ln"> 2</span>    <span class="n">name</span><span class="o">=</span><span class="s2">&#34;myfirmshooks&#34;</span><span class="p">,</span>
-<span class="ln"> 3</span>    <span class="n">version</span><span class="o">=</span><span class="s2">&#34;1.0&#34;</span><span class="p">,</span>
-<span class="ln"> 4</span>    <span class="n">description</span><span class="o">=</span><span class="s2">&#34;My Firms Hooks&#34;</span><span class="p">,</span>
-<span class="ln"> 5</span>    <span class="n">author</span><span class="o">=</span><span class="s2">&#34;Me&#34;</span><span class="p">,</span>
-<span class="ln"> 6</span>    <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
-<span class="ln"> 7</span>        <span class="s1">&#39;nova.hooks&#39;</span><span class="p">:</span> <span class="p">[</span>
-<span class="ln"> 8</span>            <span class="s1">&#39;create_instance=myfirmshooks.nova:CreateInstance&#39;</span><span class="p">,</span>
-<span class="ln"> 9</span>            <span class="s1">&#39;delete_instance=myfirmshooks.nova:DeleteInstance&#39;</span><span class="p">,</span>
-<span class="ln">10</span>        <span class="p">]</span>        
-<span class="ln">11</span>    <span class="p">},</span>
-<span class="ln">12</span><span class="p">)</span>
-</code></pre></div><h2 id="mynovahookpy">mynovahook.py</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="n">setup</span><span class="p">(</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">    <span class="n">name</span><span class="o">=</span><span class="s2">&#34;myfirmshooks&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">    <span class="n">version</span><span class="o">=</span><span class="s2">&#34;1.0&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">    <span class="n">description</span><span class="o">=</span><span class="s2">&#34;My Firms Hooks&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">    <span class="n">author</span><span class="o">=</span><span class="s2">&#34;Me&#34;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">    <span class="n">entry_points</span><span class="o">=</span><span class="p">{</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">        <span class="s1">&#39;nova.hooks&#39;</span><span class="p">:</span> <span class="p">[</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">            <span class="s1">&#39;create_instance=myfirmshooks.nova:CreateInstance&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">            <span class="s1">&#39;delete_instance=myfirmshooks.nova:DeleteInstance&#39;</span><span class="p">,</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">        <span class="p">]</span>        
+</span></span><span class="line"><span class="ln">11</span><span class="cl">    <span class="p">},</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl"><span class="p">)</span>
+</span></span></code></pre></div><h2 id="mynovahookpy">mynovahook.py</h2>
 <p>The code is actually very simple indeed. You add the code you want to run inside the post of pre method of the class. Because this code runs inside nova-api, you have access to lots of information inside the args and kwargs passed into the function which can be used inside your code. For example, the uuid, name, flavor and much more are all available with very little efforts for your code to use.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="ln"> 1</span>
-<span class="ln"> 2</span><span class="k">class</span> <span class="nc">MyNovaHook</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
-<span class="ln"> 3</span>    <span class="s2">&#34;&#34;&#34; object for running custom code &#34;&#34;&#34;</span>
-<span class="ln"> 4</span>    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="ln"> 5</span>        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
-<span class="ln"> 6</span>
-<span class="ln"> 7</span>    <span class="k">def</span> <span class="nf">pre</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="ln"> 8</span>        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&#34;Tasks that run before the instance is created&#34;</span><span class="p">)</span>
-<span class="ln"> 9</span>
-<span class="ln">10</span>    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
-<span class="ln">11</span>        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&#34;Tasks that run after the instance is created&#34;</span><span class="p">)</span>
-<span class="ln">12</span>        <span class="s2">&#34;&#34;&#34;REST requests for interaction with external systems&#34;&#34;&#34;</span>
-</code></pre></div><h2 id="scale">Scale</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="ln"> 1</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="k">class</span> <span class="nc">MyNovaHook</span><span class="p">(</span><span class="nb">object</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">    <span class="s2">&#34;&#34;&#34; object for running custom code &#34;&#34;&#34;</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">log</span> <span class="o">=</span> <span class="n">logging</span><span class="o">.</span><span class="n">getLogger</span><span class="p">(</span><span class="vm">__name__</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">    <span class="k">def</span> <span class="nf">pre</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&#34;Tasks that run before the instance is created&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">
+</span></span><span class="line"><span class="ln">10</span><span class="cl">    <span class="k">def</span> <span class="nf">post</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">info</span><span class="p">(</span><span class="s2">&#34;Tasks that run after the instance is created&#34;</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">        <span class="s2">&#34;&#34;&#34;REST requests for interaction with external systems&#34;&#34;&#34;</span>
+</span></span></code></pre></div><h2 id="scale">Scale</h2>
 <p>There isn't much information out there on customising OpenStack workflow like this. There is lots of information about using ansible, puppet, chef and similar tools for <em>post</em> build configuration of the operating system inside instance, but less information on running code that you want to run on behalf of the instance, but which cannot or you do not wish to run inside the instance. However, it should be noted that code running inside the post hook will block and/or error the instance creation. It maybe that a message bus approach would scale better with a short simple hook that puts a message on a bus and a secondary daemon running on the system that consumes and acts on that message and I may look at implementing that in future.</p>
 <h2 id="references">References</h2>
 <p>The following pages were useful when I started out writing nova hooks.</p>
@@ -512,7 +512,7 @@
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
     
   </body>
 </html>

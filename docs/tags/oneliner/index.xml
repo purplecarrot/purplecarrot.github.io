@@ -5,7 +5,7 @@
     <link>https://purplecarrot.co.uk/tags/oneliner/</link>
     <description>Recent content in oneliner on Purplecarrot</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-gb</language>
+    <language>en</language>
     <lastBuildDate>Mon, 09 Sep 2013 20:28:00 +0100</lastBuildDate><atom:link href="https://purplecarrot.co.uk/tags/oneliner/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>UTF-8 and Euro Symbol</title>
@@ -16,9 +16,9 @@
       <description>
         
           &lt;p&gt;Quick and easy way to show that UTF-8 is configured correctly in shell and terminal emulator is to display the Euro symbol. If you don&#39;t see the Euro symbol, then UTF-8 is not configured correctly.&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;linux:~$ perl -CS -le &amp;#39;print &amp;#34;\x{20AC}&amp;#34;&amp;#39;
-&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;€
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-fallback&#34; data-lang=&#34;fallback&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;linux:~$ perl -CS -le &amp;#39;print &amp;#34;\x{20AC}&amp;#34;&amp;#39;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;€
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
         
       </description>
     </item>

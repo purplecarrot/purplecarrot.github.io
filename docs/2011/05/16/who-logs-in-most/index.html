@@ -40,8 +40,8 @@
     
     
     <link rel="preload" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
+    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -163,18 +163,17 @@
     
     <p>I work in a firm with 10s of 1000s of Linux servers. A colleague had been emailed a list of servers and was trying to find out who owned them. At first, I suggested running last to see who last logged in but we realised this probably wasn't the best way to start the hunt. On reflection, the was a high chance that the user who logged in the <em>most</em> frequently into the server, was the the owner of that server. Or if not, he would most likely know the owner ;-)</p>
 <p>So I used this 30 second one liner (wrapped for viewability) to list most frequent users:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-perl" data-lang="perl"><span class="ln"> 1</span><span class="nv">$</span> <span class="nv">last</span> <span class="o">|</span> <span class="n">perl</span> <span class="o">-</span><span class="n">lane</span> <span class="s">&#39;$users{$F[0]}++; END { 
-</span><span class="ln"> 2</span><span class="s">foreach $u (reverse sort { $users{$a} &lt;=&gt; $users{b} } keys %users) 
-</span><span class="ln"> 3</span><span class="s">{ print &#34;$u logged in $users{$u} times&#34;; } }&#39;</span>
-<span class="ln"> 4</span><span class="n">tom</span> <span class="n">logged</span> <span class="n">in</span> <span class="mi">108</span> <span class="nb">times</span>
-<span class="ln"> 5</span><span class="n">sally</span> <span class="n">logged</span> <span class="n">in</span> <span class="mi">81</span> <span class="nb">times</span>
-<span class="ln"> 6</span><span class="n">dave</span> <span class="n">logged</span> <span class="n">in</span> <span class="mi">32</span> <span class="nb">times</span>
-<span class="ln"> 7</span><span class="n">root</span> <span class="n">logged</span> <span class="n">in</span> <span class="mi">27</span> <span class="nb">times</span>
-<span class="ln"> 8</span><span class="n">richard</span> <span class="n">logged</span> <span class="n">in</span> <span class="mi">8</span> <span class="nb">times</span>
-<span class="ln"> 9</span><span class="n">admin</span> <span class="n">logged</span> <span class="n">in</span> <span class="mi">3</span> <span class="nb">times</span>
-<span class="ln">10</span><span class="n">wtmp</span> <span class="n">logged</span> <span class="n">in</span> <span class="mi">1</span> <span class="nb">times</span>
-<span class="ln">11</span>
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-perl" data-lang="perl"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="nv">$</span> <span class="nv">last</span> <span class="o">|</span> <span class="n">perl</span> <span class="o">-</span><span class="n">lane</span> <span class="s">&#39;$users{$F[0]}++; END { 
+</span></span></span><span class="line"><span class="ln"> 2</span><span class="cl"><span class="s">foreach $u (reverse sort { $users{$a} &lt;=&gt; $users{b} } keys %users) 
+</span></span></span><span class="line"><span class="ln"> 3</span><span class="cl"><span class="s">{ print &#34;$u logged in $users{$u} times&#34;; } }&#39;</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="n">tom</span> <span class="n">logged</span> <span class="n">in</span> <span class="mi">108</span> <span class="nb">times</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl"><span class="n">sally</span> <span class="n">logged</span> <span class="n">in</span> <span class="mi">81</span> <span class="nb">times</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl"><span class="n">dave</span> <span class="n">logged</span> <span class="n">in</span> <span class="mi">32</span> <span class="nb">times</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="n">root</span> <span class="n">logged</span> <span class="n">in</span> <span class="mi">27</span> <span class="nb">times</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl"><span class="n">richard</span> <span class="n">logged</span> <span class="n">in</span> <span class="mi">8</span> <span class="nb">times</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl"><span class="n">admin</span> <span class="n">logged</span> <span class="n">in</span> <span class="mi">3</span> <span class="nb">times</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="n">wtmp</span> <span class="n">logged</span> <span class="n">in</span> <span class="mi">1</span> <span class="nb">times</span>
+</span></span></code></pre></div>
 
   </article>
 <aside class="sidebar">
@@ -471,7 +470,7 @@
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
     
   </body>
 </html>

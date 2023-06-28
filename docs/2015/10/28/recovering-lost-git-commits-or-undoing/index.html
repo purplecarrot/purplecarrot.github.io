@@ -40,8 +40,8 @@
     
     
     <link rel="preload" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
+    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -164,17 +164,17 @@
 <p>The remote HEAD had changed quite a bit since his initial checkout, and he got himself into a bit of a mess pulling down changes and merging his local changes. To further compound the error, he did a git reset --hard HEAD~3, and then tried a few different git revert and git  reset commands to get it into the state he wanted! He asked me if there was an easy way to get these back (after he read git reset --hard is permanent and dangerous!).</p>
 <p>So we've all lost work at some point in our lives, but I've never managed to actually <em>lose</em> work in DVCS. Fortunately, I remembered a git tutorial a while back where they had talked about the reflog. So I knew his commit was &quot;there somewhere&quot;, it just needed to be got back.</p>
 <p>It turns out this is actually very simple. You simply view your reflog and then hard reset back to the commit SHA you want (I had to update the output below as it contains proprietary information from my firm!)</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="ln"> 1</span>$ git reflog
-<span class="ln"> 2</span>a30a408 HEAD@<span class="o">{</span>0<span class="o">}</span>: commit: Revert <span class="s2">&#34;XYZ&#34;</span>
-<span class="ln"> 3</span>4149dbf HEAD@<span class="o">{</span>1<span class="o">}</span>: commit: 4149dbf.... updating HEAD
-<span class="ln"> 4</span>a6b3b59 HEAD@<span class="o">{</span>2<span class="o">}</span>: commit: a6b3b59.... updating HEAD
-<span class="ln"> 5</span>957745c HEAD@<span class="o">{</span>3<span class="o">}</span>: HEAD~2: updating HEAD
-<span class="ln"> 6</span>daa6d14 HEAD@<span class="o">{</span>4<span class="o">}</span>: HEAD~3: updating HEAD
-<span class="ln"> 7</span>ebc7042 HEAD@<span class="o">{</span>5<span class="o">}</span>: pull: Merge made by recursive
-<span class="ln"> 8</span>635d7ff HEAD@<span class="o">{</span>6<span class="o">}</span>: commit: Last Good Commit
-<span class="ln"> 9</span>$ git reset --hard 635d7ff
-<span class="ln">10</span>$ git push -f
-</code></pre></div><p>So these reset commits are basically in the reflog as garbage. This revert could be done immediately, but these garbage commits will eventually be deleted (configuration variable gc.reflogExpire which defaults to 90 days). So you won't always be able to go back to them, but it is good for immediate recovery of errors, which is realistically the case when you will be able to use this.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="ln"> 1</span><span class="cl">$ git reflog
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">a30a408 HEAD@<span class="o">{</span>0<span class="o">}</span>: commit: Revert <span class="s2">&#34;XYZ&#34;</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">4149dbf HEAD@<span class="o">{</span>1<span class="o">}</span>: commit: 4149dbf.... updating HEAD
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">a6b3b59 HEAD@<span class="o">{</span>2<span class="o">}</span>: commit: a6b3b59.... updating HEAD
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">957745c HEAD@<span class="o">{</span>3<span class="o">}</span>: HEAD~2: updating HEAD
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">daa6d14 HEAD@<span class="o">{</span>4<span class="o">}</span>: HEAD~3: updating HEAD
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">ebc7042 HEAD@<span class="o">{</span>5<span class="o">}</span>: pull: Merge made by recursive
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">635d7ff HEAD@<span class="o">{</span>6<span class="o">}</span>: commit: Last Good Commit
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">$ git reset --hard 635d7ff
+</span></span><span class="line"><span class="ln">10</span><span class="cl">$ git push -f
+</span></span></code></pre></div><p>So these reset commits are basically in the reflog as garbage. This revert could be done immediately, but these garbage commits will eventually be deleted (configuration variable gc.reflogExpire which defaults to 90 days). So you won't always be able to go back to them, but it is good for immediate recovery of errors, which is realistically the case when you will be able to use this.</p>
 
 
   </article>
@@ -472,7 +472,7 @@
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
     
   </body>
 </html>

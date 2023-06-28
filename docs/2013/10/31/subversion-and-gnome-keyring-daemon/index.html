@@ -40,8 +40,8 @@
     
     
     <link rel="preload" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
+    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -165,30 +165,30 @@
 <p>As an alternative, Subversion supports using gnome-keyring-daemon to store the repository passwords but the servers I used don't have X or GNOME installed, but with a little bit of extra manual config, gnome-keyring-daemon can be used over SSH connections too.</p>
 <p>The subversion documentation on setting this up and using gnome-keyring-daemon with SSH from the terminal is pretty poor, and the suggestions on sites and blogs I found discussing the problem didn't work for me. However, after reading these sites and some trial and error, I did get it working. The steps below show what I did to get gnome-keyring-daemon and subversion working on a RHEL 6 server with standard RHEL repos:</p>
 <p>First install the following core RPMs that are in the standard RHEL repositories:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>yum install gnome-keyring dbus-x11 subversion
-</code></pre></div><p>Next, add the following to your .bashrc or .bash_profile to setup gnome-keyring-daemon when you're not running GNOME or a desktop:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>eval `dbus-launch --sh-syntax`
-<span class="ln">2</span>eval `gnome-keyring-daemon`
-</code></pre></div><p>Edit subversion config files to use gnome-keyring for passwords:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>~/.subversion/config
-<span class="ln">2</span>[auth]
-<span class="ln">3</span>password-stores = gnome-keyring
-<span class="ln">4</span>
-<span class="ln">5</span>~/.subversion/servers
-<span class="ln">6</span>[global]
-<span class="ln">7</span>store-passwords = yes
-<span class="ln">8</span>store-plaintext-passwords = no
-</code></pre></div><p>Then when you do a subversion action for the first time you'll get asked for GNOME keyring password, but subsequent actions will no longer prompt for password:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>server01:~/svn/proj/trunk$ svn update
-<span class="ln">2</span>Updating &#39;.&#39;:
-<span class="ln">3</span>Password for &#39;svn&#39; GNOME keyring:
-<span class="ln">4</span>At revision 864
-<span class="ln">5</span>
-<span class="ln">6</span>server01:~/svn/proj/trunk$ svn -m &#34;Test Auth&#34; ci
-<span class="ln">7</span>Sending        GNUmakefile
-<span class="ln">8</span>Transmitting file data .....
-<span class="ln">9</span>Committed revision 865.
-</code></pre></div><p>Sites that I found useful in getting this config working for me were the <a href="http://svnbook.red-bean.com/en/1.7/svn.advanced.confarea.html">Version Control with Subversion</a> book and <a href="http://technicalprose.blogspot.co.uk/2011/06/using-subversion-with-gnome-keyring.html">this blog post</a> describing a wrapper around svn and gnome-keyring that the author wrote to do the same.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">yum install gnome-keyring dbus-x11 subversion
+</span></span></code></pre></div><p>Next, add the following to your .bashrc or .bash_profile to setup gnome-keyring-daemon when you're not running GNOME or a desktop:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">eval `dbus-launch --sh-syntax`
+</span></span><span class="line"><span class="ln">2</span><span class="cl">eval `gnome-keyring-daemon`
+</span></span></code></pre></div><p>Edit subversion config files to use gnome-keyring for passwords:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">~/.subversion/config
+</span></span><span class="line"><span class="ln">2</span><span class="cl">[auth]
+</span></span><span class="line"><span class="ln">3</span><span class="cl">password-stores = gnome-keyring
+</span></span><span class="line"><span class="ln">4</span><span class="cl">
+</span></span><span class="line"><span class="ln">5</span><span class="cl">~/.subversion/servers
+</span></span><span class="line"><span class="ln">6</span><span class="cl">[global]
+</span></span><span class="line"><span class="ln">7</span><span class="cl">store-passwords = yes
+</span></span><span class="line"><span class="ln">8</span><span class="cl">store-plaintext-passwords = no
+</span></span></code></pre></div><p>Then when you do a subversion action for the first time you'll get asked for GNOME keyring password, but subsequent actions will no longer prompt for password:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">server01:~/svn/proj/trunk$ svn update
+</span></span><span class="line"><span class="ln">2</span><span class="cl">Updating &#39;.&#39;:
+</span></span><span class="line"><span class="ln">3</span><span class="cl">Password for &#39;svn&#39; GNOME keyring:
+</span></span><span class="line"><span class="ln">4</span><span class="cl">At revision 864
+</span></span><span class="line"><span class="ln">5</span><span class="cl">
+</span></span><span class="line"><span class="ln">6</span><span class="cl">server01:~/svn/proj/trunk$ svn -m &#34;Test Auth&#34; ci
+</span></span><span class="line"><span class="ln">7</span><span class="cl">Sending        GNUmakefile
+</span></span><span class="line"><span class="ln">8</span><span class="cl">Transmitting file data .....
+</span></span><span class="line"><span class="ln">9</span><span class="cl">Committed revision 865.
+</span></span></code></pre></div><p>Sites that I found useful in getting this config working for me were the <a href="http://svnbook.red-bean.com/en/1.7/svn.advanced.confarea.html">Version Control with Subversion</a> book and <a href="http://technicalprose.blogspot.co.uk/2011/06/using-subversion-with-gnome-keyring.html">this blog post</a> describing a wrapper around svn and gnome-keyring that the author wrote to do the same.</p>
 
 
   </article>
@@ -486,7 +486,7 @@
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
     
   </body>
 </html>

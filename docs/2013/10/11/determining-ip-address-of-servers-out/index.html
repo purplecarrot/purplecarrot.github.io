@@ -40,8 +40,8 @@
     
     
     <link rel="preload" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
+    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -165,47 +165,47 @@
 <p>As shown in {{ site.baseurl }}{% post_url 2013-10-11-configuring-out-of-band-management %}
 this post, finding out the IP of the Out-of-Band Management interface from the &quot;in-band&quot; server is at times very useful. Here is the quick reference way to find that out from the Linux command line for popular OOBs:</p>
 <p><strong>HP iLO</strong></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="ln">1</span>hpserver:~# hponcfg -a -w ilosettings.xml
-<span class="ln">2</span>HP Lights-Out Online Configuration utility
-<span class="ln">3</span>Version 4.0.0 Date 12/08/2011 <span class="o">(</span>c<span class="o">)</span> Hewlett-Packard Company, <span class="m">2011</span>
-<span class="ln">4</span>Firmware <span class="nv">Revision</span> <span class="o">=</span> 1.29 Device <span class="nb">type</span> <span class="o">=</span> iLO <span class="m">2</span> Driver <span class="nv">name</span> <span class="o">=</span> hpilo
-<span class="ln">5</span>Management Processor configuration is successfully written to file <span class="s2">&#34;ilosettings.xml&#34;</span>
-<span class="ln">6</span>hpserver:~# grep <span class="s2">&#34;&lt;IP_ADDRESS VALUE&#34;</span> ilosettings.xml
-<span class="ln">7</span>    &lt;IP_ADDRESS <span class="nv">VALUE</span><span class="o">=</span><span class="s2">&#34;192.168.1.1&#34;</span>&gt;
-<span class="ln">8</span>hpserver:~#
-</code></pre></div><p><strong>IPMI</strong></p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="ln"> 1</span>ipmiserver# ipmitool -I open lan print <span class="m">1</span>
-<span class="ln"> 2</span>Set in Progress         : Set Complete
-<span class="ln"> 3</span>Auth Type Support       : NONE MD2 MD5 PASSWORD
-<span class="ln"> 4</span>Auth Type Enable        : Callback :
-<span class="ln"> 5</span>                        : User     : MD2 MD5 PASSWORD
-<span class="ln"> 6</span>                        : Operator : MD2 MD5 PASSWORD
-<span class="ln"> 7</span>                        : Admin    : MD5
-<span class="ln"> 8</span>                        : OEM      :
-<span class="ln"> 9</span>IP Address Source       : Static Address
-<span class="ln">10</span>IP Address              : 192.168.1.1
-<span class="ln">11</span>Subnet Mask             : 255.255.255.0
-<span class="ln">12</span>MAC Address             : 00:00:00:00:00:00
-<span class="ln">13</span>SNMP Community String   : public
-<span class="ln">14</span>IP Header               : <span class="nv">TTL</span><span class="o">=</span>0x40 <span class="nv">Flags</span><span class="o">=</span>0x40 <span class="nv">Precedence</span><span class="o">=</span>0x00 <span class="nv">TOS</span><span class="o">=</span>0x10
-<span class="ln">15</span>BMC ARP Control         : ARP Responses Enabled, Gratuitous ARP Disabled
-<span class="ln">16</span>Gratituous ARP Intrvl   : 2.0 seconds
-<span class="ln">17</span>Default Gateway IP      : 192.168.1.254
-<span class="ln">18</span>Default Gateway MAC     : 00:00:00:00:00:00
-<span class="ln">19</span>Backup Gateway IP       : 0.0.0.0
-<span class="ln">20</span>Backup Gateway MAC      : 00:00:00:00:00:00
-<span class="ln">21</span>802.1q VLAN ID          : Disabled
-<span class="ln">22</span>802.1q VLAN Priority    : <span class="m">0</span>
-<span class="ln">23</span>RMCP+ Cipher Suites     : 0,1,2,3,4
-<span class="ln">24</span>Cipher Suite Priv Max   : XaaaaXXXXXXXXXX
-<span class="ln">25</span>                        :     <span class="nv">X</span><span class="o">=</span>Cipher Suite Unused
-<span class="ln">26</span>                        :     <span class="nv">c</span><span class="o">=</span>CALLBACK
-<span class="ln">27</span>                        :     <span class="nv">u</span><span class="o">=</span>USER
-<span class="ln">28</span>                        :     <span class="nv">o</span><span class="o">=</span>OPERATOR
-<span class="ln">29</span>                        :     <span class="nv">a</span><span class="o">=</span>ADMIN
-<span class="ln">30</span>                        :     <span class="nv">O</span><span class="o">=</span>OEM
-<span class="ln">31</span>ipmiserver#
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="ln">1</span><span class="cl">hpserver:~# hponcfg -a -w ilosettings.xml
+</span></span><span class="line"><span class="ln">2</span><span class="cl">HP Lights-Out Online Configuration utility
+</span></span><span class="line"><span class="ln">3</span><span class="cl">Version 4.0.0 Date 12/08/2011 <span class="o">(</span>c<span class="o">)</span> Hewlett-Packard Company, <span class="m">2011</span>
+</span></span><span class="line"><span class="ln">4</span><span class="cl">Firmware <span class="nv">Revision</span> <span class="o">=</span> 1.29 Device <span class="nb">type</span> <span class="o">=</span> iLO <span class="m">2</span> Driver <span class="nv">name</span> <span class="o">=</span> hpilo
+</span></span><span class="line"><span class="ln">5</span><span class="cl">Management Processor configuration is successfully written to file <span class="s2">&#34;ilosettings.xml&#34;</span>
+</span></span><span class="line"><span class="ln">6</span><span class="cl">hpserver:~# grep <span class="s2">&#34;&lt;IP_ADDRESS VALUE&#34;</span> ilosettings.xml
+</span></span><span class="line"><span class="ln">7</span><span class="cl">    &lt;IP_ADDRESS <span class="nv">VALUE</span><span class="o">=</span><span class="s2">&#34;192.168.1.1&#34;</span>&gt;
+</span></span><span class="line"><span class="ln">8</span><span class="cl">hpserver:~#
+</span></span></code></pre></div><p><strong>IPMI</strong></p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="ln"> 1</span><span class="cl">ipmiserver# ipmitool -I open lan print <span class="m">1</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">Set in Progress         : Set Complete
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">Auth Type Support       : NONE MD2 MD5 PASSWORD
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">Auth Type Enable        : Callback :
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">                        : User     : MD2 MD5 PASSWORD
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">                        : Operator : MD2 MD5 PASSWORD
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">                        : Admin    : MD5
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">                        : OEM      :
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">IP Address Source       : Static Address
+</span></span><span class="line"><span class="ln">10</span><span class="cl">IP Address              : 192.168.1.1
+</span></span><span class="line"><span class="ln">11</span><span class="cl">Subnet Mask             : 255.255.255.0
+</span></span><span class="line"><span class="ln">12</span><span class="cl">MAC Address             : 00:00:00:00:00:00
+</span></span><span class="line"><span class="ln">13</span><span class="cl">SNMP Community String   : public
+</span></span><span class="line"><span class="ln">14</span><span class="cl">IP Header               : <span class="nv">TTL</span><span class="o">=</span>0x40 <span class="nv">Flags</span><span class="o">=</span>0x40 <span class="nv">Precedence</span><span class="o">=</span>0x00 <span class="nv">TOS</span><span class="o">=</span>0x10
+</span></span><span class="line"><span class="ln">15</span><span class="cl">BMC ARP Control         : ARP Responses Enabled, Gratuitous ARP Disabled
+</span></span><span class="line"><span class="ln">16</span><span class="cl">Gratituous ARP Intrvl   : 2.0 seconds
+</span></span><span class="line"><span class="ln">17</span><span class="cl">Default Gateway IP      : 192.168.1.254
+</span></span><span class="line"><span class="ln">18</span><span class="cl">Default Gateway MAC     : 00:00:00:00:00:00
+</span></span><span class="line"><span class="ln">19</span><span class="cl">Backup Gateway IP       : 0.0.0.0
+</span></span><span class="line"><span class="ln">20</span><span class="cl">Backup Gateway MAC      : 00:00:00:00:00:00
+</span></span><span class="line"><span class="ln">21</span><span class="cl">802.1q VLAN ID          : Disabled
+</span></span><span class="line"><span class="ln">22</span><span class="cl">802.1q VLAN Priority    : <span class="m">0</span>
+</span></span><span class="line"><span class="ln">23</span><span class="cl">RMCP+ Cipher Suites     : 0,1,2,3,4
+</span></span><span class="line"><span class="ln">24</span><span class="cl">Cipher Suite Priv Max   : XaaaaXXXXXXXXXX
+</span></span><span class="line"><span class="ln">25</span><span class="cl">                        :     <span class="nv">X</span><span class="o">=</span>Cipher Suite Unused
+</span></span><span class="line"><span class="ln">26</span><span class="cl">                        :     <span class="nv">c</span><span class="o">=</span>CALLBACK
+</span></span><span class="line"><span class="ln">27</span><span class="cl">                        :     <span class="nv">u</span><span class="o">=</span>USER
+</span></span><span class="line"><span class="ln">28</span><span class="cl">                        :     <span class="nv">o</span><span class="o">=</span>OPERATOR
+</span></span><span class="line"><span class="ln">29</span><span class="cl">                        :     <span class="nv">a</span><span class="o">=</span>ADMIN
+</span></span><span class="line"><span class="ln">30</span><span class="cl">                        :     <span class="nv">O</span><span class="o">=</span>OEM
+</span></span><span class="line"><span class="ln">31</span><span class="cl">ipmiserver#
+</span></span></code></pre></div>
 
   </article>
 <aside class="sidebar">
@@ -502,7 +502,7 @@ this post, finding out the IP of the Out-of-Band Management interface from the &
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
     
   </body>
 </html>

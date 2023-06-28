@@ -40,8 +40,8 @@
     
     
     <link rel="preload" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
+    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -161,23 +161,23 @@
 
     
     <p>I often use the python setup.py bdist_rpm command on RHEL to build RPMs of the python modules I'm developing. This makes it easy for me to distribute my module via the yum repos internally at the company I work for.   At my company, most of our production servers are currently RHEL 6, but we are starting to deploy RHEL 7. When I took one of my recently built RPMs of a python module (that runs under python 2.6 and python 2.7), I was surprised to find that it did not install on RHEL7 because of missing dependencies. It turns out, that my RPMs &quot;required&quot; python 2.6 from RHEL 6 (RHEL 7 moves to python 2.7 as default).  &lt;</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="ln">1</span>$ rpm -qpR python-mymodule-2.8-1.noarch.rpm
-<span class="ln">2</span>/usr/bin/python
-<span class="ln">3</span>python<span class="o">(</span>abi<span class="o">)</span> <span class="o">=</span> 2.6
-<span class="ln">4</span>python-requests
-<span class="ln">5</span>rpmlib<span class="o">(</span>CompressedFileNames<span class="o">)</span> &lt;<span class="o">=</span> 3.0.4-1
-<span class="ln">6</span>rpmlib<span class="o">(</span>PayloadFilesHavePrefix<span class="o">)</span> &lt;<span class="o">=</span> 4.0-1
-</code></pre></div><p>Even though I don't have a specific version of python listed in the requirements for the package, the rpmbuild called by setuptools automatically adds a dependency on the python version installed on the system I'm using. This is because when rpmbuild scans through my source, it then finds the shebang that points to #!/usr/bin/env python, which in turn finds the python 3.6 on the server where I build the RPM. Obviously, I could rebuild the rpm on a RHEL 7 host and it would then find python 2.7, but I don't want to have separate RPMs for different RHEL versions when the code is the same.  I wanted to be able to produce an RPM for my python module and code that installs and runs on RHEL 6 and RHEL 7 (when the python code is tested to run under python 2.6+)  Now this isn't particularly well documented, but I did a little digging and found that to do this, you can simply add the --no-autoreq option to setup.py</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="ln">1</span>$ python setup.py bdist_rpm --no-autoreq
-</code></pre></div><p>This will then tell bdist_rpm to add the &quot;AutoReq: no&quot; option to the spec file used to generate the RPM. RPM build will then see this and the resulting RPM will then no longer require a specific version of python.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="ln">1</span>$ rpm -qpR python-mymodule-2.8-2.noarch.rpm
-<span class="ln">2</span>python-requests
-<span class="ln">3</span>rpmlib<span class="o">(</span>CompressedFileNames<span class="o">)</span> &lt;<span class="o">=</span> 3.0.4-1
-<span class="ln">4</span>rpmlib<span class="o">(</span>PayloadFilesHavePrefix<span class="o">)</span> &lt;<span class="o">=</span> 4.0-1
-</code></pre></div><p>You can then add the option to your setup.cfg file for the module, so that you don't forget it next time and inadvertently distribute a python version dependent module.  &lt;</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="ln">1</span><span class="o">[</span>bdist_rpm<span class="o">]</span>
-<span class="ln">2</span>no-autoreq <span class="o">=</span> yes
-</code></pre></div><h2 id="useful-references">Useful References:</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="ln">1</span><span class="cl">$ rpm -qpR python-mymodule-2.8-1.noarch.rpm
+</span></span><span class="line"><span class="ln">2</span><span class="cl">/usr/bin/python
+</span></span><span class="line"><span class="ln">3</span><span class="cl">python<span class="o">(</span>abi<span class="o">)</span> <span class="o">=</span> 2.6
+</span></span><span class="line"><span class="ln">4</span><span class="cl">python-requests
+</span></span><span class="line"><span class="ln">5</span><span class="cl">rpmlib<span class="o">(</span>CompressedFileNames<span class="o">)</span> &lt;<span class="o">=</span> 3.0.4-1
+</span></span><span class="line"><span class="ln">6</span><span class="cl">rpmlib<span class="o">(</span>PayloadFilesHavePrefix<span class="o">)</span> &lt;<span class="o">=</span> 4.0-1
+</span></span></code></pre></div><p>Even though I don't have a specific version of python listed in the requirements for the package, the rpmbuild called by setuptools automatically adds a dependency on the python version installed on the system I'm using. This is because when rpmbuild scans through my source, it then finds the shebang that points to #!/usr/bin/env python, which in turn finds the python 3.6 on the server where I build the RPM. Obviously, I could rebuild the rpm on a RHEL 7 host and it would then find python 2.7, but I don't want to have separate RPMs for different RHEL versions when the code is the same.  I wanted to be able to produce an RPM for my python module and code that installs and runs on RHEL 6 and RHEL 7 (when the python code is tested to run under python 2.6+)  Now this isn't particularly well documented, but I did a little digging and found that to do this, you can simply add the --no-autoreq option to setup.py</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="ln">1</span><span class="cl">$ python setup.py bdist_rpm --no-autoreq
+</span></span></code></pre></div><p>This will then tell bdist_rpm to add the &quot;AutoReq: no&quot; option to the spec file used to generate the RPM. RPM build will then see this and the resulting RPM will then no longer require a specific version of python.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="ln">1</span><span class="cl">$ rpm -qpR python-mymodule-2.8-2.noarch.rpm
+</span></span><span class="line"><span class="ln">2</span><span class="cl">python-requests
+</span></span><span class="line"><span class="ln">3</span><span class="cl">rpmlib<span class="o">(</span>CompressedFileNames<span class="o">)</span> &lt;<span class="o">=</span> 3.0.4-1
+</span></span><span class="line"><span class="ln">4</span><span class="cl">rpmlib<span class="o">(</span>PayloadFilesHavePrefix<span class="o">)</span> &lt;<span class="o">=</span> 4.0-1
+</span></span></code></pre></div><p>You can then add the option to your setup.cfg file for the module, so that you don't forget it next time and inadvertently distribute a python version dependent module.  &lt;</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="ln">1</span><span class="cl"><span class="o">[</span>bdist_rpm<span class="o">]</span>
+</span></span><span class="line"><span class="ln">2</span><span class="cl">no-autoreq <span class="o">=</span> yes
+</span></span></code></pre></div><h2 id="useful-references">Useful References:</h2>
 <ul>
 <li><a href="http://www.rpm.org/max-rpm-snapshot/s1-rpm-depend-auto-depend.html">RPM Automatic Dependencies</a></li>
 </ul>
@@ -478,7 +478,7 @@
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
     
   </body>
 </html>

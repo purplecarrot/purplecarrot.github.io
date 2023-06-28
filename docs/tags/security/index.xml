@@ -5,7 +5,7 @@
     <link>https://purplecarrot.co.uk/tags/security/</link>
     <description>Recent content in Security on Purplecarrot</description>
     <generator>Hugo -- gohugo.io</generator>
-    <language>en-gb</language>
+    <language>en</language>
     <lastBuildDate>Thu, 03 Dec 2015 18:11:00 +0000</lastBuildDate><atom:link href="https://purplecarrot.co.uk/tags/security/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>Verifying TLS certificates in Python</title>
@@ -17,9 +17,9 @@
         
           &lt;p&gt;All too often people I see Python code using the requests module to query an API that just bypass TLS verification (i.e it sets &lt;code&gt;verify=False&lt;/code&gt; in the requests function calls). On RedHat Linux and derivatives, you can simply set this to &lt;code&gt;verify=/etc/pki/tls/certs/ca-bundle.crt&lt;/code&gt; and your Python code will then automatically use any system CA certs are part of TLS verification.&lt;/p&gt;
 &lt;p&gt;If like me, the environment you work in has a private Root CA that even requires and issues certs to internal services on an internal private network, you can really easily add this root CA cert (and any intermediate CA certs you might want to trust) to the systems cert chain:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# cp mycompany-root-ca.crt /etc/pki/ca-trust/source/anchors&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# /usr/bin/update-ca-trust&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;But perhaps you work on regulated systems where you don&#39;t have privileged root access? In that case, you can set the shell environment variable &lt;code&gt;REQUESTS_CA_BUNDLE=$HOME/mycert.crt&lt;/code&gt;.&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt;1&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# cp mycompany-root-ca.crt /etc/pki/ca-trust/source/anchors&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt;2&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# /usr/bin/update-ca-trust&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;But perhaps you work on regulated systems where you don&#39;t have privileged root access? In that case, you can set the shell environment variable &lt;code&gt;REQUESTS_CA_BUNDLE=$HOME/mycert.crt&lt;/code&gt;.&lt;/p&gt;
 &lt;p&gt;I can relate to the fact that sometimes we just want to get the code written as quickly as possible, but it doesn&#39;t have to be difficult and it&#39;s worth getting in the habit of leaving TLS verification turned on.&lt;/p&gt;
 
         
@@ -35,41 +35,40 @@
       <description>
         
           &lt;p&gt;Is there anybody in the IT industry that wasn&#39;t doing something with openssl in April? &lt;a href=&#34;http://heartbleed.com/&#34;&gt;&lt;/a&gt; I don&#39;t use the openssl command line utility that often, but last week it reminded me that openssl command line tool is pretty comprehensive and has some nice features. I thought on this occasion I&#39;d record the most useful ones so that next time I don&#39;t have to look them up again!&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# Show Certificate Info&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;$ openssl x509 -text -in server.cert
-&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;$ openssl md5 server.cert
-&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;$ openssl sha1 server.cert
-&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# Confirming openssl build info&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;openssl version -a
-&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;OpenSSL 1.0.1e-fips &lt;span class=&#34;m&#34;&gt;11&lt;/span&gt; Feb &lt;span class=&#34;m&#34;&gt;2013&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;built on: Tue Apr  &lt;span class=&#34;m&#34;&gt;8&lt;/span&gt; 00:29:11 UTC &lt;span class=&#34;m&#34;&gt;2014&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;platform: linux-x86_64
-&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;options:  bn&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;64,64&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; md2&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;int&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; rc4&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;16x,int&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; des&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;idx,cisc,16,int&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; idea&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;int&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; blowfish&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;idx&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; 
-&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;compiler: gcc -fPIC -DOPENSSL_PIC -DZLIB -DOPENSSL_THREADS -D_REENTRANT -DDSO_DLFCN -DHAVE_DLFCN_H -DKRB5_MIT -m64 -DL_ENDIAN -DTERMIO -Wall -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;2&lt;/span&gt; -fexceptions -fstack-protector --param&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;ssp-buffer-size&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; -grecord-gcc-switches  -m64 -mtune&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;generic -Wa,--noexecstack -DPURIFY -DOPENSSL_IA32_SSE2 -DOPENSSL_BN_ASM_MONT -DOPENSSL_BN_ASM_MONT5 -DOPENSSL_BN_ASM_GF2m -DSHA1_ASM -DSHA256_ASM -DSHA512_ASM -DMD5_ASM -DAES_ASM -DVPAES_ASM -DBSAES_ASM -DWHIRLPOOL_ASM -DGHASH_ASM
-&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;OPENSSLDIR: &lt;span class=&#34;s2&#34;&gt;&amp;#34;/etc/pki/tls&amp;#34;&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;engines:  dynamic 
-&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# Generate hashed passwords (for example, for Anaconda)&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;openssl passwd -1 mysecretword
-&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;&lt;span class=&#34;nv&#34;&gt;$1$utlS7bht$VLMQrtHnPU0mkSO&lt;/span&gt;/Kpzh/.
-&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# Directory complied in and used to search for openSSL files (--openssldir)&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;openssl version -d 
-&lt;span class=&#34;ln&#34;&gt;22&lt;/span&gt;
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I tend to use commercial SSL certificates or ones from my company&#39;s internal CA. However, I found this text file in my home directory which I&#39;m recording here for next time because it&#39;s a very easy quick reference for generating a self signed certificate:&lt;/p&gt;
-&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# Generate new private key&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;openssl genrsa -aes256 -out my.key &lt;span class=&#34;m&#34;&gt;4096&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# Generate new certificate request&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;openssl req -new -key my.key -out my.csr
-&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# Sign certificate&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;openssl x509 -req -days &lt;span class=&#34;m&#34;&gt;3650&lt;/span&gt; -in my.csr -signkey my.key -out my.crt
-&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;c1&#34;&gt;# Remove cert password&lt;/span&gt;
-&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;openssl rsa -in my.key -out my.key 
-&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# Show Certificate Info&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;$ openssl x509 -text -in server.cert
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;$ openssl md5 server.cert
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;$ openssl sha1 server.cert
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# Confirming openssl build info&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;openssl version -a
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;OpenSSL 1.0.1e-fips &lt;span class=&#34;m&#34;&gt;11&lt;/span&gt; Feb &lt;span class=&#34;m&#34;&gt;2013&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;built on: Tue Apr  &lt;span class=&#34;m&#34;&gt;8&lt;/span&gt; 00:29:11 UTC &lt;span class=&#34;m&#34;&gt;2014&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;platform: linux-x86_64
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;options:  bn&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;64,64&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; md2&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;int&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; rc4&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;16x,int&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; des&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;idx,cisc,16,int&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; idea&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;int&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; blowfish&lt;span class=&#34;o&#34;&gt;(&lt;/span&gt;idx&lt;span class=&#34;o&#34;&gt;)&lt;/span&gt; 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt;12&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;compiler: gcc -fPIC -DOPENSSL_PIC -DZLIB -DOPENSSL_THREADS -D_REENTRANT -DDSO_DLFCN -DHAVE_DLFCN_H -DKRB5_MIT -m64 -DL_ENDIAN -DTERMIO -Wall -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;2&lt;/span&gt; -fexceptions -fstack-protector --param&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;ssp-buffer-size&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;&lt;span class=&#34;m&#34;&gt;4&lt;/span&gt; -grecord-gcc-switches  -m64 -mtune&lt;span class=&#34;o&#34;&gt;=&lt;/span&gt;generic -Wa,--noexecstack -DPURIFY -DOPENSSL_IA32_SSE2 -DOPENSSL_BN_ASM_MONT -DOPENSSL_BN_ASM_MONT5 -DOPENSSL_BN_ASM_GF2m -DSHA1_ASM -DSHA256_ASM -DSHA512_ASM -DMD5_ASM -DAES_ASM -DVPAES_ASM -DBSAES_ASM -DWHIRLPOOL_ASM -DGHASH_ASM
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt;13&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;OPENSSLDIR: &lt;span class=&#34;s2&#34;&gt;&amp;#34;/etc/pki/tls&amp;#34;&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt;14&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;engines:  dynamic 
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt;15&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt;16&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# Generate hashed passwords (for example, for Anaconda)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt;17&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;openssl passwd -1 mysecretword
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt;18&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;nv&#34;&gt;$1$utlS7bht$VLMQrtHnPU0mkSO&lt;/span&gt;/Kpzh/.
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt;19&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt;20&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# Directory complied in and used to search for openSSL files (--openssldir)&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt;21&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;openssl version -d 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;&lt;p&gt;I tend to use commercial SSL certificates or ones from my company&#39;s internal CA. However, I found this text file in my home directory which I&#39;m recording here for next time because it&#39;s a very easy quick reference for generating a self signed certificate:&lt;/p&gt;
+&lt;div class=&#34;highlight&#34;&gt;&lt;pre tabindex=&#34;0&#34; class=&#34;chroma&#34;&gt;&lt;code class=&#34;language-shell&#34; data-lang=&#34;shell&#34;&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 1&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# Generate new private key&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 2&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;openssl genrsa -aes256 -out my.key &lt;span class=&#34;m&#34;&gt;4096&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 3&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 4&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# Generate new certificate request&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 5&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;openssl req -new -key my.key -out my.csr
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 6&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 7&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# Sign certificate&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 8&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;openssl x509 -req -days &lt;span class=&#34;m&#34;&gt;3650&lt;/span&gt; -in my.csr -signkey my.key -out my.crt
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt; 9&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt;10&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;&lt;span class=&#34;c1&#34;&gt;# Remove cert password&lt;/span&gt;
+&lt;/span&gt;&lt;/span&gt;&lt;span class=&#34;line&#34;&gt;&lt;span class=&#34;ln&#34;&gt;11&lt;/span&gt;&lt;span class=&#34;cl&#34;&gt;openssl rsa -in my.key -out my.key 
+&lt;/span&gt;&lt;/span&gt;&lt;/code&gt;&lt;/pre&gt;&lt;/div&gt;
         
       </description>
     </item>

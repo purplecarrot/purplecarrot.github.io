@@ -40,8 +40,8 @@
     
     
     <link rel="preload" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
+    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -163,42 +163,42 @@
     
     <p>These last few days I have been writing a command line reporting program at work. For Linux techs, formatted terminal output works great and is actually their preferred view. However, for managers, you simple must have the eye candy of a GUI. Normally in these situations, I would simply add CGI code and then bundle a simple Apache config to <em>Include</em> along with the code. With this particular program, it could be run on any one of tens of thousands of servers we have, however it is only likely to be run for a short while to graphically review some data stored in JSON files on the server. The overhead of reconfiguring and restarting Apache, even though only a few commands, is probably too much in this particular scenario.</p>
 <p>Enter <a href="http://docs.python.org/2/library/basehttpserver.html">BaseHTTPServer</a>. This includes classes that let your program become the webserver itself, negating the need to run a CGI script or framework under full blown Apache.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="ln"> 1</span><span class="k">class</span> <span class="nc">MyWebServer</span><span class="p">(</span><span class="n">BaseHTTPServer</span><span class="o">.</span><span class="n">BaseHTTPRequestHandler</span><span class="p">):</span>
-<span class="ln"> 2</span>
-<span class="ln"> 3</span>    <span class="k">def</span> <span class="nf">do_HEAD</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
-<span class="ln"> 4</span>        <span class="bp">self</span><span class="o">.</span><span class="n">send_response</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
-<span class="ln"> 5</span>        <span class="bp">self</span><span class="o">.</span><span class="n">send_header</span><span class="p">(</span><span class="s1">&#39;Content-type&#39;</span><span class="p">,</span> <span class="s1">&#39;text/html&#39;</span><span class="p">)</span>
-<span class="ln"> 6</span>        <span class="bp">self</span><span class="o">.</span><span class="n">end_headers</span><span class="p">()</span>
-<span class="ln"> 7</span>
-<span class="ln"> 8</span>    <span class="k">def</span> <span class="nf">do_GET</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
-<span class="ln"> 9</span>        <span class="k">try</span><span class="p">:</span>
-<span class="ln">10</span>            <span class="bp">self</span><span class="o">.</span><span class="n">send_response</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
-<span class="ln">11</span>            <span class="bp">self</span><span class="o">.</span><span class="n">send_header</span><span class="p">(</span><span class="s1">&#39;Content-type&#39;</span><span class="p">,</span> <span class="s1">&#39;text/html&#39;</span><span class="p">)</span>
-<span class="ln">12</span>            <span class="bp">self</span><span class="o">.</span><span class="n">end_headers</span><span class="p">()</span>
-<span class="ln">13</span>            <span class="bp">self</span><span class="o">.</span><span class="n">wfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&lt;html&gt;&lt;head&gt;&lt;title&gt;Web Page&lt;/title&gt;&lt;/head&gt;&#39;</span><span class="p">)</span>
-<span class="ln">14</span>  
-<span class="ln">15</span>            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
-<span class="ln">16</span>                <span class="bp">self</span><span class="o">.</span><span class="n">wfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">show_table</span><span class="p">)</span> 
-<span class="ln">17</span>            <span class="k">else</span><span class="p">:</span>
-<span class="ln">18</span>                <span class="n">reportjson</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rootdir</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
-<span class="ln">19</span>                <span class="bp">self</span><span class="o">.</span><span class="n">wfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">show_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
-<span class="ln">20</span>
-<span class="ln">21</span>        <span class="k">except</span> <span class="ne">IOError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
-<span class="ln">22</span>            <span class="bp">self</span><span class="o">.</span><span class="n">send_error</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span><span class="s1">&#39;Oops: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">e</span><span class="p">))</span>
-<span class="ln">23</span>
-<span class="ln">24</span>
-<span class="ln">25</span><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
-<span class="ln">26</span>    <span class="n">httpd</span> <span class="o">=</span> <span class="n">BaseHTTPServer</span><span class="o">.</span><span class="n">HTTPServer</span><span class="p">((</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span><span class="mi">2000</span><span class="p">),</span><span class="n">MyWebServer</span>
-<span class="ln">27</span>
-<span class="ln">28</span>    <span class="k">try</span><span class="p">:</span>
-<span class="ln">29</span>        <span class="n">httpd</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
-<span class="ln">30</span>
-<span class="ln">31</span>    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
-<span class="ln">32</span>        <span class="k">pass</span>
-<span class="ln">33</span>        <span class="n">httpd</span><span class="o">.</span><span class="n">server_close</span><span class="p">()</span>
-<span class="ln">34</span>
-<span class="ln">35</span><span class="o">&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
-</code></pre></div><p>Now, this obviously isn't going to replace your Apache installation (though I came across bugs in BaseHTTPServer where people were seemingly trying to!) but for development purposes and short lived web serving without affecting the running Apache server on your server, this is a very useful feature I am sure I will be using time and time again.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-python" data-lang="python"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="k">class</span> <span class="nc">MyWebServer</span><span class="p">(</span><span class="n">BaseHTTPServer</span><span class="o">.</span><span class="n">BaseHTTPRequestHandler</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">    <span class="k">def</span> <span class="nf">do_HEAD</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">send_response</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">send_header</span><span class="p">(</span><span class="s1">&#39;Content-type&#39;</span><span class="p">,</span> <span class="s1">&#39;text/html&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">        <span class="bp">self</span><span class="o">.</span><span class="n">end_headers</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">    <span class="k">def</span> <span class="nf">do_GET</span><span class="p">(</span><span class="n">s</span><span class="p">):</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">        <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">send_response</span><span class="p">(</span><span class="mi">200</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">send_header</span><span class="p">(</span><span class="s1">&#39;Content-type&#39;</span><span class="p">,</span> <span class="s1">&#39;text/html&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">12</span><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">end_headers</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln">13</span><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">wfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="s1">&#39;&lt;html&gt;&lt;head&gt;&lt;title&gt;Web Page&lt;/title&gt;&lt;/head&gt;&#39;</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">14</span><span class="cl">  
+</span></span><span class="line"><span class="ln">15</span><span class="cl">            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">path</span> <span class="o">==</span> <span class="s1">&#39;/&#39;</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">16</span><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">wfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">show_table</span><span class="p">)</span> 
+</span></span><span class="line"><span class="ln">17</span><span class="cl">            <span class="k">else</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">18</span><span class="cl">                <span class="n">reportjson</span><span class="o">=</span><span class="s1">&#39;</span><span class="si">%s</span><span class="s1">/</span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">rootdir</span><span class="p">,</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">)</span>
+</span></span><span class="line"><span class="ln">19</span><span class="cl">                <span class="bp">self</span><span class="o">.</span><span class="n">wfile</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">show_table</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">path</span><span class="p">))</span>
+</span></span><span class="line"><span class="ln">20</span><span class="cl">
+</span></span><span class="line"><span class="ln">21</span><span class="cl">        <span class="k">except</span> <span class="ne">IOError</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">22</span><span class="cl">            <span class="bp">self</span><span class="o">.</span><span class="n">send_error</span><span class="p">(</span><span class="mi">404</span><span class="p">,</span><span class="s1">&#39;Oops: </span><span class="si">%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="n">e</span><span class="p">))</span>
+</span></span><span class="line"><span class="ln">23</span><span class="cl">
+</span></span><span class="line"><span class="ln">24</span><span class="cl">
+</span></span><span class="line"><span class="ln">25</span><span class="cl"><span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">26</span><span class="cl">    <span class="n">httpd</span> <span class="o">=</span> <span class="n">BaseHTTPServer</span><span class="o">.</span><span class="n">HTTPServer</span><span class="p">((</span><span class="s1">&#39;0.0.0.0&#39;</span><span class="p">,</span><span class="mi">2000</span><span class="p">),</span><span class="n">MyWebServer</span>
+</span></span><span class="line"><span class="ln">27</span><span class="cl">
+</span></span><span class="line"><span class="ln">28</span><span class="cl">    <span class="k">try</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">29</span><span class="cl">        <span class="n">httpd</span><span class="o">.</span><span class="n">serve_forever</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln">30</span><span class="cl">
+</span></span><span class="line"><span class="ln">31</span><span class="cl">    <span class="k">except</span> <span class="ne">KeyboardInterrupt</span><span class="p">:</span>
+</span></span><span class="line"><span class="ln">32</span><span class="cl">        <span class="k">pass</span>
+</span></span><span class="line"><span class="ln">33</span><span class="cl">        <span class="n">httpd</span><span class="o">.</span><span class="n">server_close</span><span class="p">()</span>
+</span></span><span class="line"><span class="ln">34</span><span class="cl">
+</span></span><span class="line"><span class="ln">35</span><span class="cl"><span class="o">&lt;/</span><span class="n">html</span><span class="o">&gt;</span>
+</span></span></code></pre></div><p>Now, this obviously isn't going to replace your Apache installation (though I came across bugs in BaseHTTPServer where people were seemingly trying to!) but for development purposes and short lived web serving without affecting the running Apache server on your server, this is a very useful feature I am sure I will be using time and time again.</p>
 
 
   </article>
@@ -496,7 +496,7 @@
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
     
   </body>
 </html>

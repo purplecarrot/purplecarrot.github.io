@@ -18,13 +18,13 @@
 <meta property="og:locale" content="en" />
 
 <meta property="og:type" content="article">
-<meta name="description" content="Is there anybody in the IT industry that wasn&#39;t doing something with openssl in April?  I don&#39;t use the openssl command line utility that often, but last week …">
+<meta name="description" content="Is there anybody in the IT industry that wasn&#39;t doing something with openssl in April? I don&#39;t use the openssl command line utility that often, but last week it …">
 <meta name="twitter:card" content="summary" />
 <meta name="twitter:creator" content="">
 <meta name="twitter:title" content="OpenSSL Command Line Quick Reference" />
 <meta property="og:url" content="https://purplecarrot.co.uk/2014/04/24/openssl-command-line-quick-reference/" />
 <meta property="og:title" content="OpenSSL Command Line Quick Reference" />
-<meta property="og:description" content="Is there anybody in the IT industry that wasn&#39;t doing something with openssl in April?  I don&#39;t use the openssl command line utility that often, but last week …" />
+<meta property="og:description" content="Is there anybody in the IT industry that wasn&#39;t doing something with openssl in April? I don&#39;t use the openssl command line utility that often, but last week it …" />
 <meta property="og:image" content="https://purplecarrot.co.uk/images/thumbnails/linux.png" />
 
 <link rel="apple-touch-icon" sizes="180x180" href="https://purplecarrot.co.uk/icons/apple-touch-icon.png">
@@ -40,8 +40,8 @@
     
     
     <link rel="preload" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
+    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -163,41 +163,40 @@
 
     
     <p>Is there anybody in the IT industry that wasn't doing something with openssl in April? <a href="http://heartbleed.com/"></a> I don't use the openssl command line utility that often, but last week it reminded me that openssl command line tool is pretty comprehensive and has some nice features. I thought on this occasion I'd record the most useful ones so that next time I don't have to look them up again!</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="ln"> 1</span><span class="c1"># Show Certificate Info</span>
-<span class="ln"> 2</span>$ openssl x509 -text -in server.cert
-<span class="ln"> 3</span>$ openssl md5 server.cert
-<span class="ln"> 4</span>$ openssl sha1 server.cert
-<span class="ln"> 5</span>
-<span class="ln"> 6</span><span class="c1"># Confirming openssl build info</span>
-<span class="ln"> 7</span>openssl version -a
-<span class="ln"> 8</span>OpenSSL 1.0.1e-fips <span class="m">11</span> Feb <span class="m">2013</span>
-<span class="ln"> 9</span>built on: Tue Apr  <span class="m">8</span> 00:29:11 UTC <span class="m">2014</span>
-<span class="ln">10</span>platform: linux-x86_64
-<span class="ln">11</span>options:  bn<span class="o">(</span>64,64<span class="o">)</span> md2<span class="o">(</span>int<span class="o">)</span> rc4<span class="o">(</span>16x,int<span class="o">)</span> des<span class="o">(</span>idx,cisc,16,int<span class="o">)</span> idea<span class="o">(</span>int<span class="o">)</span> blowfish<span class="o">(</span>idx<span class="o">)</span> 
-<span class="ln">12</span>compiler: gcc -fPIC -DOPENSSL_PIC -DZLIB -DOPENSSL_THREADS -D_REENTRANT -DDSO_DLFCN -DHAVE_DLFCN_H -DKRB5_MIT -m64 -DL_ENDIAN -DTERMIO -Wall -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE<span class="o">=</span><span class="m">2</span> -fexceptions -fstack-protector --param<span class="o">=</span>ssp-buffer-size<span class="o">=</span><span class="m">4</span> -grecord-gcc-switches  -m64 -mtune<span class="o">=</span>generic -Wa,--noexecstack -DPURIFY -DOPENSSL_IA32_SSE2 -DOPENSSL_BN_ASM_MONT -DOPENSSL_BN_ASM_MONT5 -DOPENSSL_BN_ASM_GF2m -DSHA1_ASM -DSHA256_ASM -DSHA512_ASM -DMD5_ASM -DAES_ASM -DVPAES_ASM -DBSAES_ASM -DWHIRLPOOL_ASM -DGHASH_ASM
-<span class="ln">13</span>OPENSSLDIR: <span class="s2">&#34;/etc/pki/tls&#34;</span>
-<span class="ln">14</span>engines:  dynamic 
-<span class="ln">15</span>
-<span class="ln">16</span><span class="c1"># Generate hashed passwords (for example, for Anaconda)</span>
-<span class="ln">17</span>openssl passwd -1 mysecretword
-<span class="ln">18</span><span class="nv">$1$utlS7bht$VLMQrtHnPU0mkSO</span>/Kpzh/.
-<span class="ln">19</span>
-<span class="ln">20</span><span class="c1"># Directory complied in and used to search for openSSL files (--openssldir)</span>
-<span class="ln">21</span>openssl version -d 
-<span class="ln">22</span>
-</code></pre></div><p>I tend to use commercial SSL certificates or ones from my company's internal CA. However, I found this text file in my home directory which I'm recording here for next time because it's a very easy quick reference for generating a self signed certificate:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="ln"> 1</span><span class="c1"># Generate new private key</span>
-<span class="ln"> 2</span>openssl genrsa -aes256 -out my.key <span class="m">4096</span>
-<span class="ln"> 3</span>
-<span class="ln"> 4</span><span class="c1"># Generate new certificate request</span>
-<span class="ln"> 5</span>openssl req -new -key my.key -out my.csr
-<span class="ln"> 6</span>
-<span class="ln"> 7</span><span class="c1"># Sign certificate</span>
-<span class="ln"> 8</span>openssl x509 -req -days <span class="m">3650</span> -in my.csr -signkey my.key -out my.crt
-<span class="ln"> 9</span>
-<span class="ln">10</span><span class="c1"># Remove cert password</span>
-<span class="ln">11</span>openssl rsa -in my.key -out my.key 
-</code></pre></div>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1"># Show Certificate Info</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">$ openssl x509 -text -in server.cert
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">$ openssl md5 server.cert
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">$ openssl sha1 server.cert
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl"><span class="c1"># Confirming openssl build info</span>
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">openssl version -a
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">OpenSSL 1.0.1e-fips <span class="m">11</span> Feb <span class="m">2013</span>
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">built on: Tue Apr  <span class="m">8</span> 00:29:11 UTC <span class="m">2014</span>
+</span></span><span class="line"><span class="ln">10</span><span class="cl">platform: linux-x86_64
+</span></span><span class="line"><span class="ln">11</span><span class="cl">options:  bn<span class="o">(</span>64,64<span class="o">)</span> md2<span class="o">(</span>int<span class="o">)</span> rc4<span class="o">(</span>16x,int<span class="o">)</span> des<span class="o">(</span>idx,cisc,16,int<span class="o">)</span> idea<span class="o">(</span>int<span class="o">)</span> blowfish<span class="o">(</span>idx<span class="o">)</span> 
+</span></span><span class="line"><span class="ln">12</span><span class="cl">compiler: gcc -fPIC -DOPENSSL_PIC -DZLIB -DOPENSSL_THREADS -D_REENTRANT -DDSO_DLFCN -DHAVE_DLFCN_H -DKRB5_MIT -m64 -DL_ENDIAN -DTERMIO -Wall -O2 -g -pipe -Wall -Wp,-D_FORTIFY_SOURCE<span class="o">=</span><span class="m">2</span> -fexceptions -fstack-protector --param<span class="o">=</span>ssp-buffer-size<span class="o">=</span><span class="m">4</span> -grecord-gcc-switches  -m64 -mtune<span class="o">=</span>generic -Wa,--noexecstack -DPURIFY -DOPENSSL_IA32_SSE2 -DOPENSSL_BN_ASM_MONT -DOPENSSL_BN_ASM_MONT5 -DOPENSSL_BN_ASM_GF2m -DSHA1_ASM -DSHA256_ASM -DSHA512_ASM -DMD5_ASM -DAES_ASM -DVPAES_ASM -DBSAES_ASM -DWHIRLPOOL_ASM -DGHASH_ASM
+</span></span><span class="line"><span class="ln">13</span><span class="cl">OPENSSLDIR: <span class="s2">&#34;/etc/pki/tls&#34;</span>
+</span></span><span class="line"><span class="ln">14</span><span class="cl">engines:  dynamic 
+</span></span><span class="line"><span class="ln">15</span><span class="cl">
+</span></span><span class="line"><span class="ln">16</span><span class="cl"><span class="c1"># Generate hashed passwords (for example, for Anaconda)</span>
+</span></span><span class="line"><span class="ln">17</span><span class="cl">openssl passwd -1 mysecretword
+</span></span><span class="line"><span class="ln">18</span><span class="cl"><span class="nv">$1$utlS7bht$VLMQrtHnPU0mkSO</span>/Kpzh/.
+</span></span><span class="line"><span class="ln">19</span><span class="cl">
+</span></span><span class="line"><span class="ln">20</span><span class="cl"><span class="c1"># Directory complied in and used to search for openSSL files (--openssldir)</span>
+</span></span><span class="line"><span class="ln">21</span><span class="cl">openssl version -d 
+</span></span></code></pre></div><p>I tend to use commercial SSL certificates or ones from my company's internal CA. However, I found this text file in my home directory which I'm recording here for next time because it's a very easy quick reference for generating a self signed certificate:</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="ln"> 1</span><span class="cl"><span class="c1"># Generate new private key</span>
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">openssl genrsa -aes256 -out my.key <span class="m">4096</span>
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl"><span class="c1"># Generate new certificate request</span>
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">openssl req -new -key my.key -out my.csr
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl"><span class="c1"># Sign certificate</span>
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">openssl x509 -req -days <span class="m">3650</span> -in my.csr -signkey my.key -out my.crt
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">
+</span></span><span class="line"><span class="ln">10</span><span class="cl"><span class="c1"># Remove cert password</span>
+</span></span><span class="line"><span class="ln">11</span><span class="cl">openssl rsa -in my.key -out my.key 
+</span></span></code></pre></div>
 
   </article>
 <aside class="sidebar">
@@ -494,7 +493,7 @@
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
     
   </body>
 </html>

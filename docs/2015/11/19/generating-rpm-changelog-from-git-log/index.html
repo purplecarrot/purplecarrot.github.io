@@ -40,8 +40,8 @@
     
     
     <link rel="preload" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
+    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -165,10 +165,10 @@
 <p>It seems you can. The <a href="http://fedoraproject.org/wiki/Packaging:Guidelines#Changelogs">Fedora packaging</a> describe the format of the changelog file. They also appear to recommend not using your vcs changelog as your changelog messages would be too terse for the users. However, in my case they're not and it's exactly what they want</p>
 <p>With git log you can use the --pretty option to format the output of the commit log. You select the appropriate formats from git <a href="http://git-scm.com/docs/pretty-formats">pretty-formats</a> to make it output the git log in RPM changelog format. Unfortunately though, none of the date formats available are quite the correct format for an RPM changelog. It expects just the date of the change and doesn't want (nor can it handle) the time or the timezone offset of the git commit. The way I addressed this was to pipe the git log output through perl to remove those date fields. It would be nicer if git log had date +%H:%M:%S type formatting, but it doesn't, so we add the perl oneliner with a suitable regex to remove the parts we don't want.</p>
 <p>Also rpm-build (or perhaps setuptools) doesn't like any blank lines in the changelog file, so we remove those with perl -00 option. The contents of the generated changelog file (not the filename) are then passed into the setup.py --changelog option. The double quotes ensure the whitespace is preserved.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="ln">1</span>$ git log --pretty<span class="o">=</span><span class="s2">&#34;tformat:* %cd %an &lt;%ae&gt; (%h)%n- %s%b%n&#34;</span> <span class="se">\
-</span><span class="ln">2</span><span class="se"></span><span class="p">|</span> perl -lap00e <span class="s1">&#39;~s/(\d{2]:){2}\d{2} (\d{4}) [+-]\d{4}/$2/g&#39;</span> &gt; changelog
-<span class="ln">3</span>$ python setup.py bdist_rpm --changelog<span class="o">=</span><span class="s2">&#34;</span><span class="k">$(</span><span class="p">&amp;</span>ltchangelog<span class="k">)</span><span class="s2">
-</span></code></pre></div>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-shell" data-lang="shell"><span class="line"><span class="ln">1</span><span class="cl">$ git log --pretty<span class="o">=</span><span class="s2">&#34;tformat:* %cd %an &lt;%ae&gt; (%h)%n- %s%b%n&#34;</span> <span class="se">\
+</span></span></span><span class="line"><span class="ln">2</span><span class="cl"><span class="se"></span><span class="p">|</span> perl -lap00e <span class="s1">&#39;~s/(\d{2]:){2}\d{2} (\d{4}) [+-]\d{4}/$2/g&#39;</span> &gt; changelog
+</span></span><span class="line"><span class="ln">3</span><span class="cl">$ python setup.py bdist_rpm --changelog<span class="o">=</span><span class="s2">&#34;</span><span class="k">$(</span><span class="p">&amp;</span>ltchangelog<span class="k">)</span><span class="s2">
+</span></span></span></code></pre></div>
 
   </article>
 <aside class="sidebar">
@@ -465,7 +465,7 @@
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
     
   </body>
 </html>

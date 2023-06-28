@@ -39,8 +39,8 @@
     
     
     <link rel="preload" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity = "sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" as="style" crossorigin="anonymous">
-    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" as="script" integrity=
-    "sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous">
+    <link rel="preload" href="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" as="script" integrity=
+    "sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous">
 
     
     <link rel="stylesheet" type="text/css" href="https://purplecarrot.co.uk/css/styles.ee3b9488ef041710052f5c22837bf044d13ac251377aac559881157179229b04be4ae0027ad7b3c9b0cf469d0b37c82b8fcc5956709efe67b73f0e08a76bba3d.css" integrity="sha512-7juUiO8EFxAFL1wig3vwRNE6wlE3eqxVmIEVcXkimwS&#43;SuACetezybDPRp0LN8grj8xZVnCe/me3Pw4Ip2u6PQ==" crossorigin="anonymous">
@@ -195,133 +195,133 @@
 <li><strong>machine-config-daemon</strong> - responsible for updating nodes to a given <code>MachineConfig</code> when requested to by the machine-config-controller. This runs as a DaemonSet so there is one pod per node in the cluster.</li>
 </ul>
 <p>The terminal output below illustrates these pods running in the <em>openshift-machine-config-operator</em> project in an OpenShift cluster:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln"> 1</span>$ oc get pods -n openshift-machine-config-operator -o wide
-<span class="ln"> 2</span>NAME                                         READY   STATUS    RESTARTS   AGE   IP              NODE       NOMINATED NODE   READINESS GATES
-<span class="ln"> 3</span>machine-config-controller-7c4975f766-gbnh2   1/1     Running   1          20h   10.129.0.27     server01   &lt;none&gt;           &lt;none&gt;
-<span class="ln"> 4</span>machine-config-daemon-2kt5g                  2/2     Running   2          18h   192.162.1.203   server03   &lt;none&gt;           &lt;none&gt;
-<span class="ln"> 5</span>machine-config-daemon-jmhll                  2/2     Running   6          54d   192.168.1.206   server06   &lt;none&gt;           &lt;none&gt;
-<span class="ln"> 6</span>machine-config-daemon-rzwhv                  2/2     Running   6          54d   192.168.1.202   server02   &lt;none&gt;           &lt;none&gt;
-<span class="ln"> 7</span>machine-config-daemon-vqphs                  2/2     Running   24         54d   192.168.1.201   server01   &lt;none&gt;           &lt;none&gt;
-<span class="ln"> 8</span>machine-config-daemon-xqjgk                  2/2     Running   2          17h   192.168.1.205   server05   &lt;none&gt;           &lt;none&gt;
-<span class="ln"> 9</span>machine-config-operator-66f4cd998f-v8cfg     1/1     Running   1          20h   10.129.0.40     server01   &lt;none&gt;           &lt;none&gt;
-<span class="ln">10</span>machine-config-server-5hlsd                  1/1     Running   12         54d   192.168.1.101   server01   &lt;none&gt;           &lt;none&gt;
-<span class="ln">11</span>machine-config-server-dfvg8                  1/1     Running   3          54d   192.168.1.102   server02   &lt;none&gt;           &lt;none&gt;
-<span class="ln">12</span>machine-config-server-tr2fd                  1/1     Running   11         54d   192.168.1.103   server03   &lt;none&gt;           &lt;none&gt;
-</code></pre></div><h2 id="machineconfigs">MachineConfigs</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln"> 1</span><span class="cl">$ oc get pods -n openshift-machine-config-operator -o wide
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">NAME                                         READY   STATUS    RESTARTS   AGE   IP              NODE       NOMINATED NODE   READINESS GATES
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">machine-config-controller-7c4975f766-gbnh2   1/1     Running   1          20h   10.129.0.27     server01   &lt;none&gt;           &lt;none&gt;
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">machine-config-daemon-2kt5g                  2/2     Running   2          18h   192.162.1.203   server03   &lt;none&gt;           &lt;none&gt;
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">machine-config-daemon-jmhll                  2/2     Running   6          54d   192.168.1.206   server06   &lt;none&gt;           &lt;none&gt;
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">machine-config-daemon-rzwhv                  2/2     Running   6          54d   192.168.1.202   server02   &lt;none&gt;           &lt;none&gt;
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">machine-config-daemon-vqphs                  2/2     Running   24         54d   192.168.1.201   server01   &lt;none&gt;           &lt;none&gt;
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">machine-config-daemon-xqjgk                  2/2     Running   2          17h   192.168.1.205   server05   &lt;none&gt;           &lt;none&gt;
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">machine-config-operator-66f4cd998f-v8cfg     1/1     Running   1          20h   10.129.0.40     server01   &lt;none&gt;           &lt;none&gt;
+</span></span><span class="line"><span class="ln">10</span><span class="cl">machine-config-server-5hlsd                  1/1     Running   12         54d   192.168.1.101   server01   &lt;none&gt;           &lt;none&gt;
+</span></span><span class="line"><span class="ln">11</span><span class="cl">machine-config-server-dfvg8                  1/1     Running   3          54d   192.168.1.102   server02   &lt;none&gt;           &lt;none&gt;
+</span></span><span class="line"><span class="ln">12</span><span class="cl">machine-config-server-tr2fd                  1/1     Running   11         54d   192.168.1.103   server03   &lt;none&gt;           &lt;none&gt;
+</span></span></code></pre></div><h2 id="machineconfigs">MachineConfigs</h2>
 <p>So how does an update or change to a systemd unit file used to start the kubelet on a node make it to the OS disk of a node that requires it?</p>
 <p>One of the core utilities underpinning the MCO is <a href="https:/github.com/coreos/ignition">Ignition</a>. When RedHat acquired the CoreOS company in 2018, they merged the best parts of CoreOS, Red Hat Linux and Red Hat Atomic operating systems and the resulting product was named Red Hat CoreOS (RHCOS). This is the OS that runs on the master and worker nodes in an OpenShift cluster.</p>
 <p>All the OS configuration files a node requires are encoded and encapsulated in ignition files. The <em>machine-config-controller</em> collates all these various snippets and OS configuration files each node requires, and then renders (generates) <code>MachineConfig</code> kubernetes resources with all the files.</p>
 <p>The command below, shows the <code>MachineConfigs</code> available in an OpenShift cluster:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln"> 1</span>$ oc get mc --sort-by=&#39;{.metadata.creationTimestamp}&#39;
-<span class="ln"> 2</span>NAME                                               GENERATEDBYCONTROLLER                      IGNITIONVERSION   AGE
-<span class="ln"> 3</span>99-worker-ssh                                                                                 3.2.0             216d
-<span class="ln"> 4</span>99-master-ssh                                                                                 3.2.0             216d
-<span class="ln"> 5</span>00-master                                          a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             216d
-<span class="ln"> 6</span>01-master-kubelet                                  a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             216d
-<span class="ln"> 7</span>01-worker-container-runtime                        a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             216d
-<span class="ln"> 8</span>01-master-container-runtime                        a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             216d
-<span class="ln"> 9</span>99-master-generated-registries                     a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             216d
-<span class="ln">10</span>00-worker                                          a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             216d
-<span class="ln">11</span>99-worker-generated-registries                     a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             216d
-<span class="ln">12</span>01-worker-kubelet                                  a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             216d
-<span class="ln">13</span>rendered-master-0a540fd2eb85335cab8066f0bb407d5b   116603ff3d7a39c0de52d7d16fe307c8471330a0   3.2.0             216d
-<span class="ln">14</span>rendered-worker-9da78a560e7fa3c0cbd53d2bf0c17941   116603ff3d7a39c0de52d7d16fe307c8471330a0   3.2.0             216d
-<span class="ln">15</span>rendered-master-248f9034db99de75517a88a2ae8d29e2   116603ff3d7a39c0de52d7d16fe307c8471330a0   3.2.0             215d
-<span class="ln">16</span>rendered-worker-e323d4623ccb8cb71a4953f4ca81f8a4   116603ff3d7a39c0de52d7d16fe307c8471330a0   3.2.0             215d
-<span class="ln">17</span>rendered-worker-5599b4631efd88b5834f0844bec5ce83   116603ff3d7a39c0de52d7d16fe307c8471330a0   3.2.0             203d
-<span class="ln">18</span>rendered-master-8e5868011cc53d9697ac9dda69a64b39   116603ff3d7a39c0de52d7d16fe307c8471330a0   3.2.0             203d
-<span class="ln">19</span>rendered-worker-77e79ef013b565633a4d04da28f7dda4   116603ff3d7a39c0de52d7d16fe307c8471330a0   3.2.0             203d
-<span class="ln">20</span>rendered-master-c40185b01423956d1146b7dea0a3e265   116603ff3d7a39c0de52d7d16fe307c8471330a0   3.2.0             203d
-<span class="ln">21</span>rendered-worker-dee67e9dc2ba77876de8bc8d045740dd   c76785d62cc28ddf3390c865c9e999a02248cd84   3.2.0             57d
-<span class="ln">22</span>rendered-master-3fcbbc2dcbddc79435994c98b655b192   c76785d62cc28ddf3390c865c9e999a02248cd84   3.2.0             57d
-<span class="ln">23</span>rendered-worker-7373393797c4c7e5ae500ff51ba234a9   a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             55d
-<span class="ln">24</span>rendered-master-40ad8d11cc05c7079ee8f3bfa6df5540   a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             55d
-<span class="ln">25</span>rendered-worker-53656729c24a74935907c4fba2adc90a   a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             54d
-<span class="ln">26</span>rendered-master-1e2f18449f36cad8c9618c264d5cdc10   a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             54d
-<span class="ln">27</span>rendered-worker-82df13b281ba3ddb9ba2e8811ef7957c   a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             14d
-<span class="ln">28</span>rendered-master-7ed9a47c85ff478b341adaa20a55e942   a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             14d
-<span class="ln">29</span>rendered-master-98968a4a639e3efad0436d19d4a6c93f   a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             14d
-<span class="ln">30</span>rendered-worker-65ec18c5a3e4ebbf5f8ef459fb3c50b2   a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             14d
-</code></pre></div><p>In this command output, you can see that 216 days ago when the cluster was first installed, initial <code>MachineConfigs</code> were rendered - one for the master nodes (rendered-master-0a540f..) in the cluster, and one for the worker nodes (rendered-worker-9da78a...). Whilst these two <code>MachineConfigs</code> share common OS configuration files, there are also lots of differences and so they are managed separately for each <code>MachineConfigPool</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln"> 1</span><span class="cl">$ oc get mc --sort-by=&#39;{.metadata.creationTimestamp}&#39;
+</span></span><span class="line"><span class="ln"> 2</span><span class="cl">NAME                                               GENERATEDBYCONTROLLER                      IGNITIONVERSION   AGE
+</span></span><span class="line"><span class="ln"> 3</span><span class="cl">99-worker-ssh                                                                                 3.2.0             216d
+</span></span><span class="line"><span class="ln"> 4</span><span class="cl">99-master-ssh                                                                                 3.2.0             216d
+</span></span><span class="line"><span class="ln"> 5</span><span class="cl">00-master                                          a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             216d
+</span></span><span class="line"><span class="ln"> 6</span><span class="cl">01-master-kubelet                                  a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             216d
+</span></span><span class="line"><span class="ln"> 7</span><span class="cl">01-worker-container-runtime                        a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             216d
+</span></span><span class="line"><span class="ln"> 8</span><span class="cl">01-master-container-runtime                        a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             216d
+</span></span><span class="line"><span class="ln"> 9</span><span class="cl">99-master-generated-registries                     a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             216d
+</span></span><span class="line"><span class="ln">10</span><span class="cl">00-worker                                          a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             216d
+</span></span><span class="line"><span class="ln">11</span><span class="cl">99-worker-generated-registries                     a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             216d
+</span></span><span class="line"><span class="ln">12</span><span class="cl">01-worker-kubelet                                  a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             216d
+</span></span><span class="line"><span class="ln">13</span><span class="cl">rendered-master-0a540fd2eb85335cab8066f0bb407d5b   116603ff3d7a39c0de52d7d16fe307c8471330a0   3.2.0             216d
+</span></span><span class="line"><span class="ln">14</span><span class="cl">rendered-worker-9da78a560e7fa3c0cbd53d2bf0c17941   116603ff3d7a39c0de52d7d16fe307c8471330a0   3.2.0             216d
+</span></span><span class="line"><span class="ln">15</span><span class="cl">rendered-master-248f9034db99de75517a88a2ae8d29e2   116603ff3d7a39c0de52d7d16fe307c8471330a0   3.2.0             215d
+</span></span><span class="line"><span class="ln">16</span><span class="cl">rendered-worker-e323d4623ccb8cb71a4953f4ca81f8a4   116603ff3d7a39c0de52d7d16fe307c8471330a0   3.2.0             215d
+</span></span><span class="line"><span class="ln">17</span><span class="cl">rendered-worker-5599b4631efd88b5834f0844bec5ce83   116603ff3d7a39c0de52d7d16fe307c8471330a0   3.2.0             203d
+</span></span><span class="line"><span class="ln">18</span><span class="cl">rendered-master-8e5868011cc53d9697ac9dda69a64b39   116603ff3d7a39c0de52d7d16fe307c8471330a0   3.2.0             203d
+</span></span><span class="line"><span class="ln">19</span><span class="cl">rendered-worker-77e79ef013b565633a4d04da28f7dda4   116603ff3d7a39c0de52d7d16fe307c8471330a0   3.2.0             203d
+</span></span><span class="line"><span class="ln">20</span><span class="cl">rendered-master-c40185b01423956d1146b7dea0a3e265   116603ff3d7a39c0de52d7d16fe307c8471330a0   3.2.0             203d
+</span></span><span class="line"><span class="ln">21</span><span class="cl">rendered-worker-dee67e9dc2ba77876de8bc8d045740dd   c76785d62cc28ddf3390c865c9e999a02248cd84   3.2.0             57d
+</span></span><span class="line"><span class="ln">22</span><span class="cl">rendered-master-3fcbbc2dcbddc79435994c98b655b192   c76785d62cc28ddf3390c865c9e999a02248cd84   3.2.0             57d
+</span></span><span class="line"><span class="ln">23</span><span class="cl">rendered-worker-7373393797c4c7e5ae500ff51ba234a9   a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             55d
+</span></span><span class="line"><span class="ln">24</span><span class="cl">rendered-master-40ad8d11cc05c7079ee8f3bfa6df5540   a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             55d
+</span></span><span class="line"><span class="ln">25</span><span class="cl">rendered-worker-53656729c24a74935907c4fba2adc90a   a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             54d
+</span></span><span class="line"><span class="ln">26</span><span class="cl">rendered-master-1e2f18449f36cad8c9618c264d5cdc10   a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             54d
+</span></span><span class="line"><span class="ln">27</span><span class="cl">rendered-worker-82df13b281ba3ddb9ba2e8811ef7957c   a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             14d
+</span></span><span class="line"><span class="ln">28</span><span class="cl">rendered-master-7ed9a47c85ff478b341adaa20a55e942   a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             14d
+</span></span><span class="line"><span class="ln">29</span><span class="cl">rendered-master-98968a4a639e3efad0436d19d4a6c93f   a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             14d
+</span></span><span class="line"><span class="ln">30</span><span class="cl">rendered-worker-65ec18c5a3e4ebbf5f8ef459fb3c50b2   a537783ea4a0cd3b4fe2a02626ab27887307ea51   3.2.0             14d
+</span></span></code></pre></div><p>In this command output, you can see that 216 days ago when the cluster was first installed, initial <code>MachineConfigs</code> were rendered - one for the master nodes (rendered-master-0a540f..) in the cluster, and one for the worker nodes (rendered-worker-9da78a...). Whilst these two <code>MachineConfigs</code> share common OS configuration files, there are also lots of differences and so they are managed separately for each <code>MachineConfigPool</code>.</p>
 <p>Since the initial install, we can see at various intervals, new <code>MachineConfig</code> objects were rendered by the <em>machine-config-controller</em>. Each new rendered- <code>MachineConfig</code> is from when upgrades were made to the OpenShift cluster (because an OpenShift update may have updated an OS setting in say <code>/etc/crio/crio.conf</code>)</p>
 <p>As well as OCP version updates forcing updates, you can also manually edit <code>MachineConfigs</code> to modify or add you own OS config files. For what it's worth, I did have to do this with early OpenShift 4.1/4.2 versions, where I modified NTP and SSHD config files for custom settings and to modify the ca-bundle.crt as a workaround as early versions had issues with private CAs. But since those early versions, I have not had need to make any changes - the MCO just manages the complete OS lifecycle of the node.</p>
 <p>When a new <code>MachineConfig</code> is generated, the <em>machine-config-controller</em> will work with the <em>machine-config-daemon</em> running on each node to reboot it and have it apply the latest ignition configuration held within the <code>MachineConfig</code>.</p>
 <p>When a node boots Red Hat CoreOS, <em>ignition</em> connects to the <em>machine-config-server</em> endpoint <code>https://&lt;cluster-api&gt;:22623/config/master</code> (or <code>/config/worker</code> for worker nodes, or <code>/config/&lt;machine-config-pool&gt;</code>) and applies the <em>Ignition</em> config to the node.</p>
 <h2 id="quick-health-check-of-mco">Quick Health Check of MCO</h2>
 <p>Most of the time, the MCO works very well. However, as with any highly automated process, on occasions it does go wrong. The first thing to be aware of with MCO is that you have to keep a close eye on it, particularly when it's rolling out updates. At a high level, the quickest ways to do this is by looking at status of the the ClusterOperator's status:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ oc get co machine-config
-<span class="ln">2</span>NAME             VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE
-<span class="ln">3</span>machine-config   4.8.10    True        False         False       14d
-</code></pre></div><p>Here we can see that the MCO is <strong>AVAILABLE=True</strong>. This is good, and you nearly always want to see this. If it's <strong>False</strong>, something is very wrong with the cluster, or more likely perhaps, the cluster is in the middle of an OCP upgrade and the MCO pod is restarting on a different node.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">$ oc get co machine-config
+</span></span><span class="line"><span class="ln">2</span><span class="cl">NAME             VERSION   AVAILABLE   PROGRESSING   DEGRADED   SINCE
+</span></span><span class="line"><span class="ln">3</span><span class="cl">machine-config   4.8.10    True        False         False       14d
+</span></span></code></pre></div><p>Here we can see that the MCO is <strong>AVAILABLE=True</strong>. This is good, and you nearly always want to see this. If it's <strong>False</strong>, something is very wrong with the cluster, or more likely perhaps, the cluster is in the middle of an OCP upgrade and the MCO pod is restarting on a different node.</p>
 <p>If <strong>PROGRESSING=False</strong> is shown, that means that the MCO has no updates to rollout, and that the nodes in your cluster are all up to date and running on the latest OS version and using all the OS config files from the <code>MachineConfig</code>. If this is set to <strong>False</strong>, then that means the <em>machine-config-controller</em> is busy working through an update and asking the <em>machine-config-daemons</em> on each node to reboot the node and apply a <code>MachineConfig</code>.</p>
 <p>For a healthy MCO, you also want to see <strong>DEGRADED=False</strong>. If you see this as <strong>True</strong>, then your MCO has a problem that usually requires manual intervention, and some of the key reasons that I've seen for this condition are documented below.</p>
 <p>As well as looking at the overview status of the <code>ClusterOperator</code> resource, another way you can see the health of the MCO at a glance is to look at its <code>MachineConfigPools</code>. In a healthy cluster, these pools will show <strong>UPDATED=True</strong> and <strong>DEGRADED=False</strong>. If <strong>UPDATING=True</strong> is set, the <em>machine-config-controller</em> is in the middle of rolling out an update:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ oc get mcp
-<span class="ln">2</span>NAME     CONFIG                                             UPDATED   UPDATING   DEGRADED   MACHINECOUNT   READYMACHINECOUNT   UPDATEDMACHINECOUNT   DEGRADEDMACHINECOUNT   AGE
-<span class="ln">3</span>master   rendered-master-98968a4a639e3efad0436d19d4a6c93f   True      False      False      3              3                   3                     0                      216d
-<span class="ln">4</span>worker   rendered-worker-53656729c24a74935907c4fba2adc90a   True      False      False      3              3                   3                     0                      216d
-</code></pre></div><h2 id="monitoring-an-mco-update">Monitoring an MCO Update</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">$ oc get mcp
+</span></span><span class="line"><span class="ln">2</span><span class="cl">NAME     CONFIG                                             UPDATED   UPDATING   DEGRADED   MACHINECOUNT   READYMACHINECOUNT   UPDATEDMACHINECOUNT   DEGRADEDMACHINECOUNT   AGE
+</span></span><span class="line"><span class="ln">3</span><span class="cl">master   rendered-master-98968a4a639e3efad0436d19d4a6c93f   True      False      False      3              3                   3                     0                      216d
+</span></span><span class="line"><span class="ln">4</span><span class="cl">worker   rendered-worker-53656729c24a74935907c4fba2adc90a   True      False      False      3              3                   3                     0                      216d
+</span></span></code></pre></div><h2 id="monitoring-an-mco-update">Monitoring an MCO Update</h2>
 <p>If your MCO is updating (<strong>PROGRESSING=True</strong>, <strong>UPDATING=True</strong>), then you can monitor its progress by watching the logs of the <em>machine-config-controller</em> pod.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ oc logs -l k8s-app=machine-config-controller -n openshift-machine-config-operator
-</code></pre></div><p>In the logs from this pod, you'll see nodes in the cluster sequentially being cordoned (made <code>schedulable=False</code>) and then rebooted. Whilst rebooting and applying the new configuration, they will be seen as <code>NotReady</code> status in <code>oc get nodes</code>).</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ oc get nodes
-<span class="ln">2</span>NAME       STATUS                        ROLES           AGE    VERSION
-<span class="ln">3</span>server01   Ready                         master,worker   217d   v1.21.1+9807387
-<span class="ln">4</span>server02   NotReady,SchedulingDisabled   master,worker   217d   v1.21.1+9807387
-<span class="ln">5</span>server03   Ready                         master,worker   217d   v1.21.1+9807387
-<span class="ln">6</span>server04   NotReady,SchedulingDisabled   worker          203d   v1.21.1+9807387
-<span class="ln">7</span>server05   Ready                         worker          203d   v1.21.1+9807387
-</code></pre></div><p>If something happens when the node reboots (eg it fails to DHCP, it can't boot because of a disk or grub error, fails to start the kubelet), the MCO rollout process will halt. You'll notice this because the node stays <code>NotReady</code> for longer than you'd expect and the status will become <em>degraded</em>. If this happens, you have to roll your sleeves up and work out why.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">$ oc logs -l k8s-app=machine-config-controller -n openshift-machine-config-operator
+</span></span></code></pre></div><p>In the logs from this pod, you'll see nodes in the cluster sequentially being cordoned (made <code>schedulable=False</code>) and then rebooted. Whilst rebooting and applying the new configuration, they will be seen as <code>NotReady</code> status in <code>oc get nodes</code>).</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">$ oc get nodes
+</span></span><span class="line"><span class="ln">2</span><span class="cl">NAME       STATUS                        ROLES           AGE    VERSION
+</span></span><span class="line"><span class="ln">3</span><span class="cl">server01   Ready                         master,worker   217d   v1.21.1+9807387
+</span></span><span class="line"><span class="ln">4</span><span class="cl">server02   NotReady,SchedulingDisabled   master,worker   217d   v1.21.1+9807387
+</span></span><span class="line"><span class="ln">5</span><span class="cl">server03   Ready                         master,worker   217d   v1.21.1+9807387
+</span></span><span class="line"><span class="ln">6</span><span class="cl">server04   NotReady,SchedulingDisabled   worker          203d   v1.21.1+9807387
+</span></span><span class="line"><span class="ln">7</span><span class="cl">server05   Ready                         worker          203d   v1.21.1+9807387
+</span></span></code></pre></div><p>If something happens when the node reboots (eg it fails to DHCP, it can't boot because of a disk or grub error, fails to start the kubelet), the MCO rollout process will halt. You'll notice this because the node stays <code>NotReady</code> for longer than you'd expect and the status will become <em>degraded</em>. If this happens, you have to roll your sleeves up and work out why.</p>
 <h2 id="troubleshooting-degraded-nodes">Troubleshooting Degraded Nodes</h2>
 <p>The first place to look when troubleshooting a <em>degraded</em> node is its machine-config-daemon pod. In early OpenShift 4.x versions, there were also occasions when the reason for a degraded node was only apparent by looking in the Linux journald logs on the node itself. However in recent versions, I've not had to resort to journald logs because everything about an error has been available in the <em>machine-config-daemon</em> pod logs for the node. To find the correct <em>machine-config-daemon</em> pod for the node, you simply run <code>oc get pods -o wide</code>, or alternatively you could cut and paste the following:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ MCDPOD=$(oc get pods -l k8s-app=machine-config-daemon -o jsonpath=&#39;{.items[?(@.spec.nodeName==&#34;server01&#34;)].metadata.name&#39;)
-<span class="ln">2</span>$ oc logs $MCDPOD -c machine-config-daemon
-</code></pre></div><p>Next, lets look at a few common reasons for a node being degraded.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">$ MCDPOD=$(oc get pods -l k8s-app=machine-config-daemon -o jsonpath=&#39;{.items[?(@.spec.nodeName==&#34;server01&#34;)].metadata.name&#39;)
+</span></span><span class="line"><span class="ln">2</span><span class="cl">$ oc logs $MCDPOD -c machine-config-daemon
+</span></span></code></pre></div><p>Next, lets look at a few common reasons for a node being degraded.</p>
 <h3 id="unexpected-on-disk-state---content-mismatch-for-file">Unexpected on-disk state - content mismatch for file</h3>
 <p>If the files on a node's disk that are under control of the <code>MachineConfig</code> don't match the contents of those same files as specified in that <code>MachineConfig</code> (ie the <code>MachineConfig</code> specified in the node's <code>machineconfiguration.openshift.io/currentConfig</code> annotation), then the <em>machine-config-daemon</em> will refuse to apply the update and this will put the <code>MachineConfigPool</code> into a degraded state. You'll see a message event similar to this:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>Type:                  RenderDegraded
-<span class="ln">2</span>Message:               Node server01 is reporting: &#34;unexpected on-disk state validating against rendered-worker-82df13b281ba3ddb9ba2e8811ef7957c: content mismatch for file \&#34;/etc/kubernetes/kubelet.conf\&#34;&#34;
-<span class="ln">3</span>Reason:                1 nodes are reporting degraded status on sync
-<span class="ln">4</span>Status:                True
-<span class="ln">5</span>Type:                  NodeDegraded
-</code></pre></div><p>This happens when somebody has manually edited a file on a node. Although remember, there should be no reason or need for a sysadmin (SA) to edit files on RHCOS, but sometimes junior SAs or SAs not familiar with OpenShift might be tempted to edit OS config files using ssh/vim.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">Type:                  RenderDegraded
+</span></span><span class="line"><span class="ln">2</span><span class="cl">Message:               Node server01 is reporting: &#34;unexpected on-disk state validating against rendered-worker-82df13b281ba3ddb9ba2e8811ef7957c: content mismatch for file \&#34;/etc/kubernetes/kubelet.conf\&#34;&#34;
+</span></span><span class="line"><span class="ln">3</span><span class="cl">Reason:                1 nodes are reporting degraded status on sync
+</span></span><span class="line"><span class="ln">4</span><span class="cl">Status:                True
+</span></span><span class="line"><span class="ln">5</span><span class="cl">Type:                  NodeDegraded
+</span></span></code></pre></div><p>This happens when somebody has manually edited a file on a node. Although remember, there should be no reason or need for a sysadmin (SA) to edit files on RHCOS, but sometimes junior SAs or SAs not familiar with OpenShift might be tempted to edit OS config files using ssh/vim.</p>
 <p>You can get an indication of this by looking at the <code>machineconfiguration.openshift.io/ssh</code> annotation on the node. If this is set to accessed, then a SA has ssh'd onto the node and could have perhaps changed something manually. Ordinarily (except see troubleshooting below), SA shouldn't be ssh'ing onto RHCOS nodes.</p>
 <p>The easiest way to quickly fix this is to restore the config file from the <code>MachineConfig</code>. To do this, output the correct <code>MachineConfig</code> in full YAML, and then search for the path entry for the file being reported as having a content mismatch. Alternatively, copy and run the following commands to get the file contents:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ CURRENT_CONFIG=$(oc get node -o jsonpath=&#34;{.items[?(@.metadata.name==&#39;server01&#39;)].metadata.annotations[&#39;machineconfiguration\.openshift\.io/currentConfig&#39;]}&#34;)
-<span class="ln">2</span>$ oc get mc $CURRENT_CONFIG -o jsonpath=&#34;{.spec.config.storage.files[?(@.path==&#39;/etc/kubernetes/kubelet.conf)].contents.source}&#34; &gt; newkubelet.conf
-</code></pre></div><p>Then you simply base64 decode (or urldecode) the file, and scp it back onto the degraded node in the correct location. This will overwrite the manual changes made to the file and restore it to what the MCO wants it to be. The MCO should then pick up that the <code>MachineConfig</code> now matches, and continue progressing with what it was doing.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">$ CURRENT_CONFIG=$(oc get node -o jsonpath=&#34;{.items[?(@.metadata.name==&#39;server01&#39;)].metadata.annotations[&#39;machineconfiguration\.openshift\.io/currentConfig&#39;]}&#34;)
+</span></span><span class="line"><span class="ln">2</span><span class="cl">$ oc get mc $CURRENT_CONFIG -o jsonpath=&#34;{.spec.config.storage.files[?(@.path==&#39;/etc/kubernetes/kubelet.conf)].contents.source}&#34; &gt; newkubelet.conf
+</span></span></code></pre></div><p>Then you simply base64 decode (or urldecode) the file, and scp it back onto the degraded node in the correct location. This will overwrite the manual changes made to the file and restore it to what the MCO wants it to be. The MCO should then pick up that the <code>MachineConfig</code> now matches, and continue progressing with what it was doing.</p>
 <h3 id="error-running-rpm-ostree">Error running rpm-ostree</h3>
 <p>Red Hat CoreOS uses something called <a href="">rpm-ostree</a> which is a <em>&quot;hybrid image/package system&quot;</em>. It's basically an archive file that contain all the Linux software package (RPMS) that CoreOS requires and allows atomic upgrades (and downgrades) by being able to pivot between them. Sometimes this fails, and the node will become degraded. I've seen this fail for a couple of reasons - once with an issue where the node was unable to download an image from quay.io, and another time when a third party vendor (who wasn't familiar with how rpm-ostrees and Red Hat CoreOS worked) set the immutable ACL attribute on some of its files on the node, causing the node to fail drastically on each OS upgrade. The vendor has since removed these custom ACLs from their product after our experience.</p>
 <p>The best way to fix this, if you can, is to correct the issue breaking the pivot. For example, by removing the immutable ACL on a system file. The Linux systemd journal on the node should help with identifying the error. If you still can't fix it, the last resort to fix this issue is to force a pivot.</p>
 <h3 id="forcing-a-pivot">Forcing a Pivot</h3>
 <p>If you can't get the node to update, you'll have to force it. To do this, you connect to the node and run the <code>machine-config-daemon pivot</code> command with the correct OS image SHA (find this from the errors in the logs to be sure you get the correct one!)</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ oc debug node/server01
-<span class="ln">2</span>Starting pod/server01-debug ...
-<span class="ln">3</span>To use host binaries, run `chroot /host`
-<span class="ln">4</span>Pod IP: 192.168.1.201
-<span class="ln">5</span>If you don&#39;t see a command prompt, try pressing enter.
-<span class="ln">6</span># sh-4.4
-<span class="ln">7</span># chroot /host
-<span class="ln">8</span># /run/bin/machine-config-daemon pivot &#34;quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:aaaabbbbccccdddd&#34;
-</code></pre></div><h3 id="forcing-a-node-to-use-a-specific-machineconfig">Forcing a Node to Use a Specific MachineConfig</h3>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">$ oc debug node/server01
+</span></span><span class="line"><span class="ln">2</span><span class="cl">Starting pod/server01-debug ...
+</span></span><span class="line"><span class="ln">3</span><span class="cl">To use host binaries, run `chroot /host`
+</span></span><span class="line"><span class="ln">4</span><span class="cl">Pod IP: 192.168.1.201
+</span></span><span class="line"><span class="ln">5</span><span class="cl">If you don&#39;t see a command prompt, try pressing enter.
+</span></span><span class="line"><span class="ln">6</span><span class="cl"># sh-4.4
+</span></span><span class="line"><span class="ln">7</span><span class="cl"># chroot /host
+</span></span><span class="line"><span class="ln">8</span><span class="cl"># /run/bin/machine-config-daemon pivot &#34;quay.io/openshift-release-dev/ocp-v4.0-art-dev@sha256:aaaabbbbccccdddd&#34;
+</span></span></code></pre></div><h3 id="forcing-a-node-to-use-a-specific-machineconfig">Forcing a Node to Use a Specific MachineConfig</h3>
 <p>As a last resort - and experience has shown it really is better to address any MCO issues in other ways before doing this - you can force a node to reboot and use a different <code>MachineConfig</code>. This is done by manually editing the machineconfiguration annotations on the Node object itself.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>oc patch node server01 --type merge --patch &#39;{&#34;metadata&#34;: {&#34;annotations&#34;: {&#34;machineconfiguration.openshift.io/currentConfig&#34;: &#34;render-worker-52656729c24a7493&#34;}}}&#39;
-<span class="ln">2</span>oc patch node server01 --type merge --patch &#39;{&#34;metadata&#34;: {&#34;annotations&#34;: {&#34;machineconfiguration.openshift.io/desiredConfig&#34;: &#34;render-worker-52656729c24a7493&#34;}}}&#39;
-<span class="ln">3</span>oc patch node server01 --type merge --patch &#39;{&#34;metadata&#34;: {&#34;annotations&#34;: {&#34;machineconfiguration.openshift.io/reason&#34;: &#34;&#34;}}}&#39;
-<span class="ln">4</span>oc patch node server01 --type merge --patch &#39;{&#34;metadata&#34;: {&#34;annotations&#34;: {&#34;machineconfiguration.openshift.io/state&#34;: &#34;Done&#34;}}}&#39;
-</code></pre></div><p>Then you have to connect to the node and touch a machine-config-daemon-force file. This will trigger the <em>machine-config-daemon</em> to do a reboot and to force the update to the <code>MachineConfig</code>.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ oc debug node/server01
-<span class="ln">2</span>[root@server01 core] chroot /host
-<span class="ln">3</span>[root@server01 core] touch /run/machine-config-daemon-force
-</code></pre></div><p>On occasion, you might not be able to connect to the node using an oc debug pod. I've seen this happen when a systemd unit running podman early in the boot process has had an image pull failure, and the debug pod is also not able to run when kubelet is not running properly, mean SSH is the only option.</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ ssh core@server01
-<span class="ln">2</span>[root@server01 core] touch /run/machine-config-daemon-force
-</code></pre></div><h2 id="pausing-mco-updates">Pausing MCO Updates</h2>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">oc patch node server01 --type merge --patch &#39;{&#34;metadata&#34;: {&#34;annotations&#34;: {&#34;machineconfiguration.openshift.io/currentConfig&#34;: &#34;render-worker-52656729c24a7493&#34;}}}&#39;
+</span></span><span class="line"><span class="ln">2</span><span class="cl">oc patch node server01 --type merge --patch &#39;{&#34;metadata&#34;: {&#34;annotations&#34;: {&#34;machineconfiguration.openshift.io/desiredConfig&#34;: &#34;render-worker-52656729c24a7493&#34;}}}&#39;
+</span></span><span class="line"><span class="ln">3</span><span class="cl">oc patch node server01 --type merge --patch &#39;{&#34;metadata&#34;: {&#34;annotations&#34;: {&#34;machineconfiguration.openshift.io/reason&#34;: &#34;&#34;}}}&#39;
+</span></span><span class="line"><span class="ln">4</span><span class="cl">oc patch node server01 --type merge --patch &#39;{&#34;metadata&#34;: {&#34;annotations&#34;: {&#34;machineconfiguration.openshift.io/state&#34;: &#34;Done&#34;}}}&#39;
+</span></span></code></pre></div><p>Then you have to connect to the node and touch a machine-config-daemon-force file. This will trigger the <em>machine-config-daemon</em> to do a reboot and to force the update to the <code>MachineConfig</code>.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">$ oc debug node/server01
+</span></span><span class="line"><span class="ln">2</span><span class="cl">[root@server01 core] chroot /host
+</span></span><span class="line"><span class="ln">3</span><span class="cl">[root@server01 core] touch /run/machine-config-daemon-force
+</span></span></code></pre></div><p>On occasion, you might not be able to connect to the node using an oc debug pod. I've seen this happen when a systemd unit running podman early in the boot process has had an image pull failure, and the debug pod is also not able to run when kubelet is not running properly, mean SSH is the only option.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">$ ssh core@server01
+</span></span><span class="line"><span class="ln">2</span><span class="cl">[root@server01 core] touch /run/machine-config-daemon-force
+</span></span></code></pre></div><h2 id="pausing-mco-updates">Pausing MCO Updates</h2>
 <p>As described above, the MCO will automatically carry on the work of rebooting and managing your nodes if you let it. This is great, but does mean that nodes in the cluster can sometimes be rebooted without warning. Of course, true cloud-native Kubernetes ready applications should be running multiple replicas across nodes anyway, and this shouldn't normally be a problem.</p>
 <p>However, should you wish to pause the MCO so that it doesn't automatically reboot nodes when you don't want it to, you can &quot;pause&quot; the worker pools by setting the <code>.spec.paused</code> field in the <code>MachineConfigPool</code>. For example, by running the following patch commands:</p>
-<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="ln">1</span>$ oc patch mcp master --type merge --patch &#39;{&#34;spec&#34;:{&#34;paused&#34;: true}}&#39;
-<span class="ln">2</span>$ oc patch mcp worker --type merge --patch &#39;{&#34;spec&#34;:{&#34;paused&#34;: true}}&#39;
-</code></pre></div><p>It should be noted that you shouldn't leave the <code>MachineConfigPool's</code> paused for long periods of times. This can cause issues for MCO if configuration updates combine with cluster cert rotation events. However, pausing them whilst the actual OCP control plane upgrade happens and then unpausing when you're ready for all the nodes to be rebooted can be very useful.</p>
+<div class="highlight"><pre tabindex="0" class="chroma"><code class="language-fallback" data-lang="fallback"><span class="line"><span class="ln">1</span><span class="cl">$ oc patch mcp master --type merge --patch &#39;{&#34;spec&#34;:{&#34;paused&#34;: true}}&#39;
+</span></span><span class="line"><span class="ln">2</span><span class="cl">$ oc patch mcp worker --type merge --patch &#39;{&#34;spec&#34;:{&#34;paused&#34;: true}}&#39;
+</span></span></code></pre></div><p>It should be noted that you shouldn't leave the <code>MachineConfigPool's</code> paused for long periods of times. This can cause issues for MCO if configuration updates combine with cluster cert rotation events. However, pausing them whilst the actual OCP control plane upgrade happens and then unpausing when you're ready for all the nodes to be rebooted can be very useful.</p>
 <h2 id="summary">Summary</h2>
 <p>The Machine Config Operator is a clever piece of software that significantly reduces workload of running and managing nodes in an OpenShift cluster. However, it's important for cluster administrators to understand how it works, and to be able to successfully recover it when any issues arise and it becomes degraded. Hopefully, this blog post will help you understand it a little better and to resolve any issues you encounter.</p>
 
@@ -618,7 +618,7 @@
   </div>
 </footer>
 
-    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.14825dc619648aeca2e4e66c65ef7d06ea216e6a64cd503f64d2fe77950ee425c47fc0f2cf993c2d656f534914619a2c47c8313438a810ed5008db38a46a812d.js" integrity="sha512-FIJdxhlkiuyi5OZsZe99BuohbmpkzVA/ZNL&#43;d5UO5CXEf8Dyz5k8LWVvU0kUYZosR8gxNDioEO1QCNs4pGqBLQ==" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="https://purplecarrot.co.uk/js/bundle.min.eb436f5fa53f940b87c5fff22b7a5ff21d8e1a755411de5197a962bc1ceab4491d6492b2d9cb6e2763c8d66098d9045411b988628217da75dc160b3e1b5766a2.js" integrity="sha512-60NvX6U/lAuHxf/yK3pf8h2OGnVUEd5Rl6livBzqtEkdZJKy2ctuJ2PI1mCY2QRUEbmIYoIX2nXcFgs&#43;G1dmog==" crossorigin="anonymous"></script>
     
   </body>
 </html>
